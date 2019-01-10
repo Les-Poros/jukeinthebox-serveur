@@ -44,44 +44,10 @@ foreach ($dbh->query('SELECT * from piste ORDER BY idPiste') as $row) {
     }
     $compteurAlbum = 0;
     $compteur++;
-    /*
-            "albums":[';
-    foreach ($dbh->query('SELECT * from album NATURAL JOIN fait_partie where idPiste=' . $piste['idPiste']) as $album) {
-        $json .= '{
-                    "id":"' . $album['idAlbum'] . '",
-                    "nom":"' . $album['nomAlbum'] . '",
-                    "année":"' . $album['annéeAlbum'] . '",
-                    "image":"' . $album['imageAlbum'] . '",
-                    "genres":[';
-        foreach ($dbh->query('SELECT * from est_du_genre_album NATURAL JOIN genre where idAlbum=' . $album['idAlbum']) as $genreAlbum) {
-            $json .= '"' . $genreAlbum["nomGenre"] . '",';
-        }
-        $json = enleveVirgule($json) . '],
-                    "artistes":[';
-        foreach ($dbh->query('SELECT * from a_joué_album NATURAL JOIN artiste where idAlbum=' . $album['idAlbum']) as $artisteAlbum) {
-            $json .= '{
-                        "nom":"' . $artisteAlbum["nomArtiste"] . '",
-                        "prénom":"' . $artisteAlbum["prénomArtiste"] . '"
-                        },';
-        }
-        $json = enleveVirgule($json) . ']},';
-    }
-    $json = enleveVirgule($json) . ']';
-    $json .= '}},';*/
 }
 
 $array = ['pistes' => $tabPistes];
 $json = ['catalogue' => $array];
-/*$json = enleveVirgule($json) . ']}';*/
 
 header('Content-type: application/json');
 echo json_encode($json);
-
-function enleveVirgule($json)
-{
-    // On enlève la dernière virgule
-    if (substr($json, -2, 2) == ', ') {
-        $json = substr($json, 0, -2);
-    }
-    return $json;
-}
