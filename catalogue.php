@@ -9,7 +9,11 @@ $compteur = 0;
 $compteurGenre = 0;
 $compteurArtiste = 0;
 $compteurAlbum = 0;
-foreach ($dbh->query('SELECT * from piste ORDER BY idPiste') as $row) {
+$search="";
+if(isset($_GET["piste"])){
+    $search=$_GET["piste"];
+}
+foreach ($dbh->query('SELECT * from piste WHERE nomPiste LIKE "%'.$search.'%" ORDER BY idPiste') as $row) {
     $tabPistes[$compteur]['idPiste'] = $row['idPiste'];
     $tabPistes[$compteur]['nomPiste'] = $row['nomPiste'];
     $tabPistes[$compteur]['annéePiste'] = $row['annéePiste'];
