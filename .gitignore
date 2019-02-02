@@ -1,0 +1,10 @@
+*.idea
+src/conf/*.ini
+.project
+bin/
+out/
+conf.ini
+vendor
+.DS_Store
+composer.lock
+*.map
