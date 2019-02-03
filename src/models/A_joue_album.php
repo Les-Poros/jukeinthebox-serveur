@@ -7,7 +7,7 @@ namespace jukeinthebox\models;
  */
 class A_joue_album extends \Illuminate\Database\Eloquent\Model {
 
-    protected $table = 'a_joue_album';
+    protected $table = 'a_joué_album';
     protected $primaryKey = 'idAJoueAlbum';
     public $timestamps = false;
 

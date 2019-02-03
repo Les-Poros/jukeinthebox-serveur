@@ -12,7 +12,7 @@ class Album extends \Illuminate\Database\Eloquent\Model {
     public $timestamps = false;
 
     public function a_joue_album() {
-        return $this->hasMany('jukeinthebox\models\A_joue_album', 'idAJoueAlbum');
+        return $this->hasMany('jukeinthebox\models\A_joué_album', 'idAJoueAlbum');
     }
 
     public function est_du_genre_album() {

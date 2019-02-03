@@ -34,8 +34,22 @@ require('container.php');
 
 $app = new \Slim\App($container);
 
-$app->get('/file', 'FileController:displayFile')->setName('File');
+$app->get('/', function($request, $response, $args){
+	$controller = $this['FileController'];
+	$displayFile = $controller->displayFile($request, $response, $args);
+	return $response->withHeader(
+		'Content-Type',
+		'application/json'
+	);
+})->setName('File');
 
-$app->get('/', 'CatalogueController:displayCatalogue')->setName('Catalogue');
+$app->get('/catalogue', function($request, $response, $args){
+	$controller = $this['CatalogueController'];
+	$displayCatalogue = $controller->displayCatalogue($request, $response, $args);
+	return $response->withHeader(
+		'Content-Type',
+		'application/json'
+	);
+})->setName('Catalogue');
 
 $app->run();

@@ -25,6 +25,5 @@ $container['CatalogueController'] = function ($c){
 };
 
 $container['FileController'] = function ($c){
-    $view = $c->get('view');
-    return new FileController($view);
+    return new FileController();
 };
