@@ -31,39 +31,39 @@ class FileController {
 		foreach($file as $row) {
 			$tabPistes[$compteur]['idFile'] = $row['idFile'];
 			$piste = Piste::where('idPiste', '=', $row['idPiste'])->first();
-			$tabPistes[$compteur]['idPiste'] = $piste['idPiste'];
-    		$tabPistes[$compteur]['nomPiste'] = $piste['nomPiste'];
-    		$tabPistes[$compteur]['annéePiste'] = $piste['annéePiste'];
-			$tabPistes[$compteur]['imagePiste'] = $piste['imagePiste'];
-			$estDuGenrePiste = Est_du_genre_piste::join('genre', 'est_du_genre_piste.idGenre', '=', 'genre.idGenre')->where('idPiste', '=', $tabPistes[$compteur]['idPiste'])->get();
+			$tabPistes[$compteur]['piste']['idPiste'] = $piste['idPiste'];
+    		$tabPistes[$compteur]['piste']['nomPiste'] = $piste['nomPiste'];
+    		$tabPistes[$compteur]['piste']['annéePiste'] = $piste['annéePiste'];
+			$tabPistes[$compteur]['piste']['imagePiste'] = $piste['imagePiste'];
+			$estDuGenrePiste = Est_du_genre_piste::join('genre', 'est_du_genre_piste.idGenre', '=', 'genre.idGenre')->where('idPiste', '=', $tabPistes[$compteur]['piste']['idPiste'])->get();
 			foreach($estDuGenrePiste as $genrePiste) {
-				$tabPistes[$compteur]['genres'][$compteurGenre] = $genrePiste['nomGenre'];
+				$tabPistes[$compteur]['piste']['genres'][$compteurGenre] = $genrePiste['nomGenre'];
 				$compteurGenre++;
 			}
 			$compteurGenre = 0;
 			$aJouePiste = A_joue_piste::join('artiste', 'a_joué_piste.idArtiste', '=', 'artiste.idArtiste')->where('idPiste', '=', $row['idPiste'])->get();
 			foreach ($aJouePiste as $artistePiste) {
-				$tabPistes[$compteur]['artistes'][$compteurArtiste]["prénom"] = $artistePiste['prénomArtiste'];
-				$tabPistes[$compteur]['artistes'][$compteurArtiste]["nom"] = $artistePiste['nomArtiste'];
+				$tabPistes[$compteur]['piste']['artistes'][$compteurArtiste]["prénom"] = $artistePiste['prénomArtiste'];
+				$tabPistes[$compteur]['piste']['artistes'][$compteurArtiste]["nom"] = $artistePiste['nomArtiste'];
 				$compteurArtiste++;
 			}
 			$compteurArtiste = 0;
 			$albums = Album::join('fait_partie', 'album.idAlbum', '=', 'fait_partie.idAlbum')->where('idPiste', '=', $row['idPiste'])->get();
 			foreach ($albums as $album) {
-				$tabPistes[$compteur]['albums'][$compteurAlbum]["idAlbum"] = $album["idAlbum"];
-				$tabPistes[$compteur]['albums'][$compteurAlbum]["nomAlbum"] = $album["nomAlbum"];
-				$tabPistes[$compteur]['albums'][$compteurAlbum]["annéeAlbum"] = $album["annéeAlbum"];
-				$tabPistes[$compteur]['albums'][$compteurAlbum]["imageAlbum"] = $album["imageAlbum"];
+				$tabPistes[$compteur]['piste']['albums'][$compteurAlbum]["idAlbum"] = $album["idAlbum"];
+				$tabPistes[$compteur]['piste']['albums'][$compteurAlbum]["nomAlbum"] = $album["nomAlbum"];
+				$tabPistes[$compteur]['piste']['albums'][$compteurAlbum]["annéeAlbum"] = $album["annéeAlbum"];
+				$tabPistes[$compteur]['piste']['albums'][$compteurAlbum]["imageAlbum"] = $album["imageAlbum"];
 				$estDuGenreAlbum = Est_du_genre_album::join('genre', 'est_du_genre_album.idGenre', '=', 'genre.idGenre')->where('idAlbum', '=', $album['idAlbum'])->get();
 				foreach ($estDuGenreAlbum as $genreAlbum) {
-					$tabPistes[$compteur]['albums'][$compteurAlbum]['genres'][$compteurGenre] = $genreAlbum['nomGenre'];
+					$tabPistes[$compteur]['piste']['albums'][$compteurAlbum]['genres'][$compteurGenre] = $genreAlbum['nomGenre'];
 					$compteurGenre++;
 				}
 				$compteurGenre = 0;
 				$aJoueAlbum = A_joue_album::join('artiste', 'a_joué_album.idArtiste', '=', 'artiste.idArtiste')->where('idAlbum', '=', $album['idAlbum'])->get();
 				foreach ($aJoueAlbum as $artisteAlbum) {
-					$tabPistes[$compteur]['albums'][$compteurAlbum]['artistes'][$compteurArtiste]["prénom"] = $artisteAlbum['prénomArtiste'];
-					$tabPistes[$compteur]['albums'][$compteurAlbum]['artistes'][$compteurArtiste]["nom"] = $artisteAlbum['nomArtiste'];
+					$tabPistes[$compteur]['piste']['albums'][$compteurAlbum]['artistes'][$compteurArtiste]["prénom"] = $artisteAlbum['prénomArtiste'];
+					$tabPistes[$compteur]['piste']['albums'][$compteurAlbum]['artistes'][$compteurArtiste]["nom"] = $artisteAlbum['nomArtiste'];
 					$compteurArtiste++;
 				}
 				$compteurArtiste = 0;
