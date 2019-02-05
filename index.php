@@ -55,6 +55,10 @@ $app->get('/', function($request, $response, $args){
 	);
 })->setName('File');
 
+$app->post('/addfile', 'FileController:addFile')->setName('addFile');
+
+$app->delete('/next', 'FileController:nextFile')->setName('next');
+
 $app->get('/catalogue', function($request, $response, $args){
 	$controller = $this['CatalogueController'];
 	$displayCatalogue = $controller->displayCatalogue($request, $response, $args);

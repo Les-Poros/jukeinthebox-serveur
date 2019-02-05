@@ -77,4 +77,26 @@ class FileController {
 		echo json_encode($json);
 	}
 
+	/**
+	 * Method that displays that add a music to the file
+	 * @param request
+	 * @param response
+	 * @param args
+	 */
+	public function addFile($request, $response, $args) {
+		$file = new File();
+		$file->idPiste = $_POST['id'];
+		$file->save();
+	}
+
+	/**
+	 * Method that displays that delete a music to the file
+	 * @param request
+	 * @param response
+	 * @param args
+	 */
+	public function nextFile($request, $response, $args) {
+		$file = File::first()->delete();
+	}
+
 }
