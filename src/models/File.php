@@ -15,4 +15,8 @@ class File extends \Illuminate\Database\Eloquent\Model {
         return $this->belongsTo('jukeinthebox\models\Piste', 'idPiste');
     }
 
+    public function jukebox() {
+        return $this->belongsTo('jukeinthebox\models\Jukebox', 'idJukebox');
+    }
+
 }

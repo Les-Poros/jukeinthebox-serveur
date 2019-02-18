@@ -22,12 +22,13 @@ class FileController {
 	 * @param args
 	 */
 	public function displayFile($request, $response, $args) {
+		$idJukeBox = $args['idJukebox'];
 		$tabPistes = [];
 		$compteur = 0;
 		$compteurGenre = 0;
 		$compteurArtiste = 0;
 		$compteurAlbum = 0;
-		$file = File::get();
+		$file = File::where('idJukebox', '=', $idJukeBox)->get();
 		foreach($file as $row) {
 			$tabPistes[$compteur]['idFile'] = $row['idFile'];
 			$piste = Piste::where('idPiste', '=', $row['idPiste'])->first();
@@ -84,8 +85,10 @@ class FileController {
 	 * @param args
 	 */
 	public function addFile($request, $response, $args) {
+		$idJukeBox = $args['idJukebox'];
 		$file = new File();
 		$file->idPiste = $_POST['id'];
+		$file->idJukebox = $idJukeBox;
 		$file->save();
 	}
 
@@ -96,7 +99,8 @@ class FileController {
 	 * @param args
 	 */
 	public function nextFile($request, $response, $args) {
-		$file = File::first()->delete();
+		$idJukeBox = $args['idJukebox'];
+		$file = File::where('idJukebox', '=', $idJukeBox)->first()->delete();
 	}
 
 }
