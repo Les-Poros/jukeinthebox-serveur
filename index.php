@@ -38,14 +38,6 @@ $app->options('/{routes:.+}', function ($request, $response, $args) {
     return $response;
 });
 
-$app->add(function ($req, $res, $next) {
-    $response = $next($req, $res);
-    return $response
-            ->withHeader('Access-Control-Allow-Origin', '*')
-            ->withHeader('Access-Control-Allow-Headers', 'Origin, Content-Type, X-Auth-Token, Authorization')
-            ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
-});
-
 $app->get('/', function($request, $response, $args){
 	$controller = $this['FileController'];
 	$displayFile = $controller->displayFile($request, $response, $args);
@@ -72,5 +64,4 @@ $app->map(['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], '/{routes:.+}', function($r
     $handler = $this->notFoundHandler; // handle using the default Slim page not found handler
     return $handler($req, $res);
 });
-
 $app->run();
