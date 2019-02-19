@@ -84,7 +84,6 @@ class FileController {
 	 * @param args
 	 */
 	public function addFile($request, $response, $args) {
-		var_dump($_POST);
 		$file = new File();
 		$file->idPiste = $_POST['id'];
 		$file->save();
