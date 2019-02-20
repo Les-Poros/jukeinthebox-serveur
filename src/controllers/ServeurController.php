@@ -17,16 +17,29 @@ class ServeurController {
 	 */
 
     public function displayServeur($request, $response, $args) {
-		$url = $request->getUri()->getBasePath().'/ListJukebox';
-		$html = <<<HTML
-        <div>	
-				<h1>JukeInTheBox</h1>
-                <a href="$url">Gérer les jukebox</a>
-                <button type="button" disabled>Gérer le catalogue</button>
+			$url = $request->getUri()->getBasePath();
+			$html = <<<HTML
+			<!DOCTYPE html>
 
-         </div>
+			<html>
+
+			<head>
+					<meta charset="UTF-8">
+					<link rel="stylesheet" href="{$url}/css/jukeinthebox.css">
+			</head>
+
+			<body>
+					<div>	
+					<h1>JukeInTheBox</h1>
+									<a href="{$url}/ListJukebox" class="homeButton">Gérer les jukebox</a>
+									<button type="button" disabled>Gérer le catalogue</button>
+
+					</div>
+			</body>
+
+			</html>
 HTML;
-		echo $html ;
+			echo $html;
 	}
 
 
@@ -71,6 +84,9 @@ HTML;
 						<td>Clé d'activation</td>
 						<td>Est activé ?</td>
 						<td>Token QRCode</td>
+						<td>Client</td>
+						<td>Mail</td>
+						<td>Adresse</td>
 					</tr>
 HTML;
 		foreach ($listJukebox as $j) {
@@ -89,6 +105,9 @@ HTML;
 			}
 			$html .= <<<HTML
 					<td>$j->qr_code</td>
+					<td>$j->nomClient</td>
+					<td>$j->mailClient</td>
+					<td>$j->adresseClient</td>
 				</tr>			
 HTML;
 		}
