@@ -1,16 +1,102 @@
-h1 {
-  text-align: center;
+.mainContainer {
+  padding: 10px;
 }
 
-.homeButton {
-  padding: 6px 0 6px 0;
+h1 {
+  text-align: center;
+  padding-bottom: 50px;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  padding-top: 100px;
+}
+
+.button {
+  padding: 25px 6px 25px 6px;
   font: bold 13px Arial;
   background: #f5f5f5;
   color: #555;
   border-radius: 2px;
-  width: 100px;
   border: 1px solid #ccc;
   box-shadow: 1px 1px 3px #999;
+  text-align: center;
+}
+
+.buttonAlone {
+  width: 30%;
+  padding: 25px 6px 25px 6px;
+  font: bold 13px Arial;
+  background: #f5f5f5;
+  color: #555;
+  border-radius: 2px;
+  border: 1px solid #ccc;
+  box-shadow: 1px 1px 3px #999;
+  text-align: center;
+}
+
+a {
+  width: 30%;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: none;
+}
+
+table {
+  margin-top: 50px;
+}
+
+.newJukebox {
+  width: 80%;
+  border: solid 1px black;
+  background-color: lightgreen;
+  text-align: center;
+  margin-top: 50px;
+  margin-left: 10%;
+}
+
+input[type=text], input[type=email] {
+  width: 80%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+button[type=submit] {
+  width: 50%;
+  background-color: #c2c2c2;
+  color: #3c3c3c;
+  border: 1px solid #b3b3b3;
+  box-shadow: 1px 1px 3px gray;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border-radius: 4px;
+  cursor: pointer;
+}
+button[type=submit]:hover {
+  background-color: darkgray;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 5px;
+  background-color: #f2f2f2;
+  padding: 20px;
+  margin-left: 5%;
+  margin-right: 5%;
+  margin-top: 25px;
+}
+
+.itemForm {
+  width: 100%;
 }
 
 /*# sourceMappingURL=jukeinthebox.css.map */

@@ -25,15 +25,16 @@ class ServeurController {
 
 			<head>
 					<meta charset="UTF-8">
-					<link rel="stylesheet" href="{$url}/css/jukeinthebox.css">
+					<link rel="stylesheet" href="{$url}/src/css/jukeinthebox.css">
 			</head>
 
 			<body>
-					<div>	
+					<div class="mainContainer">	
 					<h1>JukeInTheBox</h1>
-									<a href="{$url}/ListJukebox" class="homeButton">Gérer les jukebox</a>
-									<button type="button" disabled>Gérer le catalogue</button>
-
+						<div class="buttons">
+									<a href="{$url}/ListJukebox"><div class="button">Gérer les jukebox</div></a>
+									<a href="{$url}/"><div class="button">Gérer le catalogue</div></a>
+						</div>
 					</div>
 			</body>
 
@@ -45,11 +46,24 @@ HTML;
 
 	public function listJukebox($request, $response, $args){
 		$listJukebox = Jukebox::get();
-		$url = $request->getUri()->getBasePath().'/CreateJukebox';
+		$url = $request->getUri()->getBasePath();
 		$html = <<<HTML
-			<div>
+		<!DOCTYPE html>
+		<html>
+
+		<head>
+				<meta charset="UTF-8">
+				<link rel="stylesheet" href="{$url}/src/css/jukeinthebox.css">
+				<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+		</head>
+
+		<body>
+			<div class="mainContainer">
 				<h1>Liste des jukebox</h1>
-                <a href="$url">Ajouter un jukebox</a>
+				<div class="buttons">
+					<a href="{$url}/"><div class="button">Accueil</div></a>
+					<a href="{$url}/CreateJukebox"><div class="button">Ajouter un jukebox</div></a>
+				</div>
 HTML;
 
 		if(isset($_POST['nomClient']) && isset($_POST['mailClient']) && isset($_POST['adresseClient'])){
@@ -68,7 +82,7 @@ HTML;
 			$jukebox->adresseClient = $adresseClient;
 			$jukebox->save();
 			$html .= <<<HTML
-			<div>
+			<div class="newJukebox">
 			<p>Le jukebox n°$jukebox->idJukebox a été créé pour $nomClient à l'adresse $adresseClient.<br>
 			Clé d'api à envoyer : $token <br>
 			à l'adresse mail $mailClient</p>
@@ -78,15 +92,15 @@ HTML;
 
 
 		$html .= <<<HTML
-				<table>
+				<table class="table table-hover">
 					<tr>
-						<td>&nbsp;</td>
-						<td>Clé d'activation</td>
-						<td>Est activé ?</td>
-						<td>Token QRCode</td>
-						<td>Client</td>
-						<td>Mail</td>
-						<td>Adresse</td>
+						<th scope="col">&nbsp;</th>
+						<th scope="col">Clé d'activation</th>
+						<th scope="col">Est activé ?</th>
+						<th scope="col">Token QRCode</th>
+						<th scope="col">Client</th>
+						<th scope="col">Mail</th>
+						<th scope="col">Adresse</th>
 					</tr>
 HTML;
 		foreach ($listJukebox as $j) {
@@ -114,25 +128,47 @@ HTML;
 		$html .= <<<HTML
 				</table>
 			</div>
+		</body>
+
+		</html>
 HTML;
 		echo $html;
 	}
 
 	public function createJukebox($request, $response, $args){
-		$url = $request->getUri()->getBasePath().'/ListJukebox';
+		$url = $request->getUri()->getBasePath();
 		$html = <<<HTML
-			<div>
+		<!DOCTYPE html>
+		<html>
+
+		<head>
+				<meta charset="UTF-8">
+				<link rel="stylesheet" href="{$url}/src/css/jukeinthebox.css">
+		</head>
+
+		<body>
+			<div class="mainContainer">
 				<h1>Ajouter un Jukebox</h1>
-				<form action='$url' method='post'>
-					<label>Nom du client</label>
-					<input type='text' name="nomClient" required>
-					<label>Mail du client</label>
-					<input type='email' name="mailClient" required>
-					<label>Adresse du client</label>
-					<input type='text' name="adresseClient" required>
+                <a href="{$url}/"><div class="buttonAlone">Accueil</div></a>
+				<form action='{$url}/ListJukebox' method='post'>
+					<div class="itemForm">
+						<label>Nom du client</label>
+						<input type='text' name="nomClient" required>
+					</div>
+					<div class="itemForm">
+						<label>Mail du client</label>
+						<input type='email' name="mailClient" required>
+					</div>
+					<div class="itemForm">
+						<label>Adresse du client</label>
+						<input type='text' name="adresseClient" required>
+					</div>
 					<button type="submit">Ajouter le jukebox</button>
 				</form>
 			</div>
+		</body>
+
+		</html>
 HTML;
 		echo $html;
 	}
