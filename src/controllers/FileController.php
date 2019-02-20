@@ -85,9 +85,12 @@ class FileController {
 	 * @param args
 	 */
 	public function addFile($request, $response, $args) {
+		$inputJSON = file_get_contents('php://input'); 
+		$input = json_decode($inputJSON, TRUE); //convert JSON into array 
+		$idPisteEnv = $input['id'];
 		$idJukeBox = $args['idJukebox'];
 		$file = new File();
-		$file->idPiste = $_POST['id'];
+		$file->idPiste = $idPisteEnv;
 		$file->idJukebox = $idJukeBox;
 		$file->save();
 	}
