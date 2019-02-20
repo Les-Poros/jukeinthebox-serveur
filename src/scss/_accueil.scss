@@ -16,23 +16,11 @@ h1{
 	display: flex;
 	flex-direction: row;
 	justify-content: space-evenly;
-	padding-top: 100px;
+	padding-top: 50px;
 }
 
 .button{
 	padding: 25px 6px 25px 6px;
-	font:bold 13px Arial;
-	background: $buttonBackground;
-	color: $buttonColor;
-	border-radius:2px;
-	border:1px solid $buttonBorder;
-	box-shadow:1px 1px 3px $buttonShadow;
-	text-align: center;
-}
-
-.buttonAlone{
-	width: 30%;
-    padding: 25px 6px 25px 6px;
 	font:bold 13px Arial;
 	background: $buttonBackground;
 	color: $buttonColor;

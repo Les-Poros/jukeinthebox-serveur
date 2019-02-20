@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<link rel="stylesheet" href="{{url}}/src/css/jukeinthebox.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	</head>
+
+	<body>
+		<div class="mainContainer">
+				<h1>Liste des jukebox</h1>
+				<div class="buttons">
+					<a href="{{url}}/"><div class="button">Accueil</div></a>
+					<a href="{{url}}/CreateJukebox"><div class="button">Ajouter un jukebox</div></a>
+				</div>
+
+                {% if idJukebox != '' %}
+                    <div class="newJukebox">
+                        <p>Le jukebox {{idJukebox}} a été créé pour {{nomClient}} à l'adresse {{adresseClient}}.<br>
+                        Clé d'api à envoyer : {{token}} <br>
+                        à l'adresse mail {{mailClient}}</p>
+                    </div>
+                {% endif %}
+
+                <table class="table table-hover">
+					<tr>
+						<th scope="col">&nbsp;</th>
+						<th scope="col">Clé d'activation</th>
+						<th scope="col">Est activé ?</th>
+						<th scope="col">Token QRCode</th>
+						<th scope="col">Client</th>
+						<th scope="col">Mail</th>
+						<th scope="col">Adresse</th>
+					</tr>
+
+                    {% for j in listJukebox %}
+                        <tr>
+					        <td>Jukebox n°{{j['idJukebox']}}</td> <td>{{j['tokenActivation']}}</td>
+
+                            {% if j['estActive'] == 1 %}
+                                <td>oui</td>
+                            {% else %}
+                                <td>non</td>
+                            {% endif %}
+                            <td>{{j['qr_code']}}</td>
+                            <td>{{j['nomClient']}}</td>
+                            <td>{{j['mailClient']}}</td>
+                            <td>{{j['adresseClient']}}</td>
+				        </tr>	
+                    {% endfor %} 
+                </table>
+        </div>
+	</body>
+
+</html>

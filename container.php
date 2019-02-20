@@ -30,5 +30,6 @@ $container['FileController'] = function ($c){
 };
 
 $container['ServeurController'] = function ($c){
-    return new ServeurController();
+    $view = $c->get('view');
+    return new ServeurController($view);
 };

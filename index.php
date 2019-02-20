@@ -6,6 +6,7 @@ use Illuminate\Database\Capsule\Manager as DB;
 use jukeinthebox\bd\Connection;
 use jukeinthebox\controllers\FileController;
 use jukeinthebox\controllers\CatalogueController;
+use jukeinthebox\controllers\ServeurController;
 
 $ini = parse_ini_file('src/conf/conf.ini');
 
