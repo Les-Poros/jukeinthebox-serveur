@@ -85,10 +85,9 @@ class FileController {
 	 * @param args
 	 */
 	public function addFile($request, $response, $args) {
-		$idJukeBox = $args['idJukebox'];
 		$file = new File();
 		$file->idPiste = $_POST['id'];
-		$file->idJukebox = $idJukeBox;
+		$file->idJukebox = $args['idJukebox'];
 		$file->save();
 	}
 

@@ -81,6 +81,15 @@ $app->get('/catalogue', function($request, $response, $args){
 	);
 })->setName('Catalogue');
 
+$app->get('/catalogue/{idJukebox}', function($request, $response, $args){
+	$controller = $this['CatalogueController'];
+	$displayCatalogue = $controller->displayCatalogueJukebox($request, $response, $args);
+	return $response->withHeader(
+		'Content-Type',
+		'application/json'
+	);
+})->setName('Catalogue');
+
 $app->map(['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], '/{routes:.+}', function($req, $res) {
     $handler = $this->notFoundHandler; // handle using the default Slim page not found handler
     return $handler($req, $res);
