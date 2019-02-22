@@ -9,6 +9,9 @@ use jukeinthebox\models\Album;
 use jukeinthebox\models\Est_du_genre_album;
 use jukeinthebox\models\A_joue_album;
 use jukeinthebox\models\Contenu_bibliotheque;
+use jukeinthebox\models\Bibliotheque;
+
+
 
 /**
  * Class CatalogueController
@@ -96,12 +99,17 @@ class CatalogueController {
 		$compteurGenre = 0;
 		$compteurArtiste = 0;
 		$compteurAlbum = 0;
+		$compteurBibliotheque = 0;
 		$search = "";
 		if (isset($_GET["piste"])) {
 			$search = $_GET["piste"];
 		}
 
+	
+
+		
 		$pistes = Contenu_bibliotheque::join('piste', 'contenu_bibliotheque.idPiste', '=', 'piste.idPiste')->where("idBibliotheque","=",$args['idJukebox'])->where('nomPiste', 'like', "%$search%")->get();
+		
 		foreach($pistes as $row) {
 			$tabPistes[$compteur]['idPiste'] = $row['idPiste'];
     		$tabPistes[$compteur]['nomPiste'] = $row['nomPiste'];
@@ -140,6 +148,14 @@ class CatalogueController {
 				}
 				$compteurArtiste = 0;
 				$compteurAlbum++;
+				
+				$bibliotheques = Bibliotheque::where("idBibliotheque","=",$args['idJukebox'])->get();
+				
+				foreach ($bibliotheques as $bibliotheque){
+				$tabPistes[$compteur]['bibliotheques'][$compteurBibliotheque]["titre"] = $bibliotheque["titre"];
+				$tabPistes[$compteur]['bibliotheques'][$compteurBibliotheque]["idBibliotheque"] = $bibliotheque["idBibliotheque"];
+			
+	}
 			}
 			$compteurAlbum = 0;
     		$compteur++;
