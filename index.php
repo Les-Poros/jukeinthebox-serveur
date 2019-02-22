@@ -6,6 +6,7 @@ use Illuminate\Database\Capsule\Manager as DB;
 use jukeinthebox\bd\Connection;
 use jukeinthebox\controllers\FileController;
 use jukeinthebox\controllers\CatalogueController;
+use jukeinthebox\controllers\ServeurController;
 
 $ini = parse_ini_file('src/conf/conf.ini');
 
@@ -39,6 +40,26 @@ $app->options('/{routes:.+}', function ($request, $response, $args) {
 });
 
 $app->get('/', function($request, $response, $args){
+	$controller = $this['ServeurController'];
+	$displayServeur = $controller->displayServeur($request, $response, $args);
+})->setName('Home');
+
+$app->get('/ListJukebox', function($request, $response, $args){
+	$controller = $this['ServeurController'];
+	$ListJukebox = $controller->listJukebox($request, $response, $args);
+})->setName('ListJukebox');
+
+$app->post('/ListJukebox', function($request, $response, $args){
+	$controller = $this['ServeurController'];
+	$ListJukebox = $controller->listJukebox($request, $response, $args);
+})->setName('ListJukebox');
+
+$app->get('/CreateJukebox', function($request, $response, $args){
+	$controller = $this['ServeurController'];
+	$CreateJukebox = $controller->createJukebox($request, $response, $args);
+})->setName('CreateJukebox');
+
+$app->get('/File/{idJukebox}', function($request, $response, $args){
 	$controller = $this['FileController'];
 	$displayFile = $controller->displayFile($request, $response, $args);
 	return $response->withHeader(
@@ -47,13 +68,22 @@ $app->get('/', function($request, $response, $args){
 	);
 })->setName('File');
 
-$app->post('/addfile', 'FileController:addFile')->setName('addFile');
+$app->post('/addfile/{idJukebox}', 'FileController:addFile')->setName('addFile');
 
-$app->delete('/next', 'FileController:nextFile')->setName('next');
+$app->delete('/next/{idJukebox}', 'FileController:nextFile')->setName('next');
 
 $app->get('/catalogue', function($request, $response, $args){
 	$controller = $this['CatalogueController'];
 	$displayCatalogue = $controller->displayCatalogue($request, $response, $args);
+	return $response->withHeader(
+		'Content-Type',
+		'application/json'
+	);
+})->setName('Catalogue');
+
+$app->get('/catalogue/{idJukebox}', function($request, $response, $args){
+	$controller = $this['CatalogueController'];
+	$displayCatalogue = $controller->displayCatalogueJukebox($request, $response, $args);
 	return $response->withHeader(
 		'Content-Type',
 		'application/json'
