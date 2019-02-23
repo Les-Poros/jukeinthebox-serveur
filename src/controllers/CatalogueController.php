@@ -10,6 +10,9 @@ use jukeinthebox\models\Album;
 use jukeinthebox\models\Est_du_genre_album;
 use jukeinthebox\models\A_joue_album;
 use jukeinthebox\models\Contenu_bibliotheque;
+use jukeinthebox\models\Bibliotheque;
+
+
 
 /**
  * Class CatalogueController
@@ -47,6 +50,34 @@ class CatalogueController {
 		}
 		else
 		$pistes = Piste::where('nomPiste', 'like', "%$search%")->get();
+		$array = ['pistes' => $tabPistes];
+		$json = ['catalogue' => $array];
+
+		echo json_encode($json);
+	}
+
+	/**
+	 * Method that displays the content of the catalogue for a jukebox
+	 * @param request
+	 * @param response
+	 * @param args
+	 */
+	public function displayCatalogueJukebox($request, $response, $args) {
+		$tabPistes = [];
+		$compteur = 0;
+		$compteurGenre = 0;
+		$compteurArtiste = 0;
+		$compteurAlbum = 0;
+		$compteurBibliotheque = 0;
+		$search = "";
+		if (isset($_GET["piste"])) {
+			$search = $_GET["piste"];
+		}
+
+	
+
+		
+		$pistes = Contenu_bibliotheque::join('piste', 'contenu_bibliotheque.idPiste', '=', 'piste.idPiste')->where("idBibliotheque","=",$args['idJukebox'])->where('nomPiste', 'like', "%$search%")->get();
 		
 		foreach($pistes as $row) {
 			$tabPistes[$compteur]['idPiste'] = $row['idPiste'];
@@ -86,6 +117,14 @@ class CatalogueController {
 				}
 				$compteurArtiste = 0;
 				$compteurAlbum++;
+				
+				$bibliotheques = Bibliotheque::where("idBibliotheque","=",$args['idJukebox'])->get();
+				
+				foreach ($bibliotheques as $bibliotheque){
+				$tabPistes[$compteur]['bibliotheques'][$compteurBibliotheque]["titre"] = $bibliotheque["titre"];
+				$tabPistes[$compteur]['bibliotheques'][$compteurBibliotheque]["idBibliotheque"] = $bibliotheque["idBibliotheque"];
+			
+	}
 			}
 			$compteurAlbum = 0;
     		$compteur++;
