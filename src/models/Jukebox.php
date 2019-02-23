@@ -19,4 +19,17 @@ class Jukebox extends \Illuminate\Database\Eloquent\Model {
         return $this->belongsTo('jukeinthebox\models\Bibliotheque', 'idBibliotheque');
     }
 
+    public static function getIdByQrcode($qrcode){
+        $jukebox = parent::where("qr_code","=",$qrcode)->first();
+        if (isset($jukebox)) {
+            return $jukebox->toArray()["idJukebox"];
+        }
+    }
+
+    public static function getIdByBartender($bartender){
+        $jukebox = parent::where("tokenActivation","=",$bartender)->first();
+        if (isset($jukebox)) {
+            return $jukebox->toArray()["idJukebox"];
+        }
+    }
 }

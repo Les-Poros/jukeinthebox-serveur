@@ -59,7 +59,7 @@ $app->get('/CreateJukebox', function($request, $response, $args){
 	$CreateJukebox = $controller->createJukebox($request, $response, $args);
 })->setName('CreateJukebox');
 
-$app->get('/File/{idJukebox}', function($request, $response, $args){
+$app->get('/File', function($request, $response, $args){
 	$controller = $this['FileController'];
 	$displayFile = $controller->displayFile($request, $response, $args);
 	return $response->withHeader(
@@ -68,22 +68,13 @@ $app->get('/File/{idJukebox}', function($request, $response, $args){
 	);
 })->setName('File');
 
-$app->post('/addfile/{idJukebox}', 'FileController:addFile')->setName('addFile');
+$app->post('/addfile', 'FileController:addFile')->setName('addFile');
 
-$app->delete('/next/{idJukebox}', 'FileController:nextFile')->setName('next');
+$app->delete('/next', 'FileController:nextFile')->setName('next');
 
 $app->get('/catalogue', function($request, $response, $args){
 	$controller = $this['CatalogueController'];
 	$displayCatalogue = $controller->displayCatalogue($request, $response, $args);
-	return $response->withHeader(
-		'Content-Type',
-		'application/json'
-	);
-})->setName('Catalogue');
-
-$app->get('/catalogue/{idJukebox}', function($request, $response, $args){
-	$controller = $this['CatalogueController'];
-	$displayCatalogue = $controller->displayCatalogueJukebox($request, $response, $args);
 	return $response->withHeader(
 		'Content-Type',
 		'application/json'
