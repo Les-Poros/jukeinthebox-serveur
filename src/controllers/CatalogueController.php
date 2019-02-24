@@ -100,7 +100,7 @@ class CatalogueController {
 	}
 
 	/**
-	 * Method that displays that add a music to the file
+	 * Method that displays that add a music to the bibliotheque
 	 * @param request
 	 * @param response
 	 * @param args
@@ -116,5 +116,19 @@ class CatalogueController {
 		$addContenu->idBibliotheque = $getBibliotheque;
 	
 		$addContenu->save();
+	}
+
+		/**
+	 * Method that displays that delete a music from the bibliotheque
+	 * @param request
+	 * @param response
+	 * @param args
+	 */
+	public function deleteFileBiblio($request, $response, $args) {
+	
+		Contenu_bibliotheque::where('idPiste','=',$_POST['id'])->first()->delete();
+		
+		
+	
 	}
 }
