@@ -70,6 +70,8 @@ $app->get('/File', function($request, $response, $args){
 
 $app->post('/addfile', 'FileController:addFile')->setName('addFile');
 
+$app->post('/addFileBiblio', 'CatalogueController:addFileBiblio')->setName('addFileBiblio');
+
 $app->delete('/next', 'FileController:nextFile')->setName('next');
 
 $app->get('/catalogue', function($request, $response, $args){
