@@ -98,4 +98,23 @@ class CatalogueController {
 
 		echo json_encode($json);
 	}
+
+	/**
+	 * Method that displays that add a music to the file
+	 * @param request
+	 * @param response
+	 * @param args
+	 */
+	public function addFileBiblio($request, $response, $args) {
+		$addContenu = new Contenu_bibliotheque();
+	
+		//On récupère la bibliothèque du JukeBox
+		$getBibliotheque = Jukebox::join('bibliotheque', 'jukebox.idBibliotheque', '=', 'bibliotheque.idBibliotheque')->where("idJukebox","=",Jukebox::getIdByBartender($_POST["bartender"]))->first()->idBibliotheque;
+		
+		$addContenu->idPiste = $_POST['id'];
+		
+		$addContenu->idBibliotheque = $getBibliotheque;
+	
+		$addContenu->save();
+	}
 }
