@@ -107,14 +107,14 @@ class CatalogueController {
 	 */
 	public function addFileBiblio($request, $response, $args) {
 		$addContenu = new Contenu_bibliotheque();
+	
+		//On récupère la bibliothèque du JukeBox
+		$getBibliotheque = Jukebox::join('bibliotheque', 'jukebox.idBibliotheque', '=', 'bibliotheque.idBibliotheque')->where("idJukebox","=",Jukebox::getIdByBartender($_POST["bartender"]))->first()->idBibliotheque;
 		
 		$addContenu->idPiste = $_POST['id'];
-		$addContenu->idContenu_bibliotheque = '3';
-		$addContenu->idBibliotheque = '1';
-		// if(isset($_POST["token"]))
-		// $addContenu->idJukebox = Jukebox::getIdByQrcode($_POST["token"]);
-		// else
-		// $addContenu->idJukebox = Jukebox::getIdByBartender($_POST["bartender"]);
+		
+		$addContenu->idBibliotheque = $getBibliotheque;
+	
 		$addContenu->save();
 	}
 }
