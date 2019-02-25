@@ -70,8 +70,8 @@ $app->get('/File', function($request, $response, $args){
 
 $app->post('/addfile', 'FileController:addFile')->setName('addFile');
 //Route permettant l'ajout d'une musique dans la bibliothèque
-$app->post('/addFileBiblio', 'CatalogueController:addFileBiblio')->setName('addFileBiblio');
-$app->post('/deleteFileBiblio', 'CatalogueController:deleteFileBiblio')->setName('deleteFileBiblio');
+$app->post('/addMusicBiblio', 'CatalogueController:addMusicBiblio')->setName('addMusicBiblio');
+$app->post('/deleteMusicBiblio', 'CatalogueController:deleteMusicBiblio')->setName('deleteMusicBiblio');
 
 
 $app->delete('/next', 'FileController:nextFile')->setName('next');

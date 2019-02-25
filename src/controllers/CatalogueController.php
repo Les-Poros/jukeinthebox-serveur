@@ -105,7 +105,7 @@ class CatalogueController {
 	 * @param response
 	 * @param args
 	 */
-	public function addFileBiblio($request, $response, $args) {
+	public function addMusicBiblio($request, $response, $args) {
 		$addContenu = new Contenu_bibliotheque();
 	
 		//On récupère la bibliothèque du JukeBox
@@ -124,7 +124,7 @@ class CatalogueController {
 	 * @param response
 	 * @param args
 	 */
-	public function deleteFileBiblio($request, $response, $args) {
+	public function deleteMusicBiblio($request, $response, $args) {
 	
 		Contenu_bibliotheque::where('idPiste','=',$_POST['id'])->first()->delete();
 		
