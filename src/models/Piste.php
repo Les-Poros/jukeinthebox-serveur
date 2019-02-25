@@ -27,4 +27,8 @@ class Piste extends \Illuminate\Database\Eloquent\Model {
         return $this->hasMany('jukeinthebox\models\File', 'idFile');
     }
 
+    public function contenu_bibliotheque() {
+        return $this->hasMany('jukeinthebox\models\Contenu_bilbiotheque', 'idContenu_bilbiotheque');
+    }
+
 }

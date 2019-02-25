@@ -1,0 +1,40 @@
+$buttonBackground: #f5f5f5 !default;
+$buttonColor: #555 !default;
+$buttonShadow: #999 !default;
+$buttonBorder: #ccc !default;
+
+.mainContainer{
+	padding: 10px;
+}
+
+h1{
+	text-align: center;
+	padding-bottom: 50px;
+}
+
+.buttons{
+	display: flex;
+	flex-direction: row;
+	justify-content: space-evenly;
+	padding-top: 50px;
+}
+
+.button{
+	padding: 25px 6px 25px 6px;
+	font:bold 13px Arial;
+	background: $buttonBackground;
+	color: $buttonColor;
+	border-radius:2px;
+	border:1px solid $buttonBorder;
+	box-shadow:1px 1px 3px $buttonShadow;
+	text-align: center;
+}
+
+
+a{
+	width: 30%;
+	text-decoration: none;
+	&:hover{
+		text-decoration: none;
+	}
+}

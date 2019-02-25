@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<link rel="stylesheet" href="{{url}}/src/css/jukeinthebox.css">
+    </head>
+
+	<body>
+		<div class="mainContainer">
+            <h1>Ajouter un Jukebox</h1>
+
+			<div class="buttons">
+                <a href="{{url}}/"><div class="button">Accueil</div></a>
+                <a href="{{url}}/ListJukebox"><div class="button">Retour à la liste de Jukebox</div></a>
+            </div>
+
+				<form action='{{url}}/ListJukebox' method='post'>
+					<div class="itemForm">
+						<label>Nom du client</label>
+						<input type='text' name="nomClient" required>
+					</div>
+					<div class="itemForm">
+						<label>Mail du client</label>
+						<input type='email' name="mailClient" required>
+					</div>
+					<div class="itemForm">
+						<label>Adresse du client</label>
+						<input type='text' name="adresseClient" required>
+					</div>
+					<button type="submit">Ajouter le jukebox</button>
+				</form>
+
+        </div>
+	</body>
+
+</html>

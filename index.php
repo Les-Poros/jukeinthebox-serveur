@@ -6,6 +6,7 @@ use Illuminate\Database\Capsule\Manager as DB;
 use jukeinthebox\bd\Connection;
 use jukeinthebox\controllers\FileController;
 use jukeinthebox\controllers\CatalogueController;
+use jukeinthebox\controllers\ServeurController;
 
 $ini = parse_ini_file('src/conf/conf.ini');
 
@@ -39,6 +40,26 @@ $app->options('/{routes:.+}', function ($request, $response, $args) {
 });
 
 $app->get('/', function($request, $response, $args){
+	$controller = $this['ServeurController'];
+	$displayServeur = $controller->displayServeur($request, $response, $args);
+})->setName('Home');
+
+$app->get('/ListJukebox', function($request, $response, $args){
+	$controller = $this['ServeurController'];
+	$ListJukebox = $controller->listJukebox($request, $response, $args);
+})->setName('ListJukebox');
+
+$app->post('/ListJukebox', function($request, $response, $args){
+	$controller = $this['ServeurController'];
+	$ListJukebox = $controller->listJukebox($request, $response, $args);
+})->setName('ListJukebox');
+
+$app->get('/CreateJukebox', function($request, $response, $args){
+	$controller = $this['ServeurController'];
+	$CreateJukebox = $controller->createJukebox($request, $response, $args);
+})->setName('CreateJukebox');
+
+$app->get('/File', function($request, $response, $args){
 	$controller = $this['FileController'];
 	$displayFile = $controller->displayFile($request, $response, $args);
 	return $response->withHeader(
@@ -48,6 +69,10 @@ $app->get('/', function($request, $response, $args){
 })->setName('File');
 
 $app->post('/addfile', 'FileController:addFile')->setName('addFile');
+//Route permettant l'ajout d'une musique dans la bibliothèque
+$app->post('/addMusicBiblio', 'CatalogueController:addMusicBiblio')->setName('addMusicBiblio');
+$app->post('/deleteMusicBiblio', 'CatalogueController:deleteMusicBiblio')->setName('deleteMusicBiblio');
+
 
 $app->delete('/next', 'FileController:nextFile')->setName('next');
 

@@ -3,6 +3,7 @@
 namespace jukeinthebox\controllers;
 
 use jukeinthebox\models\File;
+use jukeinthebox\models\Jukebox;
 use jukeinthebox\models\Piste;
 use jukeinthebox\models\Est_du_genre_piste;
 use jukeinthebox\models\A_joue_piste;
@@ -27,7 +28,29 @@ class FileController {
 		$compteurGenre = 0;
 		$compteurArtiste = 0;
 		$compteurAlbum = 0;
-		$file = File::get();
+		
+		if(isset($_GET["token"]))
+		{
+			if(isset($_GET["first"]))
+			$file = File::where('idJukebox', '=', Jukebox::getIdByQrcode($_GET["token"]))->take(1)->get();
+			else
+			$file = File::where('idJukebox', '=', Jukebox::getIdByQrcode($_GET["token"]))->get();
+		}
+		else 
+		if(isset($_GET["bartender"]))
+		{
+			if(isset($_GET["first"]))
+			$file = File::where('idJukebox', '=', Jukebox::getIdByBartender($_GET["bartender"]))->take(1)->get();
+			else
+			$file = File::where('idJukebox', '=', Jukebox::getIdByBartender($_GET["bartender"]))->get();
+		}
+		else
+		{
+			if(isset($_GET["first"]))
+			$file = File::take(1)->get();
+			else
+			$file = File::all();
+		}
 		foreach($file as $row) {
 			$tabPistes[$compteur]['idFile'] = $row['idFile'];
 			$piste = Piste::where('idPiste', '=', $row['idPiste'])->first();
@@ -86,6 +109,10 @@ class FileController {
 	public function addFile($request, $response, $args) {
 		$file = new File();
 		$file->idPiste = $_POST['id'];
+		if(isset($_POST["token"]))
+		$file->idJukebox = Jukebox::getIdByQrcode($_POST["token"]);
+		else
+		$file->idJukebox = Jukebox::getIdByBartender($_POST["bartender"]);
 		$file->save();
 	}
 
@@ -96,7 +123,10 @@ class FileController {
 	 * @param args
 	 */
 	public function nextFile($request, $response, $args) {
-		$file = File::first()->delete();
+			if(isset($_POST["token"]))
+			File::where('idJukebox', '=', Jukebox::getIdByQrcode($_GET["token"]))->first()->delete();
+			else
+			File::where('idJukebox', '=', Jukebox::getIdByBartender($_GET["bartender"]))->first()->delete();
 	}
 
 }

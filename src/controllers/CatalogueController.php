@@ -3,11 +3,13 @@
 namespace jukeinthebox\controllers;
 
 use jukeinthebox\models\Piste;
+use jukeinthebox\models\Jukebox;
 use jukeinthebox\models\Est_du_genre_piste;
 use jukeinthebox\models\A_joue_piste;
 use jukeinthebox\models\Album;
 use jukeinthebox\models\Est_du_genre_album;
 use jukeinthebox\models\A_joue_album;
+use jukeinthebox\models\Contenu_bibliotheque;
 
 /**
  * Class CatalogueController
@@ -31,10 +33,27 @@ class CatalogueController {
 		$compteurArtiste = 0;
 		$compteurAlbum = 0;
 		$search = "";
+		$nomCatag="Global";
 		if (isset($_GET["piste"])) {
 			$search = $_GET["piste"];
 		}
+		if(isset($_GET["token"]))
+		{
+			$nomCatag=Jukebox::join('bibliotheque', 'jukebox.idBibliotheque', '=', 'bibliotheque.idBibliotheque')->where("idJukebox","=",Jukebox::getIdByQrcode($_GET["token"]))->first()->titre;
+			$pistes = Contenu_bibliotheque::join('piste', 'contenu_bibliotheque.idPiste', '=', 'piste.idPiste')->where("idBibliotheque","=",Jukebox::getIdByQrcode($_GET["token"]))->where('nomPiste', 'like', "%$search%")->get();
+		}
+		else 
+		if(isset($_GET["bartender"]))
+		{
+			$nomCatag=Jukebox::join('bibliotheque', 'jukebox.idBibliotheque', '=', 'bibliotheque.idBibliotheque')->where("idJukebox","=",Jukebox::getIdByBartender($_GET["bartender"]))->first()->titre;
+			if(isset($_GET["addCatag"]))
+			$pistes = Piste::wherenotin('idPiste',function($query){$query->select('idPiste')->from('contenu_bibliotheque')->where('idBibliotheque', '=',Jukebox::getIdByBartender($_GET["bartender"]));})->get();
+			else
+			$pistes = Contenu_bibliotheque::join('piste', 'contenu_bibliotheque.idPiste', '=', 'piste.idPiste')->where("idBibliotheque","=",Jukebox::getIdByBartender($_GET["bartender"]))->where('nomPiste', 'like', "%$search%")->get();
+		}
+		else
 		$pistes = Piste::where('nomPiste', 'like', "%$search%")->get();
+		
 		foreach($pistes as $row) {
 			$tabPistes[$compteur]['idPiste'] = $row['idPiste'];
     		$tabPistes[$compteur]['nomPiste'] = $row['nomPiste'];
@@ -77,10 +96,42 @@ class CatalogueController {
 			$compteurAlbum = 0;
     		$compteur++;
 		}
-		$array = ['pistes' => $tabPistes];
+		$array = ['pistes' => $tabPistes,"nomCatag"=>$nomCatag];
 		$json = ['catalogue' => $array];
 
 		echo json_encode($json);
 	}
 
+	/**
+	 * Method that displays that add a music to the bibliotheque
+	 * @param request
+	 * @param response
+	 * @param args
+	 */
+	public function addMusicBiblio($request, $response, $args) {
+		$addContenu = new Contenu_bibliotheque();
+	
+		//On récupère la bibliothèque du JukeBox
+		$getBibliotheque = Jukebox::join('bibliotheque', 'jukebox.idBibliotheque', '=', 'bibliotheque.idBibliotheque')->where("idJukebox","=",Jukebox::getIdByBartender($_POST["bartender"]))->first()->idBibliotheque;
+		
+		$addContenu->idPiste = $_POST['id'];
+		
+		$addContenu->idBibliotheque = $getBibliotheque;
+	
+		$addContenu->save();
+	}
+
+		/**
+	 * Method that displays that delete a music from the bibliotheque
+	 * @param request
+	 * @param response
+	 * @param args
+	 */
+	public function deleteMusicBiblio($request, $response, $args) {
+	
+		Contenu_bibliotheque::where('idPiste','=',$_POST['id'])->first()->delete();
+		
+		
+	
+	}
 }
