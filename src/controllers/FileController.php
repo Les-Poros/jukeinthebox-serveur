@@ -40,7 +40,7 @@ class FileController {
 		if(isset($_GET["bartender"]))
 		{
 			if(isset($_GET["first"]))
-			$file = File::where('idJukebox', '=', Jukebox::getIdByBartender($_GET["bartender"]))->take(1)->first();
+			$file = File::where('idJukebox', '=', Jukebox::getIdByBartender($_GET["bartender"]))->take(1)->get();
 			else
 			$file = File::where('idJukebox', '=', Jukebox::getIdByBartender($_GET["bartender"]))->get();
 		}
