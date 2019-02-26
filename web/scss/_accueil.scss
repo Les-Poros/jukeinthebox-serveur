@@ -21,11 +21,11 @@ h1{
 
 .button{
 	padding: 25px 6px 25px 6px;
-	font:bold 13px Arial;
+	font: bold 13px Arial;
 	background: $buttonBackground;
 	color: $buttonColor;
 	border-radius:2px;
-	border:1px solid $buttonBorder;
+	border: 1px solid $buttonBorder;
 	box-shadow:1px 1px 3px $buttonShadow;
 	text-align: center;
 }
