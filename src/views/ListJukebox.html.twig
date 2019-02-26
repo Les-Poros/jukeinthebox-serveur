@@ -3,7 +3,7 @@
 
 	<head>
 		<meta charset="UTF-8">
-		<link rel="stylesheet" href="{{url}}/src/css/jukeinthebox.css">
+		<link rel="stylesheet" href="{{url}}/web/css/jukeinthebox.css">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 	</head>
 
@@ -27,7 +27,6 @@
 					<tr>
 						<th scope="col">&nbsp;</th>
 						<th scope="col">Clé d'activation</th>
-						<th scope="col">Est activé ?</th>
 						<th scope="col">Token QRCode</th>
 						<th scope="col">Client</th>
 						<th scope="col">Mail</th>
@@ -37,12 +36,6 @@
                     {% for j in listJukebox %}
                         <tr>
 					        <td>Jukebox n°{{j['idJukebox']}}</td> <td>{{j['tokenActivation']}}</td>
-
-                            {% if j['estActive'] == 1 %}
-                                <td>oui</td>
-                            {% else %}
-                                <td>non</td>
-                            {% endif %}
                             <td>{{j['qr_code']}}</td>
                             <td>{{j['nomClient']}}</td>
                             <td>{{j['mailClient']}}</td>

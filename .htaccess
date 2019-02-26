@@ -1,4 +1,3 @@
-
 # Always set these headers.
 Header always set Access-Control-Allow-Origin "*"
 Header always set Access-Control-Allow-Methods "POST, GET,OPTIONS, DELETE, PUT"
@@ -7,10 +6,9 @@ Header always set Access-Control-Allow-Headers "x-requested-with, Content-Type, 
 
 RewriteEngine On
 
-
 #
 # RewriteBase indispensable sur webetu :
-RewriteBase /www/rimet2u/jukeinthebox/
+# RewriteBase /www/rimet2u/jukeinthebox/
 
 #
 # Pour interdire l'accès aux répertoires contenant du code
