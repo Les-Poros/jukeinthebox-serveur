@@ -4,6 +4,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 use jukeinthebox\controllers\FileController;
 use jukeinthebox\controllers\CatalogueController;
 use jukeinthebox\controllers\ServeurController;
+use jukeinthebox\controllers\JukeboxController;
 
 $configuration = [
     'settings' => [
@@ -23,6 +24,11 @@ $container['view'] = function ($container) {
 
 $container['CatalogueController'] = function ($c){
     return new CatalogueController();
+};
+
+$container['JukeboxController'] = function ($c){
+    $view = $c->get('view');
+    return new JukeboxController($view);
 };
 
 $container['FileController'] = function ($c){
