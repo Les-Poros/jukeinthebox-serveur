@@ -75,6 +75,14 @@ $app->post('/addMusicBiblio', 'CatalogueController:addMusicBiblio')->setName('ad
 $app->post('/deleteMusicBiblio', 'CatalogueController:deleteMusicBiblio')->setName('deleteMusicBiblio');
 $app->post('/qrcode', 'JukeboxController:setQrcode')->setName('setQrcode');
 
+$app->get('/validateJukebox', function($request, $response, $args){
+	$controller = $this['JukeboxController'];
+	$controller->validateToken($request, $response, $args);
+	return $response->withHeader(
+		'Content-Type',
+		'application/json'
+	);
+})->setName('getJukebox');
 
 $app->delete('/next', 'FileController:nextFile')->setName('next');
 

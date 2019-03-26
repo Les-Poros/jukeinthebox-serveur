@@ -35,10 +35,24 @@ class JukeboxController {
 	
 		//On récupère le jukebox
 		$jukebox = Jukebox::where("tokenActivation","=",$_POST["bartender"])->first();
-		
+		$jukebox->qr_code2 = $jukebox->qr_code;
 		$jukebox->qr_code = $_POST['qrcode'];
 	
 		$jukebox->save();
+	}
+
+	public function validateToken($request, $response, $args) {
+	
+		if(isset($_GET["token"]))
+			$jukebox = Jukebox::getIdByQrcode($_GET["token"]);
+		else if(isset($_GET["bartender"]))
+			$jukebox = Jukebox::getIdByBartender($_GET["bartender"]);
+		else $jukebox=null;
+	
+		if($jukebox == null)
+			echo json_encode( ['validate' => false]);
+		else
+			echo json_encode( ['validate' => true]);
 	}
 	
 }

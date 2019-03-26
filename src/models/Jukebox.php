@@ -20,10 +20,11 @@ class Jukebox extends \Illuminate\Database\Eloquent\Model {
     }
 
     public static function getIdByQrcode($qrcode){
-        $jukebox = parent::where("qr_code","=",$qrcode)->first();
+        $jukebox = parent::where("qr_code","=",$qrcode)->orWhere('qr_code2', '=', $qrcode)->first();
         if (isset($jukebox)) {
             return $jukebox->toArray()["idJukebox"];
         }
+        else return null;
     }
 
     public static function getIdByBartender($bartender){
@@ -31,5 +32,6 @@ class Jukebox extends \Illuminate\Database\Eloquent\Model {
         if (isset($jukebox)) {
             return $jukebox->toArray()["idJukebox"];
         }
+        else return null;
     }
 }
