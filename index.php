@@ -76,6 +76,21 @@ $app->post('/deleteMusicBiblio', 'CatalogueController:deleteMusicBiblio')->setNa
 
 $app->delete('/next', 'FileController:nextFile')->setName('next');
 
+$app->get('/ListCatalogue', function($request, $response, $args){
+	$controller = $this['CatalogueController'];
+	$listCatalogue = $controller->listCatalogue($request, $response, $args);
+})->setName('ListCatalogue');
+
+$app->post('/ListCatalogue', function($request, $response, $args){
+	$controller = $this['CatalogueController'];
+	$ListCatalogue = $controller->listCatalogue($request, $response, $args);
+})->setName('ListCatalogue');
+
+$app->get('/CreateMusic', function($request, $response, $args){
+	$controller = $this['CatalogueController'];
+	$CreateMusic = $controller->createMusic($request, $response, $args);
+})->setName('CreateMusic');
+
 $app->get('/catalogue', function($request, $response, $args){
 	$controller = $this['CatalogueController'];
 	$displayCatalogue = $controller->displayCatalogue($request, $response, $args);
@@ -84,6 +99,8 @@ $app->get('/catalogue', function($request, $response, $args){
 		'application/json'
 	);
 })->setName('Catalogue');
+
+
 
 $app->map(['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], '/{routes:.+}', function($req, $res) {
     $handler = $this->notFoundHandler; // handle using the default Slim page not found handler

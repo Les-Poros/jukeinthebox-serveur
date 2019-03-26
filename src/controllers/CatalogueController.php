@@ -10,12 +10,28 @@ use jukeinthebox\models\Album;
 use jukeinthebox\models\Est_du_genre_album;
 use jukeinthebox\models\A_joue_album;
 use jukeinthebox\models\Contenu_bibliotheque;
+use jukeinthebox\models\Bibliotheque;
+use \Slim\Views\Twig as twig;
+use jukeinthebox\views\Home;
+use \jukeinthebox\views\ListMusic;
+use \jukeinthebox\views\AddPiste;
 
 /**
  * Class CatalogueController
  */
 class CatalogueController {
 
+	protected $view;
+
+	/**
+	 * Constructor of the class HomeController
+	 * @param view
+	 */
+    public function __construct(twig $view) {
+        $this->view = $view;
+	}
+	
+	
 	/**
 	 * Method that displays the content of the catalogue
 	 * @param request
@@ -108,6 +124,7 @@ class CatalogueController {
 	 * @param response
 	 * @param args
 	 */
+
 	public function addMusicBiblio($request, $response, $args) {
 		$addContenu = new Contenu_bibliotheque();
 	
@@ -121,7 +138,7 @@ class CatalogueController {
 		$addContenu->save();
 	}
 
-		/**
+	/**
 	 * Method that displays that delete a music from the bibliotheque
 	 * @param request
 	 * @param response
@@ -130,8 +147,84 @@ class CatalogueController {
 	public function deleteMusicBiblio($request, $response, $args) {
 	
 		Contenu_bibliotheque::where('idPiste','=',$_POST['id'])->first()->delete();
+	}
+
+	/**
+	 * Method that displays the musics from the bibiotheque
+	 * @param request
+	 * @param response
+	 * @param args
+	 */
+	public function listCatalogue($request, $response, $args) {	
+		//$listJukebox = Jukebox::get();
+		$url = $request->getUri()->getBasePath();
+		$nomPiste ='';
+		$imagePiste ='';
+		$anneePiste ='';
+		$nomArtiste ='';//Groupe ou personne ?
+		$genre ='';
+		$album = '';
+		$imageAlbum ='';
+
+
+		//requete
+		if(isset($_POST['nomPiste']) && isset($_POST['anneePiste']) && isset($_POST['genre']) && isset($_POST['nomArtiste']) && isset($_POST['album'])){
+			//$idPiste = '';
+			$nomPiste = $_POST['nomPiste'];
+			$imagePiste = $_POST['imagePiste'];
+			$anneePiste = $_POST['anneePiste'];
+			$nomArtiste = $_POST['nomArtiste'];
+			$prenomArtiste = $_POST['prenomArtiste'];
+			$genre = $_POST['genre'];
+			$album = $_POST['album'];
+			$piste = Piste::firstOrCreate(['nomPiste' => $nomPiste],['nomPiste' => $nomPiste]);
+			$artiste = Artiste::firstOrCreate(['nomArtiste' => $nomArtiste],['prenomArtiste' => $prenomArtiste]);
+
+
+
+
+
+			/*$jukebox = new Jukebox();
+			$bibliothque = new Bibliotheque();
+			$bibliothque->save();
+			$jukebox->idBibliotheque = $bibliothque->idBibliotheque;
+			$token = md5(time() . mt_rand());
+			$jukebox->qr_code='';
+			$jukebox->tokenActivation = $token;
+			$jukebox->nomClient = $nomClient;
+			$jukebox->mailClient = $mailClient;
+			$jukebox->adresseClient = $adresseClient;
+			$jukebox->save();*/
+
+			$idJukebox = $jukebox->idJukebox;
+		}
+		/*return $this->view->render($response, 'ListJukebox.html.twig', [
+			'url' => $url,
+			'nomClient' => $nomClient,
+			'mailClient' => $mailClient,
+			'adresseClient' => $adresseClient,
+			'token' => $token,
+			'idJukebox' => $idJukebox,
+			'listJukebox' => $listJukebox
+		]);*/
 		
-		
-	
+		$url = $request->getUri()->getBasePath();
+		return $this->view->render($response, 'ListMusic.html.twig', [
+			'url' => $url,
+		]);
+	}
+
+	/**
+	 * Methode pour ajouter une musique dans un catalogue
+	 * @param request
+	 * @param response
+	 * @param args
+	 */
+
+	public function createMusic($request, $response, $args) {	
+		$url = $request->getUri()->getBasePath();
+		return $this->view->render($response, 'AddPiste.html.twig', [
+			'url' => $url,
+		]);
 	}
 }

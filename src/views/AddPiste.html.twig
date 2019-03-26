@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<link rel="stylesheet" href="{{url}}/web/css/jukeinthebox.css">
+	</head>
+
+	<body>
+		<div class="mainContainer">	
+			 <h1>Ajouter une musique</h1>
+		<div class="buttons">
+                <a href="{{url}}/"><div class="button">Accueil</div></a>
+                <a href="{{url}}/ListCatalogue"><div class="button">Retour à la liste des musiques </div></a>
+        </div>
+			
+				<form action='{{url}}/catalogue' method='post'>
+					<div class="itemForm">
+						<label>Titre</label>
+						<input type="text" name="titre" required>
+					</div>
+					
+					<div class="itemForm">
+						<label>Album</label>
+						<input type="text" name="album" required>
+					</div>
+
+					<div class="itemForm">
+						<label>Image associée</label>
+						<input type="text" name="imageAlbum" required>
+					</div>
+					<div class="itemForm">
+						<label>Année de l'album</label>
+						<input type="text" name="anneeAlbum" required>
+					</div>
+
+					<div class="itemForm">
+						<label>nom de l'Artiste</label>
+						<input type="text" name="nomArtiste" required>
+					</div>
+					<div class="itemForm">
+						<label>prenom de l'Artiste</label>
+						<input type="text" name="prenomArtiste" required>
+					</div>
+
+					<div class="itemForm">
+						<label>Année</label>
+						<input type="text" name="anneePiste" required>
+					</div>
+
+					<div class="itemForm">
+						<label>Image associée</label>
+						<input type="text" name="imagePiste" required>
+					</div>
+
+					<button type="submit">Ajouter une musique</button>
+				</form>
+
+			
+		</div>
+	</body>
+
+</html>
