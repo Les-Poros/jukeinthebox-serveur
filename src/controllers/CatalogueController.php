@@ -7,6 +7,8 @@ use jukeinthebox\models\Jukebox;
 use jukeinthebox\models\Est_du_genre_piste;
 use jukeinthebox\models\A_joue_piste;
 use jukeinthebox\models\Album;
+use jukeinthebox\models\Artiste;
+use jukeinthebox\models\Genre;
 use jukeinthebox\models\Est_du_genre_album;
 use jukeinthebox\models\A_joue_album;
 use jukeinthebox\models\Contenu_bibliotheque;
@@ -156,47 +158,66 @@ class CatalogueController {
 	 * @param args
 	 */
 	public function listCatalogue($request, $response, $args) {	
-		//$listJukebox = Jukebox::get();
+		
 		$url = $request->getUri()->getBasePath();
+		$method = $request->getMethod();
+	
 		$nomPiste ='';
 		$imagePiste ='';
 		$anneePiste ='';
+		$group = false;
 		$nomArtiste ='';//Groupe ou personne ?
 		$genre ='';
 		$album = '';
 		$imageAlbum ='';
 
-
+		$piste = $request->getParams();
+		
+		if($method == "POST")
+		{
+			
 		//requete
-		if(isset($_POST['nomPiste']) && isset($_POST['anneePiste']) && isset($_POST['genre']) && isset($_POST['nomArtiste']) && isset($_POST['album'])){
-			//$idPiste = '';
-			$nomPiste = $_POST['nomPiste'];
-			$imagePiste = $_POST['imagePiste'];
-			$anneePiste = $_POST['anneePiste'];
-			$nomArtiste = $_POST['nomArtiste'];
-			$prenomArtiste = $_POST['prenomArtiste'];
-			$genre = $_POST['genre'];
-			$album = $_POST['album'];
-			$piste = Piste::firstOrCreate(['nomPiste' => $nomPiste],['nomPiste' => $nomPiste]);
-			$artiste = Artiste::firstOrCreate(['nomArtiste' => $nomArtiste],['prenomArtiste' => $prenomArtiste]);
+		if(isset($piste['nomPiste']) && isset($piste['anneePiste']) && isset($piste['genre']) && isset($piste['nomArtiste']) && isset($piste['album'])){
+			
+			
+			try{
+				$nomPiste = filter_var($piste['nomPiste'], FILTER_SANITIZE_STRING);
+				$imagePiste = filter_var($piste['imagePiste'], FILTER_SANITIZE_URL);
+				$anneePiste = filter_var($piste['anneePiste'], FILTER_SANITIZE_NUMBER_INT);
+				$nomArtiste = filter_var($piste['nomArtiste'], FILTER_SANITIZE_STRING);
+				$prenomArtiste = filter_var($piste['prenomArtiste'], FILTER_SANITIZE_STRING);
+				$nomGenre = filter_var($piste['genre'], FILTER_SANITIZE_STRING);
+				$album = filter_var($piste['album'], FILTER_SANITIZE_STRING);
+
+			
+
+				$donneePiste = Piste::query()->firstOrCreate(['nomPiste' => $nomPiste,'imagePiste' => $imagePiste,'annéePiste' => $anneePiste])->save();
+				$artiste = Artiste::query()->firstOrCreate(['nomArtiste' => $nomArtiste, 'prénomArtiste' => $prenomArtiste])->save();
+				$piste = Piste::select('idPiste')->where('nomPiste','like', $nomPiste)->first();
+				$idPiste = $piste->idPiste;
+				$artiste = Artiste::select('idArtiste')->where('nomArtiste','like', $nomArtiste)->first();
+				$idArtiste = $artiste->idArtiste;
+				
+				$AjouePiste = A_joue_piste::query()->firstOrCreate(['idPiste'=>$idPiste,'idArtiste'=>$idArtiste])->save();
+				$donneeGenre = Genre::query()->firstOrCreate(['nomGenre' => $nomGenre])->save();
+				var_dump($donneeGenre);
+				$genre = Genre::select('idGenre')->where('nomGenre','like', $nomGenre)->first();
+				$idGenre = $genre->idGenre;
+				$estDuGenre_Piste = Est_du_genre_piste::query()->firstOrCreate(['idPiste'=>$idPiste, 'idGenre'=>$idGenre]);
+
+			}
+			catch(\Exception $e){
+				$error = "La piste n'a pas été ajoutée, vérifiez vos informations.";
+				$url = $request->getUri()->getBasePath();
+				return $this->view->render($response, 'AddPiste.html.twig', [
+					'url' => $url,
+					'error'=> $error
+				]);
+			}
+			
+		}
 
 
-
-
-
-			/*$jukebox = new Jukebox();
-			$bibliothque = new Bibliotheque();
-			$bibliothque->save();
-			$jukebox->idBibliotheque = $bibliothque->idBibliotheque;
-			$token = md5(time() . mt_rand());
-			$jukebox->qr_code='';
-			$jukebox->tokenActivation = $token;
-			$jukebox->nomClient = $nomClient;
-			$jukebox->mailClient = $mailClient;
-			$jukebox->adresseClient = $adresseClient;
-			$jukebox->save();*/
-
-			$idJukebox = $jukebox->idJukebox;
 		}
 		/*return $this->view->render($response, 'ListJukebox.html.twig', [
 			'url' => $url,

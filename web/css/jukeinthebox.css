@@ -86,5 +86,13 @@ form {
 .itemForm {
   width: 100%;
 }
+.personne{
+  display: none;
+}
+.error{
+  color: red;
+  margin-top: 2%;
+  margin-left:5%;
+}
 
 /*# sourceMappingURL=jukeinthebox.css.map */

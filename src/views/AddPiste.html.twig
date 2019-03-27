@@ -13,11 +13,19 @@
                 <a href="{{url}}/"><div class="button">Accueil</div></a>
                 <a href="{{url}}/ListCatalogue"><div class="button">Retour à la liste des musiques </div></a>
         </div>
-			
-				<form action='{{url}}/catalogue' method='post'>
+				<div class="error">
+				{{error}}
+				</div>
+				<form action='{{url}}/ListCatalogue' method='post' enctype='multipart/form-data'>
+					<div class="itemForm">
+						<label>Groupe</label>
+						<input type="radio" name="personne" value="Groupe" onclick="myFunction()"  required>
+						<label>Artiste</label>
+						<input type="radio" name="personne" value="Artiste" onclick="myFunction()">
+					</div>
 					<div class="itemForm">
 						<label>Titre</label>
-						<input type="text" name="titre" required>
+						<input type="text" name="nomPiste" required>
 					</div>
 					
 					<div class="itemForm">
@@ -26,21 +34,38 @@
 					</div>
 
 					<div class="itemForm">
-						<label>Image associée</label>
-						<input type="text" name="imageAlbum" required>
+						<label>Image associée à l'album</label>
+						<input type="text" name="imageAlbum">
 					</div>
+
+					<div class="itemForm">
+						<label>Fichier mp3</label>
+						<input type="file" name="filemp3"><!--required-->
+					</div>
+
+					<div class="itemForm">
+						<label>Genre album</label>
+						<input type="text" name="genre" required>
+					</div>
+
+					<!--<div class="itemForm">
+						<label>Genre piste</label>
+						<input type="text" name="genrePiste">
+					</div>-->
+
 					<div class="itemForm">
 						<label>Année de l'album</label>
 						<input type="text" name="anneeAlbum" required>
 					</div>
 
 					<div class="itemForm">
-						<label>nom de l'Artiste</label>
+						<label>Nom de l'Artiste</label>
 						<input type="text" name="nomArtiste" required>
 					</div>
-					<div class="itemForm">
-						<label>prenom de l'Artiste</label>
-						<input type="text" name="prenomArtiste" required>
+
+					<div class="itemForm" id="radio">
+						<label>Prénom de l'Artiste</label>
+						<input type="text" name="prenomArtiste">
 					</div>
 
 					<div class="itemForm">
@@ -49,8 +74,8 @@
 					</div>
 
 					<div class="itemForm">
-						<label>Image associée</label>
-						<input type="text" name="imagePiste" required>
+						<label>Image associée à la piste</label>
+						<input type="text" name="imagePiste">
 					</div>
 
 					<button type="submit">Ajouter une musique</button>
@@ -58,6 +83,33 @@
 
 			
 		</div>
+		<script>
+
+		function myFunction(){
+			var radios = document.getElementsByName('personne');
+			var element = document.getElementById('radio');
+
+			var valeur;
+			
+			for(var i = 0; i < radios.length; i++)
+			{
+				if(radios[i].checked){
+					valeur = radios[i].value;
+					if(valeur == "Artiste")
+					{
+						element.classList.remove("personne");
+					}
+					else{
+						element.classList.add("personne");
+					}
+				}
+			}
+			
+		}
+
+
+			
+		</script>
 	</body>
 
 </html>
