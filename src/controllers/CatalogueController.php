@@ -44,8 +44,9 @@ class CatalogueController {
 			$catag=Jukebox::join('bibliotheque', 'jukebox.idBibliotheque', '=', 'bibliotheque.idBibliotheque')->where("idJukebox","=",Jukebox::getIdByQrcode($_GET["token"]))->first();
 			if(isset($catag))
 			$nomCatag=$catag->titre;
-			$pistes = Contenu_bibliotheque::join('piste', 'contenu_bibliotheque.idPiste', '=', 'piste.idPiste')->where("idBibliotheque","=",Jukebox::getIdByQrcode($_GET["token"]))->where('nomPiste', 'like', "%$search%")->skip($page*$size)->take($size)->get();
-		}
+			$pistes = Contenu_bibliotheque::join('piste', 'contenu_bibliotheque.idPiste', '=', 'piste.idPiste')->join('a_joué_piste', 'piste.idPiste', '=', 'a_joué_piste.idPiste')
+			->join('artiste', 'artiste.idArtiste', '=', 'a_joué_piste.idArtiste')->where("idBibliotheque","=",Jukebox::getIdByQrCode($_GET["token"]))
+			->where('nomPiste', 'like', "%$search%")->orWhere('nomArtiste', 'like', "%$search%")->groupBy("piste.idPiste")->skip($page*$size)->take($size)->get();}
 		else 
 		if(isset($_GET["bartender"]))
 		{
@@ -53,9 +54,12 @@ class CatalogueController {
 			if(isset($catag))
 			$nomCatag=$catag->titre;
 			if(isset($_GET["addCatag"]))
-			$pistes = Piste::wherenotin('idPiste',function($query){$query->select('idPiste')->from('contenu_bibliotheque')->where('idBibliotheque', '=',Jukebox::getIdByBartender($_GET["bartender"]));})->where('nomPiste', 'like', "%$search%")->skip($page*$size)->take($size)->get();
+			$pistes = Piste::join('a_joué_piste', 'piste.idPiste', '=', 'a_joué_piste.idPiste')
+			->join('artiste', 'artiste.idArtiste', '=', 'a_joué_piste.idArtiste')->wherenotin('piste.idPiste',function($query){$query->select('idPiste')->from('contenu_bibliotheque')->where('idBibliotheque', '=',Jukebox::getIdByBartender($_GET["bartender"]));})->where('nomPiste', 'like', "%$search%")->orWhere('nomArtiste', 'like', "%$search%")->groupBy("piste.idPiste")->skip($page*$size)->take($size)->get();
 			else
-			$pistes = Contenu_bibliotheque::join('piste', 'contenu_bibliotheque.idPiste', '=', 'piste.idPiste')->where("idBibliotheque","=",Jukebox::getIdByBartender($_GET["bartender"]))->where('nomPiste', 'like', "%$search%")->skip($page*$size)->take($size)->get();
+			$pistes = Contenu_bibliotheque::join('piste', 'contenu_bibliotheque.idPiste', '=', 'piste.idPiste')->join('a_joué_piste', 'piste.idPiste', '=', 'a_joué_piste.idPiste')
+			->join('artiste', 'artiste.idArtiste', '=', 'a_joué_piste.idArtiste')->where("idBibliotheque","=",Jukebox::getIdByBartender($_GET["bartender"]))
+			->where('nomPiste', 'like', "%$search%")->orWhere('nomArtiste', 'like', "%$search%")->groupBy("piste.idPiste")->skip($page*$size)->take($size)->get();
 		}
 		else
 		$pistes = Piste::where('nomPiste', 'like', "%$search%")->skip($page*$size)->take($size)->get();

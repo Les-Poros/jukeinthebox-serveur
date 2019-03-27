@@ -12,7 +12,7 @@ class Piste extends \Illuminate\Database\Eloquent\Model {
     public $timestamps = false;
 
     public function a_joue_piste() {
-        return $this->hasMany('jukeinthebox\models\Est_du_genre_piste', 'idEstDuGenrePiste');
+        return $this->hasMany('jukeinthebox\models\a_joue_piste', 'idAJouePiste');
     }
 
     public function est_du_genre_piste() {
