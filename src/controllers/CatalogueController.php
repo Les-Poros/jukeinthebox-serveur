@@ -33,6 +33,8 @@ class CatalogueController {
 		$compteurArtiste = 0;
 		$compteurAlbum = 0;
 		$search = "";
+		$page="0";
+		$size="10";
 		$nomCatag="Global";
 		if (isset($_GET["piste"])) {
 			$search = $_GET["piste"];
@@ -42,7 +44,7 @@ class CatalogueController {
 			$catag=Jukebox::join('bibliotheque', 'jukebox.idBibliotheque', '=', 'bibliotheque.idBibliotheque')->where("idJukebox","=",Jukebox::getIdByQrcode($_GET["token"]))->first();
 			if(isset($catag))
 			$nomCatag=$catag->titre;
-			$pistes = Contenu_bibliotheque::join('piste', 'contenu_bibliotheque.idPiste', '=', 'piste.idPiste')->where("idBibliotheque","=",Jukebox::getIdByQrcode($_GET["token"]))->where('nomPiste', 'like', "%$search%")->get();
+			$pistes = Contenu_bibliotheque::join('piste', 'contenu_bibliotheque.idPiste', '=', 'piste.idPiste')->where("idBibliotheque","=",Jukebox::getIdByQrcode($_GET["token"]))->where('nomPiste', 'like', "%$search%")->skip($page*$size)->take($size)->get();
 		}
 		else 
 		if(isset($_GET["bartender"]))
@@ -51,12 +53,12 @@ class CatalogueController {
 			if(isset($catag))
 			$nomCatag=$catag->titre;
 			if(isset($_GET["addCatag"]))
-			$pistes = Piste::wherenotin('idPiste',function($query){$query->select('idPiste')->from('contenu_bibliotheque')->where('idBibliotheque', '=',Jukebox::getIdByBartender($_GET["bartender"]));})->where('nomPiste', 'like', "%$search%")->get();
+			$pistes = Piste::wherenotin('idPiste',function($query){$query->select('idPiste')->from('contenu_bibliotheque')->where('idBibliotheque', '=',Jukebox::getIdByBartender($_GET["bartender"]));})->where('nomPiste', 'like', "%$search%")->skip($page*$size)->take($size)->get();
 			else
-			$pistes = Contenu_bibliotheque::join('piste', 'contenu_bibliotheque.idPiste', '=', 'piste.idPiste')->where("idBibliotheque","=",Jukebox::getIdByBartender($_GET["bartender"]))->where('nomPiste', 'like', "%$search%")->get();
+			$pistes = Contenu_bibliotheque::join('piste', 'contenu_bibliotheque.idPiste', '=', 'piste.idPiste')->where("idBibliotheque","=",Jukebox::getIdByBartender($_GET["bartender"]))->where('nomPiste', 'like', "%$search%")->skip($page*$size)->take($size)->get();
 		}
 		else
-		$pistes = Piste::where('nomPiste', 'like', "%$search%")->get();
+		$pistes = Piste::where('nomPiste', 'like', "%$search%")->skip($page*$size)->take($size)->get();
 		
 		foreach($pistes as $row) {
 			$tabPistes[$compteur]['idPiste'] = $row['idPiste'];
