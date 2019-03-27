@@ -45,7 +45,8 @@ class CatalogueController
             $catag = Jukebox::join('bibliotheque', 'jukebox.idBibliotheque', '=', 'bibliotheque.idBibliotheque')->where("idJukebox", "=", Jukebox::getIdByQrcode($_GET["token"]))->first();
             if (isset($catag)) {
                 $nomCatag = $catag->titre;
-            }
+			}
+			//La liste des musiques que l'on peut ajouter a la file depuis le mobile client
             $pistes = Contenu_bibliotheque::join('piste', 'contenu_bibliotheque.idPiste', '=', 'piste.idPiste')->join('a_joué_piste', 'piste.idPiste', '=', 'a_joué_piste.idPiste')
                 ->join('artiste', 'artiste.idArtiste', '=', 'a_joué_piste.idArtiste')->where("idBibliotheque", "=", Jukebox::getIdByQrCode($_GET["token"]))
                 ->where(function ($query) use ($search) {
@@ -59,6 +60,7 @@ class CatalogueController
                 $nomCatag = $catag->titre;
             }
             if (isset($_GET["addCatag"])) {
+				//La liste des musiques que l'on peut ajouter au catalogue depuis le mobile barman
                 $pistes = Piste::wherenotin('a_joué_piste.idPiste', function ($query) {$query->select('idPiste')->from('contenu_bibliotheque')->where('idBibliotheque', '=', Jukebox::getIdByBartender($_GET["bartender"]));})
                     ->join('a_joué_piste', 'piste.idPiste', '=', 'a_joué_piste.idPiste')
                     ->join('artiste', 'artiste.idArtiste', '=', 'a_joué_piste.idArtiste')->where(function ($query) use ($search) {
@@ -66,6 +68,7 @@ class CatalogueController
                         ->orWhere('nomArtiste', 'like', "%$search%");
                 })->skip($page * $size)->take($size)->get();
             } else {
+				//La liste des musiques que l'on a dans le catalogue depuis le mobile barman
                 $pistes = Contenu_bibliotheque::join('piste', 'contenu_bibliotheque.idPiste', '=', 'piste.idPiste')->join('a_joué_piste', 'piste.idPiste', '=', 'a_joué_piste.idPiste')
                     ->join('artiste', 'artiste.idArtiste', '=', 'a_joué_piste.idArtiste')->where("idBibliotheque", "=", Jukebox::getIdByBartender($_GET["bartender"]))
                     ->where(function ($query) use ($search) {
@@ -78,6 +81,7 @@ class CatalogueController
             $pistes = Piste::where('nomPiste', 'like', "%$search%")->skip($page * $size)->take($size)->get();
         }
 
+		//creation du json
         foreach ($pistes as $row) {
             $tabPistes[$compteur]['idPiste'] = $row['idPiste'];
             $tabPistes[$compteur]['nomPiste'] = $row['nomPiste'];
