@@ -35,8 +35,8 @@ class CatalogueController
         $compteurArtiste = 0;
         $compteurAlbum = 0;
         $search = "";
-        $page = "0";
-        $size = "10";
+        $page = 0;
+        $size = 10;
         if (isset($_GET["page"])) {
             $page = $_GET["page"];
         }
@@ -89,6 +89,7 @@ class CatalogueController
             })->groupBy("piste.idPiste");
         }
 
+        $count=$pistes->get()->count();
         $pistes = $pistes->skip($page * $size)->take($size)->get();
 
         //creation du json
@@ -134,7 +135,11 @@ class CatalogueController
             $compteurAlbum = 0;
             $compteur++;
         }
-        $array = ['pistes' => $tabPistes, "nomCatag" => $nomCatag, "size" => $size, "count" => $pistes->count()];
+        $lastpage=floor($count/$size);
+        if(!fmod($count,$size))
+            $lastpage=$lastpage-1;
+        $pagination = ["first"=>0,"act"=>$page,"last"=>$lastpage];
+        $array = ['pistes' => $tabPistes, "nomCatag" => $nomCatag, "size" => $size, "count" => $count,"pagination"=>$pagination];
         $json = ['catalogue' => $array];
 
         echo json_encode($json);
