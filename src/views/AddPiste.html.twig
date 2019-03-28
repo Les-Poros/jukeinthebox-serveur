@@ -4,88 +4,237 @@
 	<head>
 		<meta charset="UTF-8">
 		<link rel="stylesheet" href="{{url}}/web/css/jukeinthebox.css">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 	</head>
 
 	<body>
 		<div class="mainContainer">	
-			 <h1>Ajouter une musique</h1>
-		<div class="buttons">
-                <a href="{{url}}/"><div class="button">Accueil</div></a>
-                <a href="{{url}}/ListCatalogue"><div class="button">Retour à la liste des musiques </div></a>
-        </div>
-				<div class="error">
-				{{error}}
-				</div>
-				<form action='{{url}}/ListCatalogue' method='post' enctype='multipart/form-data'>
-					<div class="itemForm">
-						<label>Groupe</label>
-						<input type="radio" name="personne" value="Groupe" onclick="myFunction()"  required>
-						<label>Artiste</label>
-						<input type="radio" name="personne" value="Artiste" onclick="myFunction()">
-					</div>
-					<div class="itemForm">
-						<label>Titre</label>
-						<input type="text" name="nomPiste" required>
-					</div>
-					
-					<div class="itemForm">
-						<label>Album</label>
-						<input type="text" name="album" required>
+			<h1>Ajouter une musique</h1>
+			<div class="buttons">
+					<a href="{{url}}/"><div class="button">Accueil</div></a>
+					<a href="{{url}}/ListCatalogue"><div class="button">Retour à la liste des musiques </div></a>
+			</div>
+			<div class="error">
+			{{error}}
+			</div>
+			<div class="row">
+				<div class="col-6">
+					<form  action='{{url}}/ListCatalogue' method='post' enctype='multipart/form-data'>
+						<fieldset class="col-12">
+							<legend>Piste associée à un album :</legend>
+							<div class="card">
+									<div class="card-body">
+										<div class="form-group row">
+
+											<div class="itemForm" id="item">
+												<div class="row">
+													<div class="m-auto">
+														<label class="col-form-label" for="groupe">Groupe</label>
+														<input id="groupe" type="radio" name="personne" value="Groupe" onclick="AffichagePrenomArtiste()"  required>
+													</div>
+
+													<div class="m-auto">
+														<label class="col-form-label" for="artiste">Artiste</label>
+														<input  id="artiste" type="radio" name="personne" value="Artiste" onclick="AffichagePrenomArtiste()">
+													</div>
+												</div>
+											</div>
+
+											<div class="itemForm item">
+												<div class="form-group row">
+														<label class="col-4 col-form-label" for="titre">Titre</label>
+														<div class="col-8">
+															<input class="form-control" id="titre" type="text" name="nomPiste" required>
+														</div>
+												</div>
+											</div>
+
+											
+											<div class="itemForm item">
+												<div class="form-group row">
+
+														<label class="col-4 col-form-label" for="album">Album</label>
+
+													<div class="col-8">
+														<input id="album" class="form-control" type="text" name="album" required>
+													</div>
+												</div>
+											</div>
+
+											<div class="itemForm item" >
+												<div class="form-group row">
+													<label class="col-4 col-form-label" for="image_album">Image associée à l'album</label>
+													<div class="col-8">
+														<input id="image_album" type="text" name="imageAlbum">
+													</div>
+												</div>
+											</div>
+											
+											<div class="itemForm item" >
+												<div class="form-group row">
+													<label class="col-4 col-form-label" for="fichier_mp3">Fichier mp3</label>
+													<div class="col-8">
+														<button id="upload_widget" class="cloudinary-button">Upload files</button>
+														<!--<input id="fichier_mp3" type="file" name="filemp3">-->
+													</div>
+												</div>
+											</div>
+
+											<div class="itemForm item" >
+												<div class="form-group row">
+													<label class="col-4 col-form-label" for="genrePiste">Genre de la piste</label>
+													<div class="col-8">
+														<input id="genrePiste" type="text" name="genrePiste" required>
+													</div>	
+												</div>	
+											</div>
+
+											<div class="itemForm item" >
+												<div class="form-group row">
+													<label class="col-4 col-form-label" for="anneeAlbum">Année de l'album</label>
+													<div class="col-8">
+														<input id="anneeAlbum" type="text" name="anneeAlbum">
+													</div>
+												</div>
+											</div>
+
+											<div class="itemForm item" >
+												<div class="form-group row">
+													<label class="col-4 col-form-label" for="nomArtiste">Nom de l'Artiste</label>
+													<div class="col-8">
+														<input id="nomArtiste" type="text" name="nomArtiste" required>
+													</div>
+												</div>
+											</div>
+
+											<div class="itemForm item" id="radio">
+												<div class="form-group row">
+													<label class="col-4 col-form-label" for="prenomArtiste">Prénom de l'Artiste</label>
+													<div class="col-8">
+														<input id="prenomArtiste" type="text" name="prenomArtiste" required>
+													</div>
+												</div>
+											</div>
+
+											<div class="itemForm item">
+												<div class="form-group row">
+													<label class="col-4 col-form-label" for="anneePiste">Année de la piste</label>
+													<div class="col-8">
+														<input id="anneePiste" type="text" name="anneePiste" required>
+													</div>
+												</div>
+											</div>
+
+											<div class="itemForm item">
+												<div class="form-group row">
+													<label class="col-4 col-form-label" for="imagePiste">Image associée à la piste</label>
+													<div class="col-8">
+														<input id="imagePiste" type="text" name="imagePiste">
+													</div>
+												</div>
+											</div>
+
+											<button type="submit" class="m-auto">Ajouter une musique</button>
+										</div>
+									</div>
+								</div>
+							</fieldset>
+						</form>
 					</div>
 
-					<div class="itemForm">
-						<label>Image associée à l'album</label>
-						<input type="text" name="imageAlbum">
-					</div>
+					<div class="col-6">
+					<form action='{{url}}/ListCatalogue' method='post' enctype='multipart/form-data'>
+						<fieldset class="col-12">
+							<legend>Album :</legend>
+								<div class="card">
+									<div class="card-body">
+										<div class="form-group row">
 
-					<div class="itemForm">
-						<label>Fichier mp3</label>
-						<input type="file" name="filemp3"><!--required-->
-					</div>
+											<div class="itemForm item" >
+												<div class="row">
+													<div class="m-auto">
+														<label class="col-form-label" for="groupe">Groupe</label>
+														<input id="groupeAlbum" type="radio" name="personneAlbum" value="Groupe" onclick="myFunction()"  required>
+													</div>
 
-					<div class="itemForm">
-						<label>Genre album</label>
-						<input type="text" name="genre" required>
-					</div>
+													<div class="m-auto">
+														<label class="col-form-label" for="artiste">Artiste</label>
+														<input  id="artisteAlbum" type="radio" name="personneAlbum" value="Artiste" onclick="myFunction()">
+													</div>
+												</div>
+											</div>
 
-					<!--<div class="itemForm">
-						<label>Genre piste</label>
-						<input type="text" name="genrePiste">
-					</div>-->
+											<div class="itemForm item" >
+												<div class="form-group row">
 
-					<div class="itemForm">
-						<label>Année de l'album</label>
-						<input type="text" name="anneeAlbum" required>
-					</div>
+														<label class="col-4 col-form-label" for="album">Album</label>
 
-					<div class="itemForm">
-						<label>Nom de l'Artiste</label>
-						<input type="text" name="nomArtiste" required>
-					</div>
+													<div class="col-8">
+														<input id="titreAlbum" class="form-control" type="text" name="titreAlbum" required>
+													</div>
+												</div>
+											</div>
 
-					<div class="itemForm" id="radio">
-						<label>Prénom de l'Artiste</label>
-						<input type="text" name="prenomArtiste">
-					</div>
+											<div class="itemForm item">
+												<div class="form-group row">
+													<label class="col-4 col-form-label" for="image_album">Image associée à l'album</label>
+													<div class="col-8">
+														<input id="imageAlbum" type="text" name="imageAlbum2">
+													</div>
+												</div>
+											</div>
 
-					<div class="itemForm">
-						<label>Année</label>
-						<input type="text" name="anneePiste" required>
-					</div>
 
-					<div class="itemForm">
-						<label>Image associée à la piste</label>
-						<input type="text" name="imagePiste">
-					</div>
+											<div class="itemForm item" >
+												<div class="form-group row" >
+													<label class="col-4 col-form-label" for="genre_album">Genre de l'album</label>
+													<div class="col-8">
+														<input id="genreAlbum" type="text" name="genreAlbum" required>
+													</div>	
+												</div>	
+											</div>
 
-					<button type="submit">Ajouter une musique</button>
+											<div class="itemForm item">
+												<div class="form-group row">
+													<label class="col-4 col-form-label" for="annee_album">Année de l'album</label>
+													<div class="col-8">
+														<input id="anneeAlbum" type="text" name="anneeAlbum2" required>
+													</div>
+												</div>
+											</div>
+
+											<div class="itemForm item">
+												<div class="form-group row">
+													<label class="col-4 col-form-label" for="nom_artiste">Nom de l'Artiste</label>
+													<div class="col-8">
+														<input id="nomArtisteAlbum" type="text" name="nomArtisteAlbum" required>
+													</div>
+												</div>
+											</div>
+
+											<div class="itemForm item" id="radio">
+												<div class="form-group row">
+													<label class="col-4 col-form-label" for="prenom_artiste">Prénom de l'Artiste</label>
+													<div class="col-8">
+														<input id="prenomArtiste" type="text" name="prenomArtisteAlbum">
+													</div>
+												</div>
+											</div>
+
+										<button type="submit" class="m-auto">Ajouter un album</button>
+								</div>
+							</div>
+						</div>
+					</fieldset>
 				</form>
-
-			
+				</div>
+			</div>	
 		</div>
-		<script>
+	<script src="https://widget.cloudinary.com/v2.0/global/all.js" type="text/javascript"></script>  
+	<script>
 
-		function myFunction(){
+		function AffichagePrenomArtiste()
+		{
 			var radios = document.getElementsByName('personne');
 			var element = document.getElementById('radio');
 
@@ -106,6 +255,76 @@
 			}
 			
 		}
+
+
+		function end_form()
+		{
+			var champ_obligatoire = [ 'titre', 'album', 'genrePiste', 'nomArtiste', 'genre','anneePiste'];
+			var champ_plein = true;
+			for (var h=0; h<6; h++)
+			{
+				valeur = document.getElementById(champ_obligatoire[h]).value;
+				if( (valeur.length == 0) || (valeur == "") || (valeur == "NULL") )
+				{
+					champ_plein = false;
+				}
+			}
+
+			if (champ_plein)
+			{
+				document.getElementById('upload_widget').disabled = false;
+
+			}
+			else
+			{
+				document.getElementById('upload_widget').disabled = true;
+			}
+		}
+
+
+
+		function sucess(uploaded)
+		{
+			if(uploaded == true)
+			{
+
+			}
+		}
+
+
+
+
+
+		var myWidget = cloudinary.createUploadWidget({
+		cloudName: 'lesporos', apiKey: 414295376186362, uploadPreset: 'qqvpmjsb', folder: 'musique', sources: [ 'local']});
+
+
+		document.getElementById("upload_widget").addEventListener("click", function(){
+
+			var champ_obligatoire = [ 'titre', 'album', 'genrePiste', 'nomArtiste', 'genre','anneePiste'];
+			var champ_plein = true;
+			for (var h=0; h<6; h++)
+			{
+				valeur = document.getElementById(champ_obligatoire[h]).value;
+				if( (valeur.length == 0) || (valeur == "") || (valeur == "NULL") )
+				{
+					champ_plein = false;
+				}
+			}
+
+			if (champ_plein)
+			{
+				document.getElementById('upload_widget').disabled = false;
+
+			}
+			else
+			{
+				document.getElementById('upload_widget').disabled = true;
+			}
+			myWidget.open();
+		}, false);
+
+
 
 
 			

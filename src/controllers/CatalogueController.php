@@ -176,46 +176,99 @@ class CatalogueController {
 		if($method == "POST")
 		{
 			
-		//requete
-		if(isset($piste['nomPiste']) && isset($piste['anneePiste']) && isset($piste['genre']) && isset($piste['nomArtiste']) && isset($piste['album'])){
-			
-			
-			try{
-				$nomPiste = filter_var($piste['nomPiste'], FILTER_SANITIZE_STRING);
-				$imagePiste = filter_var($piste['imagePiste'], FILTER_SANITIZE_URL);
-				$anneePiste = filter_var($piste['anneePiste'], FILTER_SANITIZE_NUMBER_INT);
-				$nomArtiste = filter_var($piste['nomArtiste'], FILTER_SANITIZE_STRING);
-				$prenomArtiste = filter_var($piste['prenomArtiste'], FILTER_SANITIZE_STRING);
-				$nomGenre = filter_var($piste['genre'], FILTER_SANITIZE_STRING);
-				$album = filter_var($piste['album'], FILTER_SANITIZE_STRING);
-
-			
-
-				$donneePiste = Piste::query()->firstOrCreate(['nomPiste' => $nomPiste,'imagePiste' => $imagePiste,'annéePiste' => $anneePiste])->save();
-				$artiste = Artiste::query()->firstOrCreate(['nomArtiste' => $nomArtiste, 'prénomArtiste' => $prenomArtiste])->save();
-				$piste = Piste::select('idPiste')->where('nomPiste','like', $nomPiste)->first();
-				$idPiste = $piste->idPiste;
-				$artiste = Artiste::select('idArtiste')->where('nomArtiste','like', $nomArtiste)->first();
-				$idArtiste = $artiste->idArtiste;
+			//requete
+			if(isset($piste['nomPiste']) && isset($piste['anneePiste']) && isset($piste['genre']) && isset($piste['nomArtiste']) && isset($piste['album'])){
 				
-				$AjouePiste = A_joue_piste::query()->firstOrCreate(['idPiste'=>$idPiste,'idArtiste'=>$idArtiste])->save();
-				$donneeGenre = Genre::query()->firstOrCreate(['nomGenre' => $nomGenre])->save();
-				var_dump($donneeGenre);
-				$genre = Genre::select('idGenre')->where('nomGenre','like', $nomGenre)->first();
-				$idGenre = $genre->idGenre;
-				$estDuGenre_Piste = Est_du_genre_piste::query()->firstOrCreate(['idPiste'=>$idPiste, 'idGenre'=>$idGenre]);
+				
+				try{
+					$nomPiste = filter_var($piste['nomPiste'], FILTER_SANITIZE_STRING);
+					$imagePiste = filter_var($piste['imagePiste'], FILTER_SANITIZE_URL);
+					$anneePiste = filter_var($piste['anneePiste'], FILTER_SANITIZE_NUMBER_INT);
+					$nomArtiste = filter_var($piste['nomArtiste'], FILTER_SANITIZE_STRING);
+					$prenomArtiste = filter_var($piste['prenomArtiste'], FILTER_SANITIZE_STRING);
+					$nomGenre = filter_var($piste['genre'], FILTER_SANITIZE_STRING);
+					$album = filter_var($piste['album'], FILTER_SANITIZE_STRING);
 
+				
+
+					$donneePiste = Piste::query()->firstOrCreate(['nomPiste' => $nomPiste,'imagePiste' => $imagePiste,'annéePiste' => $anneePiste])->save();
+					$artiste = Artiste::query()->firstOrCreate(['nomArtiste' => $nomArtiste, 'prénomArtiste' => $prenomArtiste])->save();
+					$piste = Piste::select('idPiste')->where('nomPiste','like', $nomPiste)->first();
+					$idPiste = $piste->idPiste;
+					$artiste = Artiste::select('idArtiste')->where('nomArtiste','like', $nomArtiste)->first();
+					$idArtiste = $artiste->idArtiste;
+					
+					$AjouePiste = A_joue_piste::query()->firstOrCreate(['idPiste'=>$idPiste,'idArtiste'=>$idArtiste])->save();
+					$donneeGenre = Genre::query()->firstOrCreate(['nomGenre' => $nomGenre])->save();
+					var_dump($donneeGenre);
+					$genre = Genre::select('idGenre')->where('nomGenre','like', $nomGenre)->first();
+					$idGenre = $genre->idGenre;
+					$estDuGenre_Piste = Est_du_genre_piste::query()->firstOrCreate(['idPiste'=>$idPiste, 'idGenre'=>$idGenre]);
+
+				}
+				catch(\Exception $e){
+					$error = "La piste n'a pas été ajoutée, vérifiez vos informations.";
+					$url = $request->getUri()->getBasePath();
+					return $this->view->render($response, 'AddPiste.html.twig', [
+						'url' => $url,
+						'error'=> $error
+					]);
+				}
+				
 			}
-			catch(\Exception $e){
-				$error = "La piste n'a pas été ajoutée, vérifiez vos informations.";
-				$url = $request->getUri()->getBasePath();
-				return $this->view->render($response, 'AddPiste.html.twig', [
-					'url' => $url,
-					'error'=> $error
-				]);
-			}
+
 			
+
+
 		}
+
+
+
+		if($method == "POST")
+		{
+			
+			//requete
+			if(isset($piste['titreAlbum']) && isset($piste['anneePiste']) && isset($piste['genre']) && isset($piste['nomArtiste']) && isset($piste['album'])){
+				
+				
+				try{
+					$titreAlbum = filter_var($piste['titreAlbum'], FILTER_SANITIZE_STRING);
+					$imageAlbum = filter_var($piste['imageAlbum2'], FILTER_SANITIZE_URL);
+					$anneeAlbum = filter_var($piste['anneeAlbum2'], FILTER_SANITIZE_NUMBER_INT);
+					$nomArtisteAlbum = filter_var($piste['nomArtisteAlbum'], FILTER_SANITIZE_STRING);
+					$prenomArtisteAlbum = filter_var($piste['prenomArtistAlbum'], FILTER_SANITIZE_STRING);
+					$nomGenreAlbum = filter_var($piste['genreAlbum'], FILTER_SANITIZE_STRING);
+					
+
+				
+
+					$donneeAlbum = Album::query()->firstOrCreate(['nomAlbum' => $titreAlbum,'imageAlbum2' => $imageAlbum,'annéeAlbum' => $anneeAlbum])->save();
+					$artiste = Artiste::query()->firstOrCreate(['nomArtiste' => $nomArtisteAlbum, 'prénomArtiste' =>$prenomArtisteAlbum])->save();
+					$album = Album::select('idPiste')->where('nomPiste','like', $nomPiste)->first();
+					$idAlbum = $piste->idAlbum;
+					$artiste = Artiste::select('idArtiste')->where('nomArtiste','like', $nomArtiste)->first();
+					$idArtiste = $artiste->idArtiste;
+					
+					$AjouePiste = A_joue_piste::query()->firstOrCreate(['idPiste'=>$idPiste,'idArtiste'=>$idArtiste])->save();
+					$donneeGenre = Genre::query()->firstOrCreate(['nomGenre' => $nomGenre])->save();
+					var_dump($donneeGenre);
+					$genre = Genre::select('idGenre')->where('nomGenre','like', $nomGenre)->first();
+					$idGenre = $genre->idGenre;
+					$estDuGenre_Piste = Est_du_genre_piste::query()->firstOrCreate(['idPiste'=>$idPiste, 'idGenre'=>$idGenre]);
+
+				}
+				catch(\Exception $e){
+					$error = "La piste n'a pas été ajoutée, vérifiez vos informations.";
+					$url = $request->getUri()->getBasePath();
+					return $this->view->render($response, 'AddPiste.html.twig', [
+						'url' => $url,
+						'error'=> $error
+					]);
+				}
+				
+			}
+
+			
 
 
 		}
