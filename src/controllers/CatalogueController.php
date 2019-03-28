@@ -87,11 +87,12 @@ class CatalogueController
             })->groupBy("piste.idPiste");
         }
 
-        $count = $pistes->get()->count();
+        $totalCount = $pistes->get()->count();
         $pistes = $pistes->skip($page * $size)->take($size)->get();
-//creation pagination
-        $lastpage = floor($count / $size);
-        if (!fmod($count, $size)) {
+        $count=$pistes->count();
+        //creation pagination
+        $lastpage = floor($totalCount / $size);
+        if (!fmod($totalCount, $size)) {
             $lastpage = $lastpage - 1;
         }
 
@@ -108,7 +109,7 @@ class CatalogueController
         //création json
         $tabPistes = $this->createJsonCatag($pistes);
         $pagination = ["first" => 0, "prev" => $prev, "act" => $page, "next" => $next, "last" => $lastpage];
-        $array = ['pistes' => $tabPistes, "nomCatag" => $nomCatag, "size" => $size, "count" => $count, "pagination" => $pagination];
+        $array = ['pistes' => $tabPistes, "nomCatag" => $nomCatag, "size" => (int)$size, "count" => $count,"total"=>$totalCount, "pagination" => $pagination];
         $json = ['catalogue' => $array];
 
         echo json_encode($json);
