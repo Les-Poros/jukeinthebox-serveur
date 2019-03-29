@@ -29,6 +29,7 @@ a {
   width: 30%;
   text-decoration: none;
 }
+
 a:hover {
   text-decoration: none;
 }
@@ -67,6 +68,7 @@ button[type=submit] {
   border-radius: 4px;
   cursor: pointer;
 }
+
 button[type=submit]:hover {
   background-color: darkgray;
 }
@@ -86,17 +88,46 @@ form {
 .itemForm {
   width: 100%;
 }
-.item{
+
+.item {
   padding-left: 5%;
 }
-.personne{
+
+.personne {
   display: none;
 }
-.error{
+
+.error {
   color: red;
   margin-top: 2%;
-  margin-left:5%;
+  margin-left: 5%;
 }
+
+.separateur {
+  overflow: hidden;
+  text-align: center;
+}
+
+.separateur:before, .separateur:after {
+  background-color: #333;
+  content: "";
+  display: inline-block;
+  height: 1px;
+  position: relative;
+  vertical-align: middle;
+  width: 50%;
+}
+
+.separateur:before {
+  right: 0.5em;
+  margin-left: -50%;
+}
+
+.separateur:after {
+  left: 0.5em;
+  margin-right: -50%;
+}
+
 /*
 fieldset
 {
@@ -106,6 +137,5 @@ fieldset
   margin-right:50%;
 }
 */
-
 
 /*# sourceMappingURL=jukeinthebox.css.map */

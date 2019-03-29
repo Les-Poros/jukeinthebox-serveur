@@ -19,7 +19,7 @@
 
                 <table class="table table-hover">
 					<tr>
-						<th scope="col">&nbsp;</th>
+						
 						<th scope="col">Titre</th>
 						<th scope="col">Artiste</th>
 						<th scope="col">Album</th>
@@ -27,6 +27,15 @@
 						<th scope="col">Année</th>
 						
 					</tr>
+					 {% for j in tableauPistes %}
+                        <tr>
+					        <td>{{j['titre']}}</td>
+					 		<td>{{j['artistes']|join(', ')}}</td>
+                            <td>{{j['album']}}</td>
+                            <td>{{j['genres']|join(', ')}}</td>
+                        	<td>{{j['annee']}}</td>
+				        </tr>	
+                    {% endfor %} 
                 </table>
         </div>
 	</body>
