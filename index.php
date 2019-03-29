@@ -82,13 +82,26 @@ $app->get('/validateJukebox', function($request, $response, $args){
 		'Content-Type',
 		'application/json'
 	);
+})->setName('validateJukebox');
+
+$app->get('/getJukebox', function($request, $response, $args){
+	$controller = $this['JukeboxController'];
+	$controller->getJukebox($request, $response, $args);
+	return $response->withHeader(
+		'Content-Type',
+		'application/json'
+	);
 })->setName('getJukebox');
 
-$app->post('/next', 'FileController:nextFile')->setName('next');
+$app->delete('/next', 'FileController:nextFile')->setName('next');
+
+$app->post('/next', 'JukeboxController:nextJuke')->setName('next');
 
 $app->post('/play', 'JukeboxController:play')->setName('play');
 
 $app->post('/pause', 'JukeboxController:pause')->setName('pause');
+
+$app->post('/repeat', 'JukeboxController:repeat')->setName('repeat');
 
 $app->get('/catalogue', function($request, $response, $args){
 	$controller = $this['CatalogueController'];

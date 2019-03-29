@@ -55,6 +55,16 @@ class JukeboxController {
 			echo json_encode( ['validate' => true]);
 	}
 
+	public function getJukebox($request, $response, $args) {
+	
+		if(isset($_GET["token"]))
+			$jukebox = Jukebox::where('idJukebox', '=', Jukebox::getIdByQrcode($_GET["token"]))->first();
+		else if(isset($_GET["bartender"]))
+			$jukebox = Jukebox::where('idJukebox', '=', Jukebox::getIdByBartender($_GET["bartender"]))->first();
+		else $jukebox=null;
+		echo json_encode($jukebox->action);
+	}
+
 			/**
 	 * Method that change action to play
 	 * @param request
@@ -93,6 +103,45 @@ class JukeboxController {
 				$jukebox->save();
 
 			}
+	}
+
+	/**
+		 * Method that change action to repeat
+		 * @param request
+		 * @param response
+		 * @param args
+		 */
+		public function repeat($request, $response, $args) {
+			if(isset($_POST["token"])){
+				$jukebox = Jukebox::where('idJukebox', '=', Jukebox::getIdByQrcode($_GET["token"]))->first();
+				$jukebox->action = "repeat";
+				$jukebox->save();
+			}
+			else{
+				$jukebox = Jukebox::where('idJukebox', '=', Jukebox::getIdByBartender($_GET["bartender"]))->first();
+				$jukebox->action = "repeat";
+				$jukebox->save();
+
+			}
+		}
+
+	/**
+	 * Method that displays that delete a music to the file
+	 * @param request
+	 * @param response
+	 * @param args
+	 */
+	public function nextJuke($request, $response, $args) {
+		if(isset($_POST["token"])){
+			$jukebox = Jukebox::where('idJukebox', '=', Jukebox::getIdByQrcode($_GET["token"]))->first();
+			$jukebox->action = "next";
+			$jukebox->save();
+		}
+		else{
+			$jukebox = Jukebox::where('idJukebox', '=', Jukebox::getIdByBartender($_GET["bartender"]))->first();
+			$jukebox->action = "next";
+			$jukebox->save();
+		}
 	}
 	
 }
