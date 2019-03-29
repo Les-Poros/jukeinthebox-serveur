@@ -123,36 +123,21 @@ class FileController {
 	 * @param args
 	 */
 	public function nextFile($request, $response, $args) {
-			if(isset($_POST["token"]))
-			File::where('idJukebox', '=', Jukebox::getIdByQrcode($_GET["token"]))->first()->delete();
-			else
-			File::where('idJukebox', '=', Jukebox::getIdByBartender($_GET["bartender"]))->first()->delete();
+			if(isset($_POST["token"])){
+				//File::where('idJukebox', '=', Jukebox::getIdByQrcode($_GET["token"]))->first()->delete();
+				$jukebox = Jukebox::where('idJukebox', '=', Jukebox::getIdByQrcode($_GET["token"]))->first();
+				$jukebox->action = "next";
+				$jukebox->save();
+			}
+			else{
+				//File::where('idJukebox', '=', Jukebox::getIdByBartender($_GET["bartender"]))->first()->delete();
+				$jukebox = Jukebox::where('idJukebox', '=', Jukebox::getIdByBartender($_GET["bartender"]))->first();
+				$jukebox->action = "next";
+				$jukebox->save();
+			}
+			
 	}
 
-		/**
-	 * Method that displays that delete a music to the file
-	 * @param request
-	 * @param response
-	 * @param args
-	 */
-	public function play($request, $response, $args) {
-		if(isset($_POST["token"]))
-		
-		else
-		
-}
 
-	/**
-	 * Method that displays that delete a music to the file
-	 * @param request
-	 * @param response
-	 * @param args
-	 */
-	public function pause($request, $response, $args) {
-		if(isset($_POST["token"]))
-		
-		else
-		
-}
 
 }

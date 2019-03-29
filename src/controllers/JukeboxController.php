@@ -54,5 +54,45 @@ class JukeboxController {
 		else
 			echo json_encode( ['validate' => true]);
 	}
+
+			/**
+	 * Method that change action to play
+	 * @param request
+	 * @param response
+	 * @param args
+	 */
+	public function play($request, $response, $args) {
+		if(isset($_POST["token"])){
+			$jukebox = Jukebox::where('idJukebox', '=', Jukebox::getIdByQrcode($_GET["token"]))->first();
+			$jukebox->action = "play";
+			$jukebox->save();
+		}
+		else{
+			$jukebox = Jukebox::where('idJukebox', '=', Jukebox::getIdByBartender($_GET["bartender"]))->first();
+			$jukebox->action = "play";
+			$jukebox->save();
+		}
+		
+	}
+
+		/**
+		 * Method that change action to pause
+		 * @param request
+		 * @param response
+		 * @param args
+		 */
+		public function pause($request, $response, $args) {
+			if(isset($_POST["token"])){
+				$jukebox = Jukebox::where('idJukebox', '=', Jukebox::getIdByQrcode($_GET["token"]))->first();
+				$jukebox->action = "pause";
+				$jukebox->save();
+			}
+			else{
+				$jukebox = Jukebox::where('idJukebox', '=', Jukebox::getIdByBartender($_GET["bartender"]))->first();
+				$jukebox->action = "pause";
+				$jukebox->save();
+
+			}
+	}
 	
 }

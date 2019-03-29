@@ -84,11 +84,11 @@ $app->get('/validateJukebox', function($request, $response, $args){
 	);
 })->setName('getJukebox');
 
-$app->delete('/next', 'FileController:nextFile')->setName('next');
+$app->post('/next', 'FileController:nextFile')->setName('next');
 
-$app->post('/play', 'FileController:play')->setName('play');
+$app->post('/play', 'JukeboxController:play')->setName('play');
 
-$app->post('/pause', 'FileController:pause')->setName('pause');
+$app->post('/pause', 'JukeboxController:pause')->setName('pause');
 
 $app->get('/catalogue', function($request, $response, $args){
 	$controller = $this['CatalogueController'];
