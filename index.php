@@ -84,9 +84,9 @@ $app->get('/validateJukebox', function($request, $response, $args){
 	);
 })->setName('validateJukebox');
 
-$app->get('/getJukebox', function($request, $response, $args){
+$app->get('/getJukeboxAction', function($request, $response, $args){
 	$controller = $this['JukeboxController'];
-	$controller->getJukebox($request, $response, $args);
+	$controller->getJukeboxAction($request, $response, $args);
 	return $response->withHeader(
 		'Content-Type',
 		'application/json'

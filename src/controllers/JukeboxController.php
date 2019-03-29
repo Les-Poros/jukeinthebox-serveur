@@ -55,7 +55,7 @@ class JukeboxController {
 			echo json_encode( ['validate' => true]);
 	}
 
-	public function getJukebox($request, $response, $args) {
+	public function getJukeboxAction($request, $response, $args) {
 	
 		if(isset($_GET["token"]))
 			$jukebox = Jukebox::where('idJukebox', '=', Jukebox::getIdByQrcode($_GET["token"]))->first();
