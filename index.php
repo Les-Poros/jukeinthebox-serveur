@@ -84,7 +84,7 @@ $app->get('/validateJukebox', function($request, $response, $args){
 	);
 })->setName('getJukebox');
 
-$app->post('/next', 'FileController:nextFile')->setName('next');
+$app->delete('/next', 'FileController:nextFile')->setName('next');
 
 $app->post('/play', 'FileController:play')->setName('play');
 
