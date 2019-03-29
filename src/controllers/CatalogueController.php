@@ -92,7 +92,7 @@ class CatalogueController
         $count=$pistes->count();
         //creation pagination
         $lastpage = floor($totalCount / $size);
-        if (!fmod($totalCount, $size)) {
+        if (!fmod($totalCount, $size) && $totalCount!=0) {
             $lastpage = $lastpage - 1;
         }
 
