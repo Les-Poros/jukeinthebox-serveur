@@ -129,4 +129,30 @@ class FileController {
 			File::where('idJukebox', '=', Jukebox::getIdByBartender($_GET["bartender"]))->first()->delete();
 	}
 
+		/**
+	 * Method that displays that delete a music to the file
+	 * @param request
+	 * @param response
+	 * @param args
+	 */
+	public function play($request, $response, $args) {
+		if(isset($_POST["token"]))
+		
+		else
+		
+}
+
+	/**
+	 * Method that displays that delete a music to the file
+	 * @param request
+	 * @param response
+	 * @param args
+	 */
+	public function pause($request, $response, $args) {
+		if(isset($_POST["token"]))
+		
+		else
+		
+}
+
 }
