@@ -9,6 +9,7 @@ use jukeinthebox\models\Contenu_bibliotheque;
 use jukeinthebox\models\Est_du_genre_album;
 use jukeinthebox\models\Est_du_genre_piste;
 use jukeinthebox\models\Jukebox;
+use jukeinthebox\models\Bibliotheque;
 use jukeinthebox\models\Piste;
 
 /**
@@ -29,6 +30,7 @@ class CatalogueController
         $page = 0;
         $size = 10;
         $nomCatag = "Global";
+        $predef=1;
 
         //page de pagination
         if (isset($_GET["page"])) {
@@ -44,37 +46,49 @@ class CatalogueController
         }
         //requete venant du client
         if (isset($_GET["token"])) {
-            $catag = Jukebox::join('bibliotheque', 'jukebox.idBibliotheque', '=', 'bibliotheque.idBibliotheque')->where("idJukebox", "=", Jukebox::getIdByQrcode($_GET["token"]))->first();
+            $catag = Bibliotheque::where("idBibliotheque", "=", Jukebox::getBibliActByQrcode($_GET["token"]))->first();
             if (isset($catag)) {
                 $nomCatag = $catag->titre;
+                $predef=$catag->predef;
             }
             //La liste des musiques que l'on peut ajouter a la file depuis le mobile client
             $pistes = Contenu_bibliotheque::join('piste', 'contenu_bibliotheque.idPiste', '=', 'piste.idPiste')->join('a_joué_piste', 'piste.idPiste', '=', 'a_joué_piste.idPiste')
-                ->join('artiste', 'artiste.idArtiste', '=', 'a_joué_piste.idArtiste')->where("idBibliotheque", "=", Jukebox::getIdByQrCode($_GET["token"]));
+                ->join('artiste', 'artiste.idArtiste', '=', 'a_joué_piste.idArtiste')->where("idBibliotheque", "=", Jukebox::getBibliActByQrcode($_GET["token"]));
         } else
         //requete venant du barman
         if (isset($_GET["bartender"])) {
-            $catag = Jukebox::join('bibliotheque', 'jukebox.idBibliotheque', '=', 'bibliotheque.idBibliotheque')->where("idJukebox", "=", Jukebox::getIdByBartender($_GET["bartender"]))->first();
+            $catag = Bibliotheque::where("idBibliotheque", "=", Jukebox::getBibliActByBartender($_GET["bartender"]))->first(); 
             if (isset($catag)) {
                 $nomCatag = $catag->titre;
+                $predef=$catag->predef;
             }
             if (isset($_GET["addCatag"])) {
+                if($predef)
+                {
+                    $array = ['pistes' => [], "nomCatag" => $nomCatag,'predef'=>$predef,"pagination" => []];
+                    $json = ['catalogue' => $array];
+                    echo json_encode($json);
+                    exit;
+                }
+                else
                 //La liste des musiques que l'on peut ajouter au catalogue depuis le mobile barman
-                $pistes = Piste::wherenotin('a_joué_piste.idPiste', function ($query) {$query->select('idPiste')->from('contenu_bibliotheque')->where('idBibliotheque', '=', Jukebox::getIdByBartender($_GET["bartender"]));})
+                $pistes = Piste::wherenotin('a_joué_piste.idPiste', function ($query) {$query->select('idPiste')->from('contenu_bibliotheque')->where('idBibliotheque', '=', Jukebox::getBibliActByBartender($_GET["bartender"]));})
                     ->join('a_joué_piste', 'piste.idPiste', '=', 'a_joué_piste.idPiste')
                     ->join('artiste', 'artiste.idArtiste', '=', 'a_joué_piste.idArtiste');
 
             } else {
                 //La liste des musiques que l'on a dans le catalogue depuis le mobile barman
                 $pistes = Contenu_bibliotheque::join('piste', 'contenu_bibliotheque.idPiste', '=', 'piste.idPiste')->join('a_joué_piste', 'piste.idPiste', '=', 'a_joué_piste.idPiste')
-                    ->join('artiste', 'artiste.idArtiste', '=', 'a_joué_piste.idArtiste')->where("idBibliotheque", "=", Jukebox::getIdByBartender($_GET["bartender"]));
+                    ->join('artiste', 'artiste.idArtiste', '=', 'a_joué_piste.idArtiste')->where("idBibliotheque", "=", Jukebox::getBibliActByBartender($_GET["bartender"]));
             }
-            //sinon catalogue complet
-        } else {
-            $pistes = Piste::all()->get();
         }
-        //si recherche par artiste ET titre
-        if (strpos($search, "-")) {
+     
+
+        if(!isset($pistes))
+            $pistes = Piste::where('nomPiste', 'like', "%$search%");
+        else
+           //si recherche par artiste ET titre
+           if (strpos($search, "-")) {
             $search = explode("-", $search);
             $pistes = $pistes->where(function ($query) use ($search) {
                 $query->where('nomPiste', 'like', "%$search[1]%")
@@ -87,9 +101,20 @@ class CatalogueController
             })->groupBy("piste.idPiste");
         }
 
-        $totalCount = $pistes->get()->count();
-        $pistes = $pistes->skip($page * $size)->take($size)->get();
-        $count=$pistes->count();
+        //création json
+        $pagination = $this->pagination($pistes,$page,$size);
+        $tabPistes = $this->createJsonCatag($pistes->skip($page * $size)->take($size)->get());
+        $array = ['pistes' => $tabPistes, "nomCatag" => $nomCatag,'predef'=>$predef,"pagination" => $pagination];
+        $json = ['catalogue' => $array];
+
+        echo json_encode($json);
+    }
+
+    public function pagination($items,$page,$size){
+        $totalCount = $items->get()->count();
+        $items = $items->skip($page * $size)->take($size)->get();
+        $count=$items->count();
+       
         //creation pagination
         $lastpage = floor($totalCount / $size);
         if (!fmod($totalCount, $size) && $totalCount!=0) {
@@ -105,14 +130,7 @@ class CatalogueController
         if ($next > $lastpage) {
             $next = $lastpage;
         }
-
-        //création json
-        $tabPistes = $this->createJsonCatag($pistes);
-        $pagination = ["first" => 0, "prev" => $prev, "act" => $page, "next" => $next, "last" => $lastpage];
-        $array = ['pistes' => $tabPistes, "nomCatag" => $nomCatag, "size" => (int)$size, "count" => $count,"total"=>$totalCount, "pagination" => $pagination];
-        $json = ['catalogue' => $array];
-
-        echo json_encode($json);
+        return ["first" => 0, "prev" => $prev, "act" => $page, "next" => $next, "last" => $lastpage , "size" => (int)$size, "count" => $count,"total"=>$totalCount];
     }
 
     public function createJsonCatag($pistes)
@@ -166,6 +184,34 @@ class CatalogueController
           
         }  return $tabPistes;
     }
+
+    public function displayCatalogueChoice($request, $response, $args)
+    {
+        $search = "";
+        $page = 0;
+        $size = 10;
+
+        //page de pagination
+        if (isset($_GET["page"])) {
+            $page = $_GET["page"];
+        }
+        //taille de pagination
+        if (isset($_GET["size"])) {
+            $size = $_GET["size"];
+        }
+        //mot de recherche
+        if (isset($_GET["piste"])) {
+            $search = $_GET["piste"];
+        }
+        $catag=Bibliotheque::where("idBibliotheque", "=", Jukebox::getBibliByBartender($_GET["bartender"]))->orWhere("predef","=",1)->where('titre', 'like', "%$search%"); 
+    
+        //création json
+        $pagination = $this->pagination($catag,$page,$size);
+        $array = ['catags' => $catag->skip($page * $size)->take($size)->get()->toArray(),"pagination" => $pagination];
+        $json = ['catalogue' => $array];
+
+        echo json_encode($json);
+    }
     /**
      * Method that displays that add a music to the bibliotheque
      * @param request
@@ -198,4 +244,5 @@ class CatalogueController
         Contenu_bibliotheque::where('idPiste', '=', $_POST['id'])->first()->delete();
 
     }
+
 }

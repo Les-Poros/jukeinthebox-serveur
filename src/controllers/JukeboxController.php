@@ -144,4 +144,16 @@ class JukeboxController {
 		}
 	}
 	
+
+	public function selectCatag($request, $response, $args)
+	{
+	
+			//On récupère la bibliothèque du JukeBox
+			$jukebox = Jukebox::where("idJukebox", "=", Jukebox::getIdByBartender($_POST["bartender"]))->first();
+
+			$jukebox->bibliAct = $_POST['id'];
+
+			$jukebox->save();
+	}
+
 }

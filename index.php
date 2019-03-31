@@ -103,6 +103,8 @@ $app->post('/pause', 'JukeboxController:pause')->setName('pause');
 
 $app->post('/repeat', 'JukeboxController:repeat')->setName('repeat');
 
+$app->post('/selectCatag', 'JukeboxController:selectCatag')->setName('repeat');
+
 $app->get('/catalogue', function($request, $response, $args){
 	$controller = $this['CatalogueController'];
 	$displayCatalogue = $controller->displayCatalogue($request, $response, $args);
@@ -111,6 +113,15 @@ $app->get('/catalogue', function($request, $response, $args){
 		'application/json'
 	);
 })->setName('Catalogue');
+
+$app->get('/catalogueChoice', function($request, $response, $args){
+	$controller = $this['CatalogueController'];
+	$displayCatalogue = $controller->displayCatalogueChoice($request, $response, $args);
+	return $response->withHeader(
+		'Content-Type',
+		'application/json'
+	);
+})->setName('CatalogueChoice');
 
 $app->map(['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], '/{routes:.+}', function($req, $res) {
     $handler = $this->notFoundHandler; // handle using the default Slim page not found handler

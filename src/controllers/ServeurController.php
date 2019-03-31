@@ -54,8 +54,11 @@ class ServeurController {
 			$adresseClient=$_POST['adresseClient'];
 			$jukebox = new Jukebox();
 			$bibliothque = new Bibliotheque();
+			$bibliothque->titre="Catalogue perso";
+			$bibliothque->predef=0;
 			$bibliothque->save();
 			$jukebox->idBibliotheque = $bibliothque->idBibliotheque;
+			$jukebox->bibliAct = $bibliothque->idBibliotheque;
 			$token = md5(time() . mt_rand());
 			$jukebox->qr_code='';
 			$jukebox->tokenActivation = $token;
