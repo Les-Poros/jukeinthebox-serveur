@@ -93,10 +93,6 @@ form {
   padding-left: 5%;
 }
 
-.personne {
-  display: none;
-}
-
 .error {
   color: red;
   margin-top: 2%;

@@ -10,6 +10,7 @@ class A_joue_album extends \Illuminate\Database\Eloquent\Model {
     protected $table = 'a_joué_album';
     protected $primaryKey = 'idAJoueAlbum';
     public $timestamps = false;
+    protected $fillable = ['idAlbum', 'idArtiste'];
 
     public function album() {
         return $this->belongsTo('jukeinthebox\models\Album', 'idAlbum');

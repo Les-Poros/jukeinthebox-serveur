@@ -12,6 +12,7 @@ use jukeinthebox\models\Genre;
 use jukeinthebox\models\Est_du_genre_album;
 use jukeinthebox\models\A_joue_album;
 use jukeinthebox\models\Contenu_bibliotheque;
+use jukeinthebox\models\Fait_partie;
 use jukeinthebox\models\Bibliotheque;
 use \Slim\Views\Twig as twig;
 use jukeinthebox\views\Home;
@@ -52,6 +53,7 @@ class CatalogueController {
 		$compteurAlbum = 0;
 		$search = "";
 		$nomCatag="Global";
+
 		if (isset($_GET["piste"])) {
 			$search = $_GET["piste"];
 		}
@@ -158,47 +160,37 @@ class CatalogueController {
 	 * @param args
 	 */
 	public function listCatalogue($request, $response, $args) {	
-		
-		/*$AjouePiste = A_joue_piste::join('piste','a_joué_piste.idPiste','piste.idPiste')
-		->join('artiste','a_joué_piste.idArtiste','artiste.idArtiste')
-		->get();
-
-		$EstDuGenrePiste = Est_du_genre_piste::join('piste','est_du_genre_piste.idPiste','piste.idPiste')
-		->join('genre', 'est_du_genre_piste.idGenre','genre.idGenre' )
-		->get();*/
-
-		//var_dump($AjouePiste);
-		//$AjouePiste = $AjouePiste->A_joue_piste->getOriginal();
-		/*foreach ($AjouePiste as $key => $value) {
-			var_dump($value->getOriginal());
-		}*/
-		
-		$pistes = Piste::all();
 		$tableauPistes = [];
-		foreach ($pistes as $piste) {
+		foreach (Piste::all() as $piste) {
 			// Gestion des genres
 			$genres = [];
 			$genresQuerry = Piste::join('est_du_genre_piste','piste.idPiste','est_du_genre_piste.idPiste')
-			->join('genre', 'est_du_genre_piste.idGenre','genre.idGenre' )
-			->where('piste.idPiste','=', $piste->getOriginal()['idPiste'])
-			->get();
+				->join('genre', 'est_du_genre_piste.idGenre','genre.idGenre' )
+				->where('piste.idPiste','=', $piste->getOriginal()['idPiste'])
+				->get();
 			foreach ($genresQuerry as $value) array_push($genres, $value->getOriginal()['nomGenre']);
 
 			// Gestion des artistes
 			$artistes = [];
 			$artistesQuerry = Piste::join('a_joué_piste','piste.idPiste','a_joué_piste.idPiste')
-			->join('artiste', 'a_joué_piste.idArtiste','artiste.idArtiste' )
-			->where('piste.idPiste','=', $piste->getOriginal()['idPiste'])
-			->get();
+				->join('artiste', 'a_joué_piste.idArtiste','artiste.idArtiste' )
+				->where('piste.idPiste','=', $piste->getOriginal()['idPiste'])
+				->get();
 			foreach ($artistesQuerry as $value) array_push($artistes, $value->getOriginal()['nomArtiste']);
 
 			// Gestion de l'album
+			
+			$albums = [];
 			$albumQuerry = Piste::join('fait_partie','piste.idPiste','fait_partie.idPiste')
-			->join('album', 'fait_partie.idAlbum','album.idAlbum' )
-			->where('piste.idPiste','=', $piste->getOriginal()['idPiste'])
-			->get();
+				->join('album', 'fait_partie.idAlbum','album.idAlbum' )
+				->where('piste.idPiste','=', $piste->getOriginal()['idPiste'])
+				->get();
+			foreach ($albumQuerry as $value)
+			{
+				array_push($albums, $value->getOriginal()['nomAlbum']);
 
-			//var_dump($albumQuerry->first()->getAttributes('nomAlbum'));
+			} 
+				
 
 
 			array_push($tableauPistes, [
@@ -209,54 +201,75 @@ class CatalogueController {
 				'album' => $albumQuerry->first() ? $albumQuerry->first()->getAttributes()['nomAlbum'] : null
 			]);
 		}
+
 		$url = $request->getUri()->getBasePath();
 		$method = $request->getMethod();
 		$nomPiste ='';
 		$imagePiste ='';
 		$anneePiste ='';
 		$group = false;
-		$nomArtiste ='';//Groupe ou personne ?
+		$nomArtiste = '';//Groupe ou personne ?
+		$nomArtistes = [];
+		$prenomArtiste = '';
+		$prenomArtistes = [];
+		$anneeAlbum = '';
 		$genre ='';
-		$album = '';
+		$nomAlbum = '';
 		$imageAlbum ='';
 
 		$piste = $request->getParams();
+		if(isset($piste['nbArtistes'])) $nbArtistes = $piste['nbArtistes'];
 
-		
+		// Ne fonctionne pas sur un groupe
 		if($method == "POST")
 		{
-			
-			//requete
-			
-			if(isset($piste['nomPiste']) && isset($piste['anneePiste']) && isset($piste['genrePiste']) && isset($piste['nomArtiste'] ) && isset($piste['album'])){
+			$champsRequis = ['nomPiste', 'anneePiste', 'genrePiste', 'nomAlbum'];
+			for($i = 1; $i <= $nbArtistes; $i++) array_push($champsRequis, 'nomArtiste'.$i);
+			$areAllFieldsOK = true;
+
+
+			foreach($champsRequis as $champs) $areAllFieldsOK &= isset($piste[$champs]);
+			if($areAllFieldsOK){
+
 				try{
 					$nomPiste = filter_var($piste['nomPiste'], FILTER_SANITIZE_STRING);
 					$imagePiste = filter_var($piste['imagePiste'], FILTER_SANITIZE_URL);
-					$imageAlbum = filter_var($piste['imageAlbum'], FILTER_SANITIZE_URL);
 					$anneePiste = filter_var($piste['anneePiste'], FILTER_SANITIZE_NUMBER_INT);
+					$imageAlbum = filter_var($piste['imageAlbum'], FILTER_SANITIZE_URL);
+
+					for($i = 1; $i <= $nbArtistes; $i++) {
+						array_push($nomArtistes, filter_var($piste['nomArtiste'.$i], FILTER_SANITIZE_STRING));
+						array_push($prenomArtistes, filter_var($piste['prenomArtiste'.$i], FILTER_SANITIZE_STRING));
+					}
+
 					$anneeAlbum = filter_var($piste['anneeAlbum'],FILTER_SANITIZE_NUMBER_INT);
-					$nomArtiste = filter_var($piste['nomArtiste'], FILTER_SANITIZE_STRING);
-					$prenomArtiste = filter_var($piste['prenomArtiste'], FILTER_SANITIZE_STRING);
 					$nomGenre = filter_var($piste['genrePiste'], FILTER_SANITIZE_STRING);
-					$album = filter_var($piste['album'], FILTER_SANITIZE_STRING);
+					$nomAlbum = filter_var($piste['nomAlbum'], FILTER_SANITIZE_STRING);
 
-				
 
-					$donneePiste = Piste::query()->firstOrCreate(['nomPiste' => $nomPiste,'imagePiste' => $imagePiste,'annéePiste' => $anneePiste])->save();
-					$artiste = Artiste::query()->firstOrCreate(['nomArtiste' => $nomArtiste, 'prénomArtiste' => $prenomArtiste])->save();
-					$piste = Piste::select('idPiste')->where('nomPiste','like', $nomPiste)->first();
-					$idPiste = $piste->idPiste;
-					$artiste = Artiste::select('idArtiste')->where('nomArtiste','like', $nomArtiste)->first();
-					$idArtiste = $artiste->idArtiste;
+					Piste::query()->firstOrCreate(['nomPiste' => $nomPiste,'imagePiste' => $imagePiste,'annéePiste' => $anneePiste])->save();
+
+					$piste = Piste::select('idPiste')->where('nomPiste','like',  $nomPiste)->first();
+
+					for($i = 0 ; $i < $nbArtistes; $i++) {
+						Artiste::query()->firstOrCreate(['nomArtiste' => $nomArtistes[$i], 'prénomArtiste' => $prenomArtistes[$i]])->save();
+						$artiste = Artiste::select('idArtiste')->where('nomArtiste','like',  $nomArtistes[$i])->first();
+						A_joue_piste::query()->firstOrCreate(['idPiste'=>$piste->idPiste,'idArtiste'=> $artiste->idArtiste])->save();
+					}
 					
-					$AjouePiste = A_joue_piste::query()->firstOrCreate(['idPiste'=>$idPiste,'idArtiste'=>$idArtiste])->save();
-					$donneeGenre = Genre::query()->firstOrCreate(['nomGenre' => $nomGenre])->save();
+					Genre::query()->firstOrCreate(['nomGenre' => $nomGenre])->save();
 					$genre = Genre::select('idGenre')->where('nomGenre','like', $nomGenre)->first();
-					$idGenre = $genre->idGenre;
-					$estDuGenre_Piste = Est_du_genre_piste::query()->firstOrCreate(['idPiste'=>$idPiste, 'idGenre'=>$idGenre]);
+					Est_du_genre_piste::query()->firstOrCreate(['idPiste'=> $piste->idPiste, 'idGenre'=> $genre->idGenre])->save();
+					Album::query()->firstOrCreate(['nomAlbum' => $nomAlbum, 'imageAlbum' => $imageAlbum, 'annéeAlbum' => $anneeAlbum])->save();
+					
+					$album = Album::select('idAlbum')->where('nomAlbum','like',$nomAlbum)->first();
+					Fait_partie::query()->firstOrCreate(['idPiste'=> $piste->idPiste,'idAlbum'=>$album->idAlbum])->save();
+					A_joue_album::query()->firstOrCreate(['idAlbum' => $album->idAlbum, 'idArtiste'=>$artiste->idArtiste])->save();
 
 				}
 				catch(\Exception $e){
+					print($e);
+					die;
 					$error = "La piste n'a pas été ajoutée, vérifiez vos informations.";
 					$url = $request->getUri()->getBasePath();
 					return $this->view->render($response, 'AddPiste.html.twig', [
@@ -277,7 +290,7 @@ class CatalogueController {
 			'idJukebox' => $idJukebox,
 			'listJukebox' => $listJukebox
 		]);*/
-		
+		//die;
 		$url = $request->getUri()->getBasePath();
 		return $this->view->render($response, 'ListMusic.html.twig', [
 			'url' => $url,

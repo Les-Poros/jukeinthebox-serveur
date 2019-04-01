@@ -10,6 +10,7 @@ class Fait_partie extends \Illuminate\Database\Eloquent\Model {
     protected $table = 'fait_partie';
     protected $primaryKey = 'idFaitPartie';
     public $timestamps = false;
+    protected $fillable = ['idPiste','idAlbum'];
 
     public function piste() {
         return $this->belongsTo('jukeinthebox\models\Piste', 'idPiste');

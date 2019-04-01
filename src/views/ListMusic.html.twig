@@ -5,6 +5,10 @@
 		<meta charset="UTF-8">
 		<link rel="stylesheet" href="{{url}}/web/css/jukeinthebox.css">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+		<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  		<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+		  
 	</head>
 
 	<body>
@@ -17,26 +21,36 @@
 
                
 
-                <table class="table table-hover">
-					<tr>
-						
-						<th scope="col">Titre</th>
-						<th scope="col">Artiste</th>
-						<th scope="col">Album</th>
-						<th scope="col">Genre</th>
-						<th scope="col">Année</th>
-						
-					</tr>
-					 {% for j in tableauPistes %}
-                        <tr>
-					        <td>{{j['titre']}}</td>
-					 		<td>{{j['artistes']|join(', ')}}</td>
-                            <td>{{j['album']}}</td>
-                            <td>{{j['genres']|join(', ')}}</td>
-                        	<td>{{j['annee']}}</td>
-				        </tr>	
-                    {% endfor %} 
+                <table id="table_id" class="table table-hover">
+					<thead>
+						<tr>
+							
+							<th scope="col">Titre</th>
+							<th scope="col">Artiste</th>
+							<th scope="col">Album</th>
+							<th scope="col">Genre</th>
+							<th scope="col">Année</th>
+							
+						</tr>
+						</thead>
+						<tbody>
+						{% for j in tableauPistes %}
+							<tr>
+								<td>{{j['titre']}}</td>
+								<td>{{j['artistes']|join(', ')}}</td>
+								<td>{{j['album']}}</td>
+								<td>{{j['genres']|join(', ')}}</td>
+								<td>{{j['annee']}}</td>
+							</tr>	
+						{% endfor %} 
+						</tbody>
                 </table>
+				<script>
+				
+					$(document).ready( function () {
+						$('#table_id').DataTable();
+					} );
+				</script>
         </div>
 	</body>
 
