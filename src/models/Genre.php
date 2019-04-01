@@ -15,4 +15,12 @@ class Genre extends \Illuminate\Database\Eloquent\Model {
         return $this->hasMany('jukeinthebox\models\Est_du_genre_piste', 'idEstDuGenrePiste');
     }
 
+    public static function getIdByGenre($nomGenre) {
+        $genre = parent::where("nomGenre","=",$nomGenre)->first();
+        if (isset($jukebox)) {
+            return $jukebox->toArray()["idGenre"];
+        }
+        else return null;
+    }
+
 }

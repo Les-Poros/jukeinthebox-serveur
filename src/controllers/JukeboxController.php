@@ -17,7 +17,7 @@ class JukeboxController {
 	protected $view;
 
 	/**
-	 * Constructor of the class HomeController
+	 * Constructor of the class JukeboxController
 	 * @param view
 	 */
     public function __construct(twig $view) {
