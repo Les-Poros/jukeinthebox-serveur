@@ -16,7 +16,7 @@ class Piste extends \Illuminate\Database\Eloquent\Model {
     }
 
     public function est_du_genre_piste() {
-        return $this->hasMany('jukeinthebox\models\Est_du_genre_piste', 'idEstDuGenrePiste');
+        return $this->hasMany('jukeinthebox\models\Est_du_genre_piste', 'idPiste');
     }
 
     public function fait_partie() {

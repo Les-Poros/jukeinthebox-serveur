@@ -3,111 +3,59 @@
 namespace jukeinthebox\controllers;
 
 use jukeinthebox\models\Jukebox;
-use jukeinthebox\models\StatPistes;
 use jukeinthebox\models\StatGenres;
+use jukeinthebox\models\StatPistes;
 use jukeinthebox\models\Genre;
+use jukeinthebox\models\Piste;
 use \Slim\Views\Twig as twig;
 
 /**
  * Class Statistiques
  */
-class StatistiquesController {
+class StatistiquesController
+{
 
-	protected $view;
+    protected $view;
 
-	/**
-	 * Constructor of the class StatistiquesController
-	 * @param view
-	 */
-    public function __construct(twig $view) {
+    /**
+     * Constructor of the class StatistiquesController
+     * @param view
+     */
+    public function __construct(twig $view)
+    {
         $this->view = $view;
-	}
-
-	/**
-	 * Method that
-	 * @param request
-	 * @param response
-	 * @param args
-	 */
-	public function countMoreStatPistes($request, $response, $args)
-	{
-        $statPistes = StatPistes::where("idJukebox", "=", Jukebox::getIdByBartender($_GET["bartender"]))->where("idPiste","=",$_GET['idPiste'])->first();
-        if(isset($statPistes)){
-            $statPistes->nbFoisJoue += 1;
-        }
-        else{
-            $statPistes = new StatPistes();
-            $statPistes->idJukebox = Jukebox::getIdByBartender($_GET["bartender"]);
-            $statPistes->idPiste = $_GET['idPiste'];
-            $statPistes->nbFoisJoue = 1;
-        }
-		$statPistes->save();
     }
 
     /**
-	 * Method that
-	 * @param request
-	 * @param response
-	 * @param args
-	 */
-	public function countMoreStatGenres($request, $response, $args)
-	{
-        /*$tabStatGenres = StatGenres::where("idJukebox", "=", Jukebox::getIdByBartender($_GET["bartender"]))->get();
-        if(sizeof($tabStatGenres) > 1){
-            foreach($tabStatGenres as $statGenres){
-                if(sizeof($_GET["genres"]) > 1){
-                    foreach($_GET["genres"] as $genre){
-                        $statGenres = $statGenres::where("idGenre", "=", Genre::getIdByGenre($genre))->first();
-                        if(isset($statGenres)){
-                            $statGenres->nbFoisJoue += 1;
-                            $statGenres->save();
-                        }
-                        else{
-                            $statGenres = new StatGenres();
-                            $statGenres->idJukebox = Jukebox::getIdByBartender($_GET["bartender"]);
-                            $statGenres->idGenre = Genre::getIdByGenre($genre);
-                            $statGenres->nbFoisJoue = 1;
-                            $statGenres->save();
-                        }
-                    }
-                }
-                else{
-                    $statGenres = $statGenres::where("idGenre", "=", Genre::getIdByGenre($genre))->first();
-                        if(isset($statGenres)){
-                            $statGenres->nbFoisJoue += 1;
-                            $statGenres->save();
-                        }
-                        else{
-                            $statGenres = new StatGenres();
-                            $statGenres->idJukebox = Jukebox::getIdByBartender($_GET["bartender"]);
-                            $statGenres->idGenre = Genre::getIdByGenre($_GET["genres"][0]);
-                            $statGenres->nbFoisJoue = 1;
-                            $statGenres->save();
-                        }
-                }
-            }
+     * Method that
+     * @param request
+     * @param response
+     * @param args
+     */
+    public function pushStatsMusic($request, $response, $args)
+    {
+        $statPistes = StatPistes::where("idJukebox", "=", Jukebox::getIdByBartender($_POST["bartender"]))->where("idPiste", "=", $_POST['idPiste'])->first();
+        if (isset($statPistes)) {
+            $statPistes->nbFoisJoue += 1;
+        } else {
+            $statPistes = new StatPistes();
+            $statPistes->idJukebox = Jukebox::getIdByBartender($_POST["bartender"]);
+            $statPistes->idPiste = $_POST['idPiste'];
+            $statPistes->nbFoisJoue = 1;
         }
-        else{
-            if(sizeof($_GET["genres"]) > 1){
-                foreach($_GET["genres"] as $genre){
-                    $statGenres = new StatGenres();
-                    $statGenres->idJukebox = Jukebox::getIdByBartender($_GET["bartender"]);
-                    $statGenres->idGenre = Genre::getIdByGenre($genre);
-                    $statGenres->nbFoisJoue = 1;
-                    $statGenres->save();
-                }
+        $statPistes->save();
+        foreach ( Piste::where("idPiste","=",$_POST['idPiste'])->first()->est_du_genre_piste()->get()->toArray() as $estDuGenre ) {
+            $statGenre = StatGenres::where("idJukebox", "=", Jukebox::getIdByBartender($_POST["bartender"]))->where("idGenre", "=", $estDuGenre["idGenre"])->first();
+            if (isset($statGenre)) {
+                $statGenre->nbFoisJoue += 1;
+            } else {
+                $statGenre = new StatGenres();
+                $statGenre->idJukebox = Jukebox::getIdByBartender($_POST["bartender"]);
+                $statGenre->idGenre = $estDuGenre["idGenre"];
+                $statGenre->nbFoisJoue = 1;
             }
-            else{
-                return $_GET["genres"];
-                $statGenres = new StatGenres();
-                $statGenres->idJukebox = Jukebox::getIdByBartender($_GET["bartender"]);
-                $statGenres->idGenre = Genre::getIdByGenre($_GET["genres"][0]);
-                $statGenres->nbFoisJoue = 1;
-                $statGenres->save();
-            }
-        }*/
-        //return Genre::select('nomGenre')->where('nomGenre','=',$_GET["genres"][0])->first();
-        return $_GET["genres"];
+            $statGenre->save();
+        }
     }
-    
+
 }
