@@ -311,4 +311,60 @@ class CatalogueController {
 			'url' => $url,
 		]);
 	}
+
+	public function createAlbum($request, $response, $args) {	
+
+
+		
+			$champsRequis = ['titreAlbum', 'anneeAlbum2', 'genreAlbum2'];
+			for($i = 1; $i <= $nbArtistes; $i++) array_push($champsRequis, 'nomArtiste'.$i);
+			$areAllFieldsOK = true;
+
+
+			foreach($champsRequis as $champs) $areAllFieldsOK &= isset($piste[$champs]);
+			if($areAllFieldsOK){
+
+				try{
+					$nomAlbum = filter_var($piste['titreAlbum'], FILTER_SANITIZE_STRING);
+					$imageAlbum = filter_var($piste['imageAlbum2'], FILTER_SANITIZE_URL);
+					$anneeAlbum = filter_var($piste['anneeAlbum2'], FILTER_SANITIZE_NUMBER_INT);
+					$genreAlbum = filter_var($piste['genreAlbum2'], FILTER_SANITIZE_STRING);
+
+					for($i = 1; $i <= $nbArtistes; $i++) {
+						array_push($nomArtistes, filter_var($piste['nomArtisteAlbum'.$i], FILTER_SANITIZE_STRING));
+						array_push($prenomArtistes, filter_var($piste['prenomArtisteAlbum'.$i], FILTER_SANITIZE_STRING));
+					}
+
+					Album::query()->firstOrCreate(['nomAlbum' => $titreAlbum,'imageAlbum' => $imageAlbum,'annéeAlbum' => $anneeAlbum])->save();
+					$album = Album::select('idAlbum')->where('nomAlbum','like',  $nomAlbum)->first();
+
+					for($i = 0 ; $i < $nbArtistes; $i++) {
+						Artiste::query()->firstOrCreate(['nomArtiste' => $nomArtistes[$i], 'prénomArtiste' => $prenomArtistes[$i]])->save();
+						$artiste = Artiste::select('idArtiste')->where('nomArtiste','like',  $nomArtistes[$i])->first();
+						A_joue_album::query()->firstOrCreate(['idAlbum' => $album->idAlbum, 'idArtiste'=>$artiste->idArtiste])->save();	
+					}
+					
+					Genre::query()->firstOrCreate(['nomGenre' => $nomGenre])->save();
+					$genre = Genre::select('idGenre')->where('nomGenre','like', $nomGenre)->first();
+					Est_du_genre_album::query()->firstOrCreate(['idAlbum'=> $album->idAlbum, 'idGenre'=> $genre->idGenre])->save();
+					
+				}
+				catch(\Exception $e){
+					print($e);
+					die;
+					$error = "L'album n'a pas été ajoutée, vérifiez vos informations.";
+					$url = $request->getUri()->getBasePath();
+					return $this->view->render($response, 'AddPiste.html.twig', [
+						'url' => $url,
+						'error'=> $error
+					]);
+				}
+				
+			}
+
+		}
+
+
+		
+
 }

@@ -171,7 +171,7 @@
 											<div class="itemForm item" >
 												<div class="form-group row">
 
-														<label class="col-4 col-form-label" for="album">Album</label>
+														<label class="col-4 col-form-label" for="titreAlbum">Album</label>
 
 													<div class="col-8">
 														<input id="titreAlbum" class="form-control" type="text" name="titreAlbum" required>
@@ -191,9 +191,9 @@
 
 											<div class="itemForm item" >
 												<div class="form-group row" >
-													<label class="col-4 col-form-label" for="genre_album">Genre de l'album</label>
+													<label class="col-4 col-form-label" for="genreAlbum2">Genre de l'album</label>
 													<div class="col-8">
-														<input id="genreAlbum" type="text" name="genreAlbum" required>
+														<input id="genreAlbum2" type="text" name="genreAlbum2" required>
 													</div>	
 												</div>	
 											</div>
@@ -208,9 +208,9 @@
 											</div>
 											<h5>Artiste</h5> <hr style="width: 100%; display:inline-block; color:black; height: 0.5px;"/>
 
-											<div class="itemForm item">
+											<div class="itemForm item" >
 												<div class="form-group row">
-													<label class="col-4 col-form-label" for="nom_artiste">Nom de l'Artiste</label>
+													<label class="col-4 col-form-label" for="nomArtisteAlbum">Nom de l'Artiste</label>
 													<div class="col-8">
 														<input id="nomArtisteAlbum" type="text" name="nomArtisteAlbum" required>
 													</div>
@@ -219,9 +219,9 @@
 
 											<div class="itemForm item" id="radio">
 												<div class="form-group row">
-													<label class="col-4 col-form-label" for="prenom_artiste">Prénom de l'Artiste</label>
+													<label class="col-4 col-form-label" for="prenomArtisteAlbum">Prénom de l'Artiste</label>
 													<div class="col-8">
-														<input id="prenomArtiste" type="text" name="prenomArtisteAlbum">
+														<input id="pprenomArtisteAlbum" type="text" name="prenomArtisteAlbum">
 													</div>
 												</div>
 											</div>
@@ -238,6 +238,48 @@
 	<script src="https://widget.cloudinary.com/v2.0/global/all.js" type="text/javascript"></script>  
 	<script>
 		function AffichagePrenomArtiste()
+		{
+			var radios = document.getElementsByName('personneAlbum');
+			var element = document.getElementById('radio');
+			var titre = document.getElementById('nomCategorie');
+
+			
+			for(var i = 0; i < radios.length; i++)
+			{
+				if(radios[i].checked){
+					if(radios[i].value == "Artiste")
+					{
+						titre.innerHTML = 'Artiste';
+						//document.getElementById('radio').required = false;
+						//element.classList.remove("personne");
+						// Supprime le contenu de la div avant de la remplir
+						let artistes = document.getElementById("artistes");
+						while (artistes.hasChildNodes()) {artistes.removeChild(artistes.lastChild);}
+						AjouterArtistes();
+
+						//let label = document.getElementById('labelNomArtiste');
+						//if(label) label.innerText = 'Nom de l\'Artiste';
+						
+						
+					}
+					else{
+						titre.innerHTML = 'Groupe';
+						
+						// Supprime le contenu de la div avant de la remplir
+						let artistes = document.getElementById("artistes");
+						while (artistes.hasChildNodes()) {artistes.removeChild(artistes.lastChild);}
+						AjouterGroupe();
+
+						//element.classList.add("personne");
+						//document.getElementById('radio').required =true;
+						//document.getElementById('labelNomArtiste').innerText = 'Nom du Groupe';
+					}
+				}
+			}
+			
+		}
+
+		function AffichagePrenomArtisteAlbum()
 		{
 			var radios = document.getElementsByName('personne');
 			var element = document.getElementById('radio');

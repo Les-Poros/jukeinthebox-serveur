@@ -91,6 +91,12 @@ $app->get('/CreateMusic', function($request, $response, $args){
 	$CreateMusic = $controller->createMusic($request, $response, $args);
 })->setName('CreateMusic');
 
+
+$app->post('/CreateAlbum', function($request, $response, $args){
+	$controller = $this['CatalogueController'];
+	$CreateAlbum = $controller->createAlbum($request, $response, $args);
+})->setName('CreateAlbum');
+
 $app->get('/catalogue', function($request, $response, $args){
 	$controller = $this['CatalogueController'];
 	$displayCatalogue = $controller->displayCatalogue($request, $response, $args);
