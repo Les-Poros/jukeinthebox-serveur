@@ -124,6 +124,18 @@ form {
   margin-right: -50%;
 }
 
+/* Suppression des flèches dans les Input number pour firefox */ 
+input[type='number'] {
+    -moz-appearance:textfield;
+}
+
+/* Suppression des flèches dans les Input number pour les navigateurs webkit */ 
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
 /*
 fieldset
 {

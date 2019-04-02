@@ -2,7 +2,7 @@
 <html>
 
 	<head>
-		<meta charset="UTF-8">
+		<meta charset="utf-8">
 		<link rel="stylesheet" href="{{url}}/web/css/jukeinthebox.css">
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 	</head>
@@ -30,11 +30,11 @@
 												<div class="row">
 													<div class="m-auto">
 														<label class="col-form-label" for="artiste">Artiste</label>
-														<input  id="artiste" type="radio" name="personne" value="Artiste" onclick="AffichagePrenomArtiste()" checked>
+														<input  id="radioPisteArtiste" type="radio" name="personne" value="Artiste" onclick="changementEntite('Piste')" checked>
 													</div>
 													<div class="m-auto">
 														<label class="col-form-label" for="groupe">Groupe</label>
-														<input id="groupe" type="radio" name="personne" value="Groupe" onclick="AffichagePrenomArtiste()">
+														<input id="radioPisteGroupe" type="radio" name="personne" value="Groupe" onclick="changementEntite('Piste')">
 													</div>
 
 													
@@ -111,8 +111,9 @@
 											</div>
 
 
-											<h5 id="nomCategorie"></h5><hr style="width: 100%; display:inline-block; color:black; height: 0.5px;"/>
-											<div id="artistes" class="itemForm item"></div>
+											<h5 id="nomCategoriePiste"></h5><hr style="width: 100%; display:inline-block; color:black; height: 0.5px;"/>
+											<!--<input type="hidden" name="nbArtistesPiste">-->
+											<div id="artistesPiste" class="itemForm item"></div>
 
 											
 											
@@ -130,12 +131,7 @@
 													
 												</div>
 											</div>
-
-											
-
-											
-
-											<button type="submit" class="m-auto" id="ajouterMusique" disabled >Ajouter une musique</button>
+											<button type="submit" class="m-auto" id="ajouterMusique" name="ajout" value="musique" disabled >Ajouter une musique</button>
 										</div>
 									</div>
 								</div>
@@ -156,11 +152,11 @@
 
 													<div class="m-auto">
 														<label class="col-form-label" for="artisteAlbum">Artiste</label>
-														<input  id="artisteAlbum" type="radio" name="personneAlbum" value="Artiste" onclick="" checked>
+														<input  id="radioAlbumArtiste" type="radio" name="personneAlbum" value="Artiste" onclick="changementEntite('Album')" checked>
 													</div>
 													<div class="m-auto">
 														<label class="col-form-label" for="groupeAlbum">Groupe</label>
-														<input id="groupeAlbum" type="radio" name="personneAlbum" value="Groupe" onclick=""  required>
+														<input id="radioAlbumGroupe" type="radio" name="personneAlbum" value="Groupe" onclick="changementEntite('Album')">
 													</div>
 
 													
@@ -206,27 +202,10 @@
 													</div>
 												</div>
 											</div>
-											<h5>Artiste</h5> <hr style="width: 100%; display:inline-block; color:black; height: 0.5px;"/>
+											<h5 id="nomCategorieAlbum"></h5><hr style="width: 100%; display:inline-block; color:black; height: 0.5px;"/>
+											<div id="artistesAlbum" class="itemForm item"></div>
 
-											<div class="itemForm item" >
-												<div class="form-group row">
-													<label class="col-4 col-form-label" for="nomArtisteAlbum">Nom de l'Artiste</label>
-													<div class="col-8">
-														<input id="nomArtisteAlbum" type="text" name="nomArtisteAlbum" required>
-													</div>
-												</div>
-											</div>
-
-											<div class="itemForm item" id="radio">
-												<div class="form-group row">
-													<label class="col-4 col-form-label" for="prenomArtisteAlbum">Prénom de l'Artiste</label>
-													<div class="col-8">
-														<input id="pprenomArtisteAlbum" type="text" name="prenomArtisteAlbum">
-													</div>
-												</div>
-											</div>
-
-										<button type="submit" class="m-auto">Ajouter un album</button>
+										<button type="submit"  name="ajout" value="album" class="m-auto">Ajouter un album</button>
 								</div>
 							</div>
 						</div>
@@ -237,88 +216,164 @@
 		</div>
 	<script src="https://widget.cloudinary.com/v2.0/global/all.js" type="text/javascript"></script>  
 	<script>
-		function AffichagePrenomArtiste()
-		{
-			var radios = document.getElementsByName('personneAlbum');
-			var element = document.getElementById('radio');
-			var titre = document.getElementById('nomCategorie');
+		function creerChampNomArtiste(i) {		
+			let row = document.createElement('div');
+			row.setAttribute("class", "form-group row");
+			let col = document.createElement('div');
+			col.setAttribute("class", "col-8");
 
-			
-			for(var i = 0; i < radios.length; i++)
-			{
-				if(radios[i].checked){
-					if(radios[i].value == "Artiste")
-					{
-						titre.innerHTML = 'Artiste';
-						//document.getElementById('radio').required = false;
-						//element.classList.remove("personne");
-						// Supprime le contenu de la div avant de la remplir
-						let artistes = document.getElementById("artistes");
-						while (artistes.hasChildNodes()) {artistes.removeChild(artistes.lastChild);}
-						AjouterArtistes();
+			let label = document.createElement('label');
+			label.setAttribute("class", "col-4 col-form-label");
+			label.setAttribute('for', 'labelNomArtiste');
+			label.appendChild(document.createTextNode('Nom de l\'Artiste ' + i));
+			label.required = true;
 
-						//let label = document.getElementById('labelNomArtiste');
-						//if(label) label.innerText = 'Nom de l\'Artiste';
-						
-						
-					}
-					else{
-						titre.innerHTML = 'Groupe';
-						
-						// Supprime le contenu de la div avant de la remplir
-						let artistes = document.getElementById("artistes");
-						while (artistes.hasChildNodes()) {artistes.removeChild(artistes.lastChild);}
-						AjouterGroupe();
+			let input = document.createElement('input');
+			input.setAttribute('id', 'nomArtiste' + i);
+			input.setAttribute('type', 'text');
+			input.setAttribute('name', 'nomArtiste' + i);
 
-						//element.classList.add("personne");
-						//document.getElementById('radio').required =true;
-						//document.getElementById('labelNomArtiste').innerText = 'Nom du Groupe';
-					}
-				}
-			}
-			
+			col.appendChild(input);
+			row.appendChild(label);
+			row.appendChild(col);
+
+			return row;
 		}
 
-		function AffichagePrenomArtisteAlbum()
-		{
-			var radios = document.getElementsByName('personne');
-			var element = document.getElementById('radio');
-			var titre = document.getElementById('nomCategorie');
+		function creerChampPrenomArtiste(i) {
+			let row = document.createElement('div');
+			row.setAttribute("class", "form-group row");
+			let col = document.createElement('div');
+			col.setAttribute("class", "col-8");
+			let div3 = document.createElement('div');
 
-			
-			for(var i = 0; i < radios.length; i++)
-			{
-				if(radios[i].checked){
-					if(radios[i].value == "Artiste")
-					{
-						titre.innerHTML = 'Artiste';
-						//document.getElementById('radio').required = false;
-						//element.classList.remove("personne");
-						// Supprime le contenu de la div avant de la remplir
-						let artistes = document.getElementById("artistes");
-						while (artistes.hasChildNodes()) {artistes.removeChild(artistes.lastChild);}
-						AjouterArtistes();
+			let label = document.createElement('label');
+			label.setAttribute("class", "col-4 col-form-label");
+			label.setAttribute('for', 'prenomArtiste');
+			label.appendChild(document.createTextNode('Prénom de l\'Artiste ' + i));
+			label.required = true;
 
-						//let label = document.getElementById('labelNomArtiste');
-						//if(label) label.innerText = 'Nom de l\'Artiste';
-						
-						
-					}
-					else{
-						titre.innerHTML = 'Groupe';
-						
-						// Supprime le contenu de la div avant de la remplir
-						let artistes = document.getElementById("artistes");
-						while (artistes.hasChildNodes()) {artistes.removeChild(artistes.lastChild);}
-						AjouterGroupe();
 
-						//element.classList.add("personne");
-						//document.getElementById('radio').required =true;
-						//document.getElementById('labelNomArtiste').innerText = 'Nom du Groupe';
-					}
-				}
+			let input = document.createElement('input');
+			input.setAttribute('id', 'prenomArtiste' + i);
+			input.setAttribute('type', 'text');
+			input.setAttribute('name', 'prenomArtiste' + i);
+
+
+			col.appendChild(input);
+			row.appendChild(label);
+			row.appendChild(col);
+
+			return row;
+		}
+
+		function creerChampNomGroupe() {
+			let div1 = document.createElement('div');
+			div1.setAttribute("class", "itemForm item");
+			div1.setAttribute('name', 'artistesField');
+			let div2 = document.createElement('div');
+			div2.setAttribute("class", "form-group row");
+			let div3 = document.createElement('div');
+			div3.setAttribute("class", "col-8");
+			let label1 = document.createElement('label');
+			label1.setAttribute("class", "col-4 col-form-label");
+			label1.setAttribute('for', 'labelNomArtiste');
+			label1.appendChild(document.createTextNode('Nom du groupe'));
+			label1.required = true;
+
+			let input1 = document.createElement('input');
+			input1.setAttribute('id', 'nomArtiste');
+			input1.setAttribute('type', 'text');
+			input1.setAttribute('name', 'nomArtiste');
+
+			div3.appendChild(input1);
+			div2.appendChild(label1);
+			div2.appendChild(div3);
+			div1.appendChild(div2);
+
+			return div1;
+		}
+		
+		function creerCompteurArtiste(nomDeCategorie) {
+			let row = document.createElement('div');
+			row.setAttribute("class", "form-group row");
+			let input_group = document.createElement('div');
+			input_group.setAttribute("class", "col-8 input-group");
+			let input_group_append = document.createElement('div');
+			input_group_append.setAttribute('class', 'input-group-append');
+
+			let label = document.createElement('label');
+			label.setAttribute("class", "col-4 col-form-label");
+			label.appendChild(document.createTextNode('Nombre d\'artistes'));
+			label.required = true;
+
+
+			let input = document.createElement('input');
+			input.setAttribute('id', 'nbArtistes' + nomDeCategorie);
+			input.setAttribute('type', 'number');
+			input.setAttribute('name', 'nbArtistes' + nomDeCategorie);
+			input.setAttribute('value', '1');
+			input.readOnly = true;
+
+			let button1 = document.createElement('button');
+			button1.setAttribute('class', 'btn btn-outline-secondary');
+			button1.setAttribute('type', 'button');
+			button1.setAttribute('onclick', 'ajouterArtiste("' + nomDeCategorie + '")');
+			button1.innerHTML = '+';
+
+			let button2 = document.createElement('button');
+			button2.setAttribute('class', 'btn btn-outline-secondary');
+			button2.setAttribute('type', 'button');
+			button2.setAttribute('onclick', 'supprimerArtiste("' + nomDeCategorie + '")');
+			button2.innerHTML = '-';
+
+			input_group_append.appendChild(button1);
+			input_group_append.appendChild(button2);
+			input_group.appendChild(input);
+			input_group.appendChild(input_group_append);
+			row.appendChild(label);
+			row.appendChild(input_group);
+
+			return row;
+		}
+
+		function ajouterArtiste(nomDeCategorie) {
+			let input = document.getElementById("nbArtistes" + nomDeCategorie)
+			input.value++;
+			let artistes = document.getElementById("artistes" + nomDeCategorie);
+			artistes.appendChild(creerChampPrenomArtiste(input.value));
+			artistes.appendChild(creerChampNomArtiste(input.value));
+		}
+
+		function supprimerArtiste(nomDeCategorie) {
+			if (document.getElementById("nbArtistes" + nomDeCategorie).value > 1) {
+				document.getElementById("nbArtistes" + nomDeCategorie).value--;
+				let artistes = document.getElementById("artistes" + nomDeCategorie);
+				artistes.removeChild(artistes.lastChild);
+				artistes.removeChild(artistes.lastChild);
 			}
-			
+		}
+
+
+
+
+
+		function changementEntite(nomDeCategorie) {
+			var radio = document.getElementById('radio' + nomDeCategorie + 'Artiste');
+			var titre = document.getElementById('nomCategorie' + nomDeCategorie);
+			let artistes = document.getElementById("artistes" + nomDeCategorie)
+			// Supprime le contenu de la div
+			while (artistes.hasChildNodes()) {artistes.removeChild(artistes.lastChild);}
+
+			if(radio.checked) {
+				titre.innerHTML = 'Artiste';
+				artistes.appendChild(creerCompteurArtiste(nomDeCategorie));
+				artistes.appendChild(creerChampNomArtiste(1));
+				artistes.appendChild(creerChampPrenomArtiste(1));
+			} else {
+				titre.innerHTML = 'Groupe';
+				artistes.appendChild(creerChampNomGroupe());
+			}
 		}
 
 		//GESTION DES ACCENTS
@@ -422,7 +477,7 @@
 
 			var champ_obligatoire = [ 'nomPiste', 'album', 'genrePiste','anneePiste'];
 			let artistes = [];
-			let value = document.getElementById("nbArtistes") ? document.getElementById("nbArtistes").value : 1;
+			let value = document.getElementById("nbArtistesPiste") ? document.getElementById("nbArtistesPiste").value : 1;
 			for(let i = 1; i <= value; i++) {
 				artistes.push('nomArtiste' + i)
 			}
@@ -438,7 +493,7 @@
 				//var public = tableau_valeur['nomArtiste'].toLowerCase().split(' ');
 				let public = '';
 				for(artiste of artistes) {
-					console.log(tableau_valeur[artiste])
+					//console.log(tableau_valeur[artiste])
 					tableau_valeur[artiste] = tableau_valeur[artiste].toLowerCase().split(' ');
 					for(let i = 0; i < tableau_valeur[artiste].length; i++) {
 						tableau_valeur[artiste][i] = tableau_valeur[artiste][i].charAt(0).toUpperCase() + tableau_valeur[artiste][i].slice(1);
@@ -466,141 +521,16 @@
 					if (result && result.event === "success") {
 						console.log(result);
 						document.getElementById("ajouterMusique").disabled = false;
-
-						
 						// do something
 					}
 				}).open();
 			}
 		}, false);
 
-		function AjouterArtistes() {
-				let value = document.getElementById("nbArtistes") ? document.getElementById("nbArtistes").value : 1;
-
-				let artistes = document.getElementById("artistes");
-				while (artistes.hasChildNodes()) artistes.removeChild(artistes.lastChild);
-				creerArtistes(value);
-				
-
-				for(let i = 1; i <= value; i++) {
-				
-					let div1 = document.createElement('div');
-					div1.setAttribute("class", "form-group row");
-					let div2 = document.createElement('div');
-					div2.setAttribute("class", "col-8");
-					let div3 = document.createElement('div');
-					div3.setAttribute("class", "form-group row");
-					let div4 = document.createElement('div');
-					div4.setAttribute("class", "col-8");
-
-					let label1 = document.createElement('label');
-					label1.setAttribute("class", "col-4 col-form-label");
-					label1.setAttribute('for', 'labelNomArtiste');
-					label1.appendChild(document.createTextNode('Nom de l\'Artiste ' + i));
-					label1.required = true;
-
-					let label2 = document.createElement('label');
-					label2.setAttribute("class", "col-4 col-form-label");
-					label2.setAttribute('for', 'prenomArtiste');
-					label2.appendChild(document.createTextNode('Prénom de l\'Artiste ' + i));
-					label2.required = true;
-
-					let input1 = document.createElement('input');
-					input1.setAttribute('id', 'nomArtiste' + i);
-					input1.setAttribute('type', 'text');
-					input1.setAttribute('name', 'nomArtiste' + i);
-
-					let input2 = document.createElement('input');
-					input2.setAttribute('id', 'prenomArtiste' + i);
-					input2.setAttribute('type', 'text');
-					input2.setAttribute('name', 'prenomArtiste' + i);
-
-					div2.appendChild(input1);
-					div1.appendChild(label1);
-					div1.appendChild(div2);
-
-					div4.appendChild(input2);
-					div3.appendChild(label2);
-					div3.appendChild(div4);
-
-					let container = document.getElementById("artistes");
-					container.appendChild(div1);
-					container.appendChild(div3);
-				}
-		}
-
-		function AjouterGroupe() {
-			let div1 = document.createElement('div');
-			div1.setAttribute("class", "itemForm item");
-			div1.setAttribute('name', 'artistesField');
-			let div2 = document.createElement('div');
-			div2.setAttribute("class", "form-group row");
-			let div3 = document.createElement('div');
-			div3.setAttribute("class", "col-8");
-			let label1 = document.createElement('label');
-			label1.setAttribute("class", "col-4 col-form-label");
-			label1.setAttribute('for', 'labelNomArtiste');
-			label1.appendChild(document.createTextNode('Nom du groupe'));
-			label1.required = true;
-
-			let input1 = document.createElement('input');
-			input1.setAttribute('id', 'nomArtiste');
-			input1.setAttribute('type', 'text');
-			input1.setAttribute('name', 'nomArtiste');
-
-			div3.appendChild(input1);
-			div2.appendChild(label1);
-			div2.appendChild(div3);
-			div1.appendChild(div2);
-
-			let container = document.getElementById("artistes");
-			container.appendChild(div1);
-
-		}
-
-		function creerArtistes(value) {
-			let div1 = document.createElement('div');
-			div1.setAttribute("class", "itemForm item");
-			div1.setAttribute("id", "divNbArtistes");
-			let div2 = document.createElement('div');
-			div2.setAttribute("class", "form-group row");
-			let div3 = document.createElement('div');
-			div3.setAttribute("class", "col-8");
-			let label1 = document.createElement('label');
-			label1.setAttribute("class", "col-4 col-form-label");
-			label1.setAttribute('for', 'nbArtistes');
-			label1.appendChild(document.createTextNode('Nombre d\'artistes : '));
-			label1.required = true;
-
-			let input1 = document.createElement('input');
-			input1.setAttribute('id', 'nbArtistes');
-			input1.setAttribute('type', 'number');
-			input1.setAttribute('name', 'nbArtistes');
-			input1.setAttribute('min', '1');
-			input1.setAttribute('max', '10');
-			input1.value = value;
-
-			let button = document.createElement('a');
-			button.setAttribute('href', '#');
-			button.setAttribute('id', 'filldetails');
-			button.addEventListener("click", AjouterArtistes);
-			button.innerHTML = 'Ajouter les artistes';
-
-			let container = document.getElementById("artistes");
-			div3.appendChild(input1);
-			div2.appendChild(label1);
-			div2.appendChild(div3);
-			div2.appendChild(button);
-			div1.appendChild(div2);
-
-			container.appendChild(div1);
-		}
-
-		AffichagePrenomArtiste();
+		changementEntite('Piste');
+		changementEntite('Album');
 
 
-
-			
 		</script>
 	</body>
 
