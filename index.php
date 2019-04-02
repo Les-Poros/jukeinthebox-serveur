@@ -8,6 +8,7 @@ use jukeinthebox\controllers\FileController;
 use jukeinthebox\controllers\CatalogueController;
 use jukeinthebox\controllers\ServeurController;
 use jukeinthebox\controllers\JukeboxController;
+use jukeinthebox\controllers\StatistiquesController;
 
 $ini = parse_ini_file('src/conf/conf.ini');
 
@@ -122,6 +123,17 @@ $app->get('/catalogueChoice', function($request, $response, $args){
 		'application/json'
 	);
 })->setName('CatalogueChoice');
+
+$app->post('/pushStatsMusic', 'StatistiquesController:pushStatsMusic')->setName('pushStatsMusic');
+
+$app->get('/getStats', function($request, $response, $args){
+	$controller = $this['StatistiquesController'];
+	$controller->getStats($request, $response, $args);
+	return $response->withHeader(
+		'Content-Type',
+		'application/json'
+	);
+})->setName('getStats');
 
 $app->map(['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], '/{routes:.+}', function($req, $res) {
     $handler = $this->notFoundHandler; // handle using the default Slim page not found handler

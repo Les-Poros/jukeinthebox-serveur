@@ -5,6 +5,7 @@ use jukeinthebox\controllers\FileController;
 use jukeinthebox\controllers\CatalogueController;
 use jukeinthebox\controllers\ServeurController;
 use jukeinthebox\controllers\JukeboxController;
+use jukeinthebox\controllers\StatistiquesController;
 
 $configuration = [
     'settings' => [
@@ -38,4 +39,9 @@ $container['FileController'] = function ($c){
 $container['ServeurController'] = function ($c){
     $view = $c->get('view');
     return new ServeurController($view);
+};
+
+$container['StatistiquesController'] = function ($c){
+    $view = $c->get('view');
+    return new StatistiquesController($view);
 };
