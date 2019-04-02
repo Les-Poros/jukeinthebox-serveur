@@ -2,7 +2,7 @@
 <html>
 
 	<head>
-		<meta charset="utf-8">
+		<meta charset="UTF-8">
 		<link rel="stylesheet" href="{{url}}/web/css/jukeinthebox.css">
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 	</head>
@@ -167,19 +167,19 @@
 											<div class="itemForm item" >
 												<div class="form-group row">
 
-														<label class="col-4 col-form-label" for="titreAlbum">Album</label>
+														<label class="col-4 col-form-label" for="nomAlbum">Album</label>
 
 													<div class="col-8">
-														<input id="titreAlbum" class="form-control" type="text" name="titreAlbum" required>
+														<input id="nomAlbum" class="form-control" type="text" name="nomAlbum" required>
 													</div>
 												</div>
 											</div>
 
 											<div class="itemForm item">
 												<div class="form-group row">
-													<label class="col-4 col-form-label" for="imageAlbum2">Image associée à l'album</label>
+													<label class="col-4 col-form-label" for="imageAlbum">Image associée à l'album</label>
 													<div class="col-8">
-														<input id="imageAlbum2" type="text" name="imageAlbum2">
+														<input id="imageAlbum" type="text" name="imageAlbum">
 													</div>
 												</div>
 											</div>
@@ -187,18 +187,18 @@
 
 											<div class="itemForm item" >
 												<div class="form-group row" >
-													<label class="col-4 col-form-label" for="genreAlbum2">Genre de l'album</label>
+													<label class="col-4 col-form-label" for="genreAlbum">Genre de l'album</label>
 													<div class="col-8">
-														<input id="genreAlbum2" type="text" name="genreAlbum2" required>
+														<input id="genreAlbum" type="text" name="genreAlbum" required>
 													</div>	
 												</div>	
 											</div>
 
 											<div class="itemForm item">
 												<div class="form-group row">
-													<label class="col-4 col-form-label" for="anneeAlbum2">Année de l'album</label>
+													<label class="col-4 col-form-label" for="anneeAlbum">Année de l'album</label>
 													<div class="col-8">
-														<input id="anneeAlbum2" type="number" name="anneeAlbum2" required>
+														<input id="anneeAlbum" type="number" name="anneeAlbum" required>
 													</div>
 												</div>
 											</div>
@@ -282,9 +282,9 @@
 			label1.required = true;
 
 			let input1 = document.createElement('input');
-			input1.setAttribute('id', 'nomArtiste');
+			input1.setAttribute('id', 'nomArtiste1');
 			input1.setAttribute('type', 'text');
-			input1.setAttribute('name', 'nomArtiste');
+			input1.setAttribute('name', 'nomArtiste1');
 
 			div3.appendChild(input1);
 			div2.appendChild(label1);
@@ -341,8 +341,9 @@
 			let input = document.getElementById("nbArtistes" + nomDeCategorie)
 			input.value++;
 			let artistes = document.getElementById("artistes" + nomDeCategorie);
-			artistes.appendChild(creerChampPrenomArtiste(input.value));
 			artistes.appendChild(creerChampNomArtiste(input.value));
+			artistes.appendChild(creerChampPrenomArtiste(input.value));
+
 		}
 
 		function supprimerArtiste(nomDeCategorie) {
@@ -473,14 +474,22 @@
 			return str;
 
 		}
+		
 		document.getElementById("upload_widget").addEventListener("click", function(){
 
 			var champ_obligatoire = [ 'nomPiste', 'album', 'genrePiste','anneePiste'];
+			var radio = document.getElementById('radioPisteArtiste');
 			let artistes = [];
-			let value = document.getElementById("nbArtistesPiste") ? document.getElementById("nbArtistesPiste").value : 1;
-			for(let i = 1; i <= value; i++) {
-				artistes.push('nomArtiste' + i)
+
+			if(radio.checked) { // Artistes
+				let value = document.getElementById("nbArtistesPiste") ? document.getElementById("nbArtistesPiste").value : 1;
+				for(let i = 1; i <= value; i++) {
+					artistes.push('nomArtiste' + i)
+				}
+			} else { // Groupe
+				artistes.push('nomArtiste1')
 			}
+
 			var champ_plein = true;
 			var tableau_valeur = [];
 			for (var cat of champ_obligatoire.concat(artistes)) {
@@ -493,13 +502,12 @@
 				//var public = tableau_valeur['nomArtiste'].toLowerCase().split(' ');
 				let public = '';
 				for(artiste of artistes) {
-					//console.log(tableau_valeur[artiste])
 					tableau_valeur[artiste] = tableau_valeur[artiste].toLowerCase().split(' ');
 					for(let i = 0; i < tableau_valeur[artiste].length; i++) {
 						tableau_valeur[artiste][i] = tableau_valeur[artiste][i].charAt(0).toUpperCase() + tableau_valeur[artiste][i].slice(1);
 						
 					}
-					public += tableau_valeur[artiste].join('');
+					public += tableau_valeur[artiste].join(radio.checked ? '' : ' ');
 				}
 
 
@@ -521,6 +529,8 @@
 					if (result && result.event === "success") {
 						console.log(result);
 						document.getElementById("ajouterMusique").disabled = false;
+
+						
 						// do something
 					}
 				}).open();
