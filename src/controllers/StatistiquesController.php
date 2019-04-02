@@ -7,6 +7,8 @@ use jukeinthebox\models\StatGenres;
 use jukeinthebox\models\StatPistes;
 use jukeinthebox\models\Genre;
 use jukeinthebox\models\Piste;
+use jukeinthebox\models\A_joue_piste;
+use jukeinthebox\models\Artiste;
 use \Slim\Views\Twig as twig;
 
 /**
@@ -27,7 +29,7 @@ class StatistiquesController
     }
 
     /**
-     * Method that
+     * Method that push stats of musics
      * @param request
      * @param response
      * @param args
@@ -56,6 +58,45 @@ class StatistiquesController
             }
             $statGenre->save();
         }
+    }
+
+    /**
+     * Method that get stats
+     * @param request
+     * @param response
+     * @param args
+     */
+    public function getStats($request, $response, $args)
+    {
+        $tabStat = [];
+        $compteurForPiste = 0;
+        $compteurForGenre = 0;
+        $statPistes = StatPistes::where("idJukebox", "=", Jukebox::getIdByBartender($_GET["bartender"]))->orderBy('nbFoisJoue','desc')->take(3)->get();
+        foreach ($statPistes as $statP){
+            if (isset($statP)){
+                $piste = Piste::where('idPiste','=',$statP["idPiste"])->first();
+                $tabStat['pistes'][$compteurForPiste]['nomPiste'] = $piste['nomPiste'];
+                $tabStat['pistes'][$compteurForPiste]['imagePiste'] = $piste['imagePiste'];
+                $tabStat['pistes'][$compteurForPiste]['nbFoisJoue'] = $statP['nbFoisJoue'];
+                $compteurForArtiste = 0;
+                foreach($piste->a_joue_piste()->get() as $artiste){
+                    $nomArt = Artiste::where('idArtiste','=', $artiste['idArtiste'])->first();
+                    $tabStat['pistes'][$compteurForPiste]['artistes'][$compteurForArtiste] = $nomArt;
+                    $compteurForArtiste++;
+                }
+                $compteurForPiste++;
+            }
+        }
+        $statGenres = StatGenres::where("idJukebox", "=", Jukebox::getIdByBartender($_GET["bartender"]))->orderBy('nbFoisJoue','desc')->take(5)->get();
+        foreach ($statGenres as $statG){
+            if (isset($statG)){
+                $genre = Genre::where('idGenre','=',$statG["idGenre"])->first();
+                $tabStat['genres'][$compteurForGenre]['nomGenre'] = $genre['nomGenre'];
+                $tabStat['genres'][$compteurForGenre]['nbFoisJoue'] = $statG["nbFoisJoue"];
+                $compteurForGenre++;
+            }
+        }
+        echo json_encode($tabStat);
     }
 
 }

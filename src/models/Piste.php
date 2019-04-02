@@ -1,6 +1,7 @@
 <?php
 
 namespace jukeinthebox\models;
+use jukeinthebox\models\A_joue_piste;
 
 /**
  * Class Piste
@@ -12,7 +13,7 @@ class Piste extends \Illuminate\Database\Eloquent\Model {
     public $timestamps = false;
 
     public function a_joue_piste() {
-        return $this->hasMany('jukeinthebox\models\a_joue_piste', 'idAJouePiste');
+        return $this->hasMany('jukeinthebox\models\A_joue_piste', 'idPiste');
     }
 
     public function est_du_genre_piste() {

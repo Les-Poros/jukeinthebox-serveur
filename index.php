@@ -126,6 +126,15 @@ $app->get('/catalogueChoice', function($request, $response, $args){
 
 $app->post('/pushStatsMusic', 'StatistiquesController:pushStatsMusic')->setName('pushStatsMusic');
 
+$app->get('/getStats', function($request, $response, $args){
+	$controller = $this['StatistiquesController'];
+	$controller->getStats($request, $response, $args);
+	return $response->withHeader(
+		'Content-Type',
+		'application/json'
+	);
+})->setName('getStats');
+
 $app->map(['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], '/{routes:.+}', function($req, $res) {
     $handler = $this->notFoundHandler; // handle using the default Slim page not found handler
     return $handler($req, $res);
