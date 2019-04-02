@@ -61,6 +61,11 @@ $app->get('/CreateJukebox', function($request, $response, $args){
 	$CreateJukebox = $controller->createJukebox($request, $response, $args);
 })->setName('CreateJukebox');
 
+$app->post('/DeleteJukebox/{id}', function($request, $response, $args){
+	$controller = $this['ServeurController'];
+	$DeleteJukebox = $controller->deleteJukebox($request, $response, $args);
+})->setName('DeleteJukebox');
+
 $app->get('/File', function($request, $response, $args){
 	$controller = $this['FileController'];
 	$displayFile = $controller->displayFile($request, $response, $args);

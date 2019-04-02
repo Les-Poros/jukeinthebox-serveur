@@ -71,7 +71,7 @@ button[type=submit]:hover {
   background-color: darkgray;
 }
 
-form {
+.createJuke {
   display: flex;
   flex-direction: column;
   align-items: center;

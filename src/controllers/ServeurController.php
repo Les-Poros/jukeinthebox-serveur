@@ -87,6 +87,16 @@ class ServeurController {
 		]);
 	}
 
-	
+	public function deleteJukebox($request, $response, $args){
+		$url = $request->getUri()->getBasePath();
+		$jukebox = Jukebox::where('idJukebox', '=', $args["id"])->first();
+		Bibliotheque::where('idBibliotheque','=', $jukebox['idBibliotheque'])->first()->delete();
+		$jukebox->delete();
+		$listJukebox = Jukebox::get();
+		return $this->view->render($response, 'ListJukebox.html.twig', [
+			'url' => $url,
+			'listJukebox' => $listJukebox
+		]);
+	}
 
 }
