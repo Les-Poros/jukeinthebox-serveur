@@ -62,7 +62,7 @@ class JukeboxController {
 		else if(isset($_GET["bartender"]))
 			$jukebox = Jukebox::where('idJukebox', '=', Jukebox::getIdByBartender($_GET["bartender"]))->first();
 		else $jukebox=null;
-		echo json_encode($jukebox->action);
+		echo json_encode(["action" => $jukebox->action,"blindtest"=>$jukebox->isBlindTest]);
 	}
 
 			/**
@@ -125,6 +125,47 @@ class JukeboxController {
 			}
 		}
 
+		
+			/**
+	 * Method that change mode to blindtest
+	 * @param request
+	 * @param response
+	 * @param args
+	 */
+	public function modeBlindtest($request, $response, $args) {
+		if(isset($_POST["token"])){
+			$jukebox = Jukebox::where('idJukebox', '=', Jukebox::getIdByQrcode($_GET["token"]))->first();
+			$jukebox->isBlindTest = 1;
+			$jukebox->save();
+		}
+		else{
+			$jukebox = Jukebox::where('idJukebox', '=', Jukebox::getIdByBartender($_GET["bartender"]))->first();
+			$jukebox->isBlindTest = 1;
+			$jukebox->save();
+		}
+		
+	}
+
+			
+			/**
+	 * Method that change mode to normal
+	 * @param request
+	 * @param response
+	 * @param args
+	 */
+	public function modeNormal($request, $response, $args) {
+		if(isset($_POST["token"])){
+			$jukebox = Jukebox::where('idJukebox', '=', Jukebox::getIdByQrcode($_GET["token"]))->first();
+			$jukebox->isBlindTest = 0;
+			$jukebox->save();
+		}
+		else{
+			$jukebox = Jukebox::where('idJukebox', '=', Jukebox::getIdByBartender($_GET["bartender"]))->first();
+			$jukebox->isBlindTest = 0;
+			$jukebox->save();
+		}
+		
+	}
 	/**
 	 * Method that displays that delete a music to the file
 	 * @param request

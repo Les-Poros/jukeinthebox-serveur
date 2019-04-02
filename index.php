@@ -107,6 +107,10 @@ $app->post('/play', 'JukeboxController:play')->setName('play');
 
 $app->post('/pause', 'JukeboxController:pause')->setName('pause');
 
+$app->post('/modeBlindtest', 'JukeboxController:modeBlindtest')->setName('modeBlindtest');
+
+$app->post('/modeNormal', 'JukeboxController:modeNormal')->setName('modeNormal');
+
 $app->post('/repeat', 'JukeboxController:repeat')->setName('repeat');
 
 $app->post('/selectCatag', 'JukeboxController:selectCatag')->setName('repeat');
