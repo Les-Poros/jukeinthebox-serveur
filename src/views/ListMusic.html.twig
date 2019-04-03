@@ -49,7 +49,12 @@
 				
 					$(document).ready( function () {
 						$('#table_id').DataTable();
-					} );
+					});
+					
+					$("tr").click(function(item){
+						console.log(item.target.parentNode.cells[0].innerText);
+						window.location = "{{ path_for('InfoMusic') }}" + encodeURI("?title=" + item.target.parentNode.cells[0].innerText.replace(" ", "+"));
+					});
 				</script>
         </div>
 	</body>

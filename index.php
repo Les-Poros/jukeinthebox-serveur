@@ -106,6 +106,17 @@ $app->get('/catalogue', function($request, $response, $args){
 	);
 })->setName('Catalogue');
 
+$app->get('/InfoMusic', function($request, $response, $args){
+	$controller = $this['CatalogueController'];
+	$param = $request->getParams();
+	if(!isset($param['title']) || empty($param['title']))
+		return $controller->listCatalogue($request, $response, $args);
+
+	$InfoMusic = $controller->infoMusic($request, $response, $args);
+})->setName('InfoMusic');
+
+
+
 
 
 $app->map(['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], '/{routes:.+}', function($req, $res) {

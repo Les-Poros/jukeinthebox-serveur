@@ -405,7 +405,6 @@ class CatalogueController {
 					}
 					catch(\Exception $e){
 						print($e);
-						die;
 						$error = "L'album n'a pas été ajoutée, vérifiez vos informations.";
 						$url = $request->getUri()->getBasePath();
 						return $this->view->render($response, 'AddPiste.html.twig', [
@@ -437,6 +436,63 @@ class CatalogueController {
 		$url = $request->getUri()->getBasePath();
 		return $this->view->render($response, 'AddPiste.html.twig', [
 			'url' => $url,
+		]);
+	}
+
+	/**
+	 * Methode pour éditer une musique
+	 * @param request
+	 * @param response
+	 * @param args
+	 */
+
+	public function infoMusic($request, $response, $args)
+	{
+		
+		$param = $request->getParams();
+		$url = $request->getUri()->getBasePath();
+		$data = [];
+		$piste = Piste::where('nomPiste','like',$param['title'])->first();
+
+		$artistes = [];
+		$artistesQuerry = Piste::join('a_joué_piste','piste.idPiste','a_joué_piste.idPiste')
+				->join('artiste', 'a_joué_piste.idArtiste','artiste.idArtiste' )
+				->where('piste.idPiste','=', $piste->getOriginal()['idPiste'])
+				->get();
+		foreach ($artistesQuerry as $value) array_push($artistes, $value->getOriginal()['nomArtiste']);
+
+		$genres = [];
+		$genresQuerry = Piste::join('est_du_genre_piste','piste.idPiste','est_du_genre_piste.idPiste')
+			->join('genre', 'est_du_genre_piste.idGenre','genre.idGenre' )
+			->where('piste.idPiste','=', $piste->getOriginal()['idPiste'])
+			->get();
+		foreach ($genresQuerry as $value) array_push($genres, $value->getOriginal()['nomGenre']);
+
+		$albums = [];
+		$albumQuerry = Piste::join('fait_partie','piste.idPiste','fait_partie.idPiste')
+			->join('album', 'fait_partie.idAlbum','album.idAlbum' )
+			->where('piste.idPiste','=', $piste->getOriginal()['idPiste'])
+			->get();
+		foreach ($albumQuerry as $value) array_push($albums, $value->getOriginal()['nomAlbum']);
+		
+
+
+		$data = [
+			'titre' => $param['title'],
+			'image' => $piste->getOriginal()['imagePiste'],
+			'genres' => $genres,
+			'artistes' => $artistes,
+			'annee' => $piste->getOriginal()['annéePiste'],
+			'album' => $albumQuerry->first() ? $albumQuerry->first()->getAttributes()['nomAlbum'] : null,
+			'imageAlbum' => $albumQuerry->first() ? $albumQuerry->first()->getAttributes()['imageAlbum'] : null,
+			'anneeAlbum' => $albumQuerry->first() ? $albumQuerry->first()->getAttributes()['annéeAlbum'] : null
+		];
+
+		var_dump($data);
+
+		return $this->view->render($response, 'InfoPiste.html.twig', [
+			'url' => $url,
+			'data' => $data
 		]);
 	}
 }
