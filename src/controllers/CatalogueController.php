@@ -232,6 +232,20 @@ class CatalogueController
         $addContenu->save();
     }
 
+    public function integrerCatag($request, $response, $args)
+    {
+        
+
+        //On récupère la bibliothèque du JukeBox
+        $getBibliothequeBarman = Jukebox::getBibliByBartender($_POST["bartender"]);
+        $pistes = Contenu_bibliotheque::where("idBibliotheque","=",$_POST["id"])->wherenotin('idPiste', function ($query) {$query->select('idPiste')->from('contenu_bibliotheque')->where('idBibliotheque', '=', Jukebox::getBibliByBartender($_POST["bartender"]));})->get()->toArray();
+        foreach($pistes as $piste){
+        $addContenu = new Contenu_bibliotheque();
+        $addContenu->idPiste = $piste["idPiste"];
+        $addContenu->idBibliotheque = $getBibliothequeBarman;
+        $addContenu->save();
+        }
+    }
     /**
      * Method that displays that delete a music from the bibliotheque
      * @param request
@@ -240,9 +254,7 @@ class CatalogueController
      */
     public function deleteMusicBiblio($request, $response, $args)
     {
-
-        Contenu_bibliotheque::where('idPiste', '=', $_POST['id'])->first()->delete();
-
+        Contenu_bibliotheque::where('idPiste', '=', $_POST['id'])->where('idBibliotheque', '=', Jukebox::getBibliByBartender($_POST["bartender"]))->first()->delete();
     }
 
 }

@@ -113,7 +113,8 @@ $app->post('/modeNormal', 'JukeboxController:modeNormal')->setName('modeNormal')
 
 $app->post('/repeat', 'JukeboxController:repeat')->setName('repeat');
 
-$app->post('/selectCatag', 'JukeboxController:selectCatag')->setName('repeat');
+$app->post('/selectCatag', 'JukeboxController:selectCatag')->setName('selectCatag');
+$app->post('/integrerCatag', 'CatalogueController:integrerCatag')->setName('integrerCatag');
 
 $app->get('/catalogue', function($request, $response, $args){
 	$controller = $this['CatalogueController'];
