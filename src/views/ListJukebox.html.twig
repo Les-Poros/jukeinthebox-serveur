@@ -43,8 +43,8 @@
                             <td>{{j['mailClient']}}</td>
                             <td>{{j['adresseClient']}}</td>
 							<td>
-								<form action='{{url}}/DeleteJukebox/{{j['idJukebox']}}' method='post'>
-									<button type="submit"><img src="{{url}}/web/images/delete.png"></button>
+								<form class="deleteForm" action='{{url}}/DeleteJukebox/{{j['idJukebox']}}' method='post'>
+									<button class="deleteButton" type="submit"><img src="{{url}}/web/images/delete.png"></button>
 								</form>
 							</td>
 				        </tr>	

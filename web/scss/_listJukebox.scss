@@ -16,3 +16,21 @@ table{
     margin-left: 10%;
 }
 
+.deleteButton{
+    background-color: darken($buttonBackground, 20%);
+    color: darken($buttonColor,10%);
+    border:1px solid darken($buttonBorder,10%);
+	box-shadow:1px 1px 3px darken($buttonShadow,10%);
+    padding: 14px 20px;
+    margin: 8px 0;
+    border-radius: 4px;
+    cursor: pointer;
+    &:hover {
+        background-color: darken($buttonBackground, 30%);
+      }
+}
+
+.deleteForm{
+    width: 10vh;
+    height: 10vh; 
+}
