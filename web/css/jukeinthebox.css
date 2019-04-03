@@ -146,6 +146,9 @@ input[type=number]::-webkit-outer-spin-button {
 #table_id_wrapper {
   padding-top: 5%;
 }
+.alert{
+  padding-top: 5%;
+}
 /*
 fieldset
 {

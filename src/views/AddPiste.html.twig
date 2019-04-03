@@ -11,17 +11,26 @@
 		<div class="mainContainer">	
 			<h1>Ajouter une musique</h1>
 			<div class="buttons">
-					<a class="button" href="{{url}}/"><div>Accueil</div></a>
-					<a class="button" href="{{url}}/ListCatalogue"><div>Retour à la liste des musiques </div></a>
+					<a class="button  btn-secondary" href="{{url}}/"><div>Accueil</div></a>
+					<a class="button  btn-secondary" href="{{url}}/ListCatalogue"><div>Retour à la liste des musiques </div></a>
 			</div>
+			<div class="row">
+				<div class="col-8 offset-md-2">
+					<div class="alert alert-info" role="alert">
+						Cette page est composé de deux formulaire, l'un pour ajouter une piste, l'autre pour ajouter un album et peuvent être remplis indépendament l'un de l'autre.
+					</div>
+				</div>
+				
+			</div>
+			
 			<div class="error">
-			{{error}}
+				{{error}}
 			</div>
 			<div class="row">
 				<div class="col-6">
 					<form  action='{{url}}/ListCatalogue' method='post' enctype='multipart/form-data'>
 						<fieldset class="col-12">
-							<legend>Piste associée à un album :</legend>
+							<legend>Ajouter une Piste :</legend>
 							<div class="card">
 									<div class="card-body">
 										<div class="form-group row" id="formArtiste">
@@ -124,14 +133,14 @@
 												<div class="form-group row">
 													<label class="col-4 col-form-label" for="upload_widget">Fichier mp3</label>
 													<div class="col-8">
-														<input id="upload_widget" type="button" class="cloudinary-button" value="Upload files*"/>
+														<input id="upload_widget" type="button" class="cloudinary-button" value="Envoie du fichier*"/>
 														<label class="">*Seuls les fichiers mp3 sont acceptés</label>
 														
 													</div>
 													
 												</div>
 											</div>
-											<button type="submit" class="m-auto" id="ajouterMusique" name="ajout" value="musique" disabled >Ajouter une musique</button>
+											<button type="submit" class="m-auto btn-success" id="ajouterMusique" name="ajout" value="musique" disabled >Ajouter une musique</button>
 										</div>
 									</div>
 								</div>
