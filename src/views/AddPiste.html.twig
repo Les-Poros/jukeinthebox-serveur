@@ -5,6 +5,11 @@
 		<meta charset="UTF-8">
 		<link rel="stylesheet" href="{{url}}/web/css/jukeinthebox.css">
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+		  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+		<script src="bootstrap3-typeahead.min.js"></script>
 	</head>
 
 	<body>
@@ -34,7 +39,76 @@
 							<div class="card">
 									<div class="card-body">
 										<div class="form-group row" id="formArtiste">
+											<h5>Musique</h5> <hr style="width: 100%; display:inline-block; color:black; height: 0.5px;"/>
+											<div class="itemForm item">
+												<div class="form-group row">
+														<label class="col-4 col-form-label" for="nomPiste">Titre</label>
+														<div class="col-8">
+															<input class="form-control" id="nomPiste" type="text" name="nomPiste" required>
+														</div>
+												</div>
+											</div>
 
+											<div class="itemForm item" >
+												<div class="form-group row">
+													<label class="col-4 col-form-label" for="genrePiste">Genre de la piste</label>
+													<div class="col-8">
+														<input id="genrePiste" type="text" name="genrePiste" autocomplete="off" required>
+													</div>	
+												</div>	
+											</div>
+
+											<div class="itemForm item">
+												<div class="form-group row">
+													<label class="col-4 col-form-label" for="imagePiste">Image associée à la piste</label>
+													<div class="col-8">
+														<input id="imagePiste" name="imagePiste" placeholder="https://exemple.com/" type="text">
+													</div>
+												</div>
+											</div>
+
+											<div class="itemForm item">
+												<div class="form-group row">
+													<label class="col-4 col-form-label" for="anneePiste">Année de la piste</label>
+													<div class="col-8">
+														<input id="anneePiste" type="number" name="anneePiste"  min="1000" max="9999" required>
+													</div>
+												</div>
+											</div>
+
+											
+											<h5>Album</h5> <hr style="width: 100%; display:inline-block; color:black; height: 0.5px;"/>
+											<div class="itemForm item">
+												<div class="form-group row">
+
+														<label class="col-4 col-form-label" for="nomAlbum">Album</label>
+
+													<div class="col-8">
+														<input id="album" class="form-control" type="text" name="nomAlbum" autocomplete="off" required>
+													</div>
+												</div>
+											</div>
+
+											<div class="itemForm item" >
+												<div class="form-group row">
+													<label class="col-4 col-form-label" for="imageAlbum">Image associée à l'album</label>
+													<div class="col-8">
+														<input id="imageAlbum" name="imageAlbum" placeholder="https://exemple.com/" type="text">
+													</div>
+												</div>
+											</div>
+
+											<div class="itemForm item" >
+												<div class="form-group row">
+													<label class="col-4 col-form-label" for="anneeAlbum">Année de l'album</label>
+													<div class="col-8">
+														<input id="anneeAlbum" type="number" name="anneeAlbum" min="1000" max="9999" >
+													</div>
+												</div>
+											</div>
+
+
+											<h5 id="nomCategoriePiste"></h5><hr style="width: 100%; display:inline-block; color:black; height: 0.5px;"/>
 											<div class="itemForm" id="item">
 												<div class="row">
 													<div class="m-auto">
@@ -49,79 +123,6 @@
 													
 												</div>
 											</div>
-											<h5>Musique</h5> <hr style="width: 100%; display:inline-block; color:black; height: 0.5px;"/>
-
-
-											<div class="itemForm item">
-												<div class="form-group row">
-														<label class="col-4 col-form-label" for="nomPiste">Titre</label>
-														<div class="col-8">
-															<input class="form-control" id="nomPiste" type="text" name="nomPiste" required>
-														</div>
-												</div>
-											</div>
-
-											<div class="itemForm item" >
-												<div class="form-group row">
-													<label class="col-4 col-form-label" for="genrePiste">Genre de la piste</label>
-													<div class="col-8">
-														<input id="genrePiste" type="text" name="genrePiste" required>
-													</div>	
-												</div>	
-											</div>
-
-											<div class="itemForm item">
-												<div class="form-group row">
-													<label class="col-4 col-form-label" for="imagePiste">Image associée à la piste</label>
-													<div class="col-8">
-														<input id="imagePiste" type="text" name="imagePiste">
-													</div>
-												</div>
-											</div>
-
-											<div class="itemForm item">
-												<div class="form-group row">
-													<label class="col-4 col-form-label" for="anneePiste">Année de la piste</label>
-													<div class="col-8">
-														<input id="anneePiste" type="number" name="anneePiste" required>
-													</div>
-												</div>
-											</div>
-
-											
-											<h5>Album</h5> <hr style="width: 100%; display:inline-block; color:black; height: 0.5px;"/>
-											<div class="itemForm item">
-												<div class="form-group row">
-
-														<label class="col-4 col-form-label" for="nomAlbum">Album</label>
-
-													<div class="col-8">
-														<input id="album" class="form-control" type="text" name="nomAlbum" required>
-													</div>
-												</div>
-											</div>
-
-											<div class="itemForm item" >
-												<div class="form-group row">
-													<label class="col-4 col-form-label" for="imageAlbum">Image associée à l'album</label>
-													<div class="col-8">
-														<input id="imageAlbum" type="text" name="imageAlbum">
-													</div>
-												</div>
-											</div>
-
-											<div class="itemForm item" >
-												<div class="form-group row">
-													<label class="col-4 col-form-label" for="anneeAlbum">Année de l'album</label>
-													<div class="col-8">
-														<input id="anneeAlbum" type="number" name="anneeAlbum">
-													</div>
-												</div>
-											</div>
-
-
-											<h5 id="nomCategoriePiste"></h5><hr style="width: 100%; display:inline-block; color:black; height: 0.5px;"/>
-											<!--<input type="hidden" name="nbArtistesPiste">-->
 											<div id="artistesPiste" class="itemForm item"></div>
 
 											
@@ -135,8 +136,9 @@
 													<div class="col-8">
 														<input id="upload_widget" type="button" class="cloudinary-button" value="Envoie du fichier*"/>
 														<label class="">*Seuls les fichiers mp3 sont acceptés</label>
-														
+														<p id="infoUpload"></p>
 													</div>
+													
 													
 												</div>
 											</div>
@@ -156,21 +158,7 @@
 									<div class="card-body">
 										<div class="form-group row">
 
-											<div class="itemForm item" >
-												<div class="row">
-
-													<div class="m-auto">
-														<label class="col-form-label" for="artisteAlbum">Artiste</label>
-														<input  id="radioAlbumArtiste" type="radio" name="personneAlbum" value="Artiste" onclick="changementEntite('Album')" checked>
-													</div>
-													<div class="m-auto">
-														<label class="col-form-label" for="groupeAlbum">Groupe</label>
-														<input id="radioAlbumGroupe" type="radio" name="personneAlbum" value="Groupe" onclick="changementEntite('Album')">
-													</div>
-
-													
-												</div>
-											</div>
+											
 											<h5>Album</h5> <hr style="width: 100%; display:inline-block; color:black; height: 0.5px;"/>
 
 											<div class="itemForm item" >
@@ -179,7 +167,7 @@
 														<label class="col-4 col-form-label" for="nomAlbum">Album</label>
 
 													<div class="col-8">
-														<input id="nomAlbum" class="form-control" type="text" name="nomAlbum" required>
+														<input id="nomAlbum" class="form-control" type="text" name="nomAlbum" autocomplete="off" required>
 													</div>
 												</div>
 											</div>
@@ -188,7 +176,7 @@
 												<div class="form-group row">
 													<label class="col-4 col-form-label" for="imageAlbum">Image associée à l'album</label>
 													<div class="col-8">
-														<input id="imageAlbum" type="text" name="imageAlbum">
+														<input id="imageAlbum" name="imageAlbum" placeholder="https://exemple.com/" type="text">
 													</div>
 												</div>
 											</div>
@@ -198,7 +186,7 @@
 												<div class="form-group row" >
 													<label class="col-4 col-form-label" for="genreAlbum">Genre de l'album</label>
 													<div class="col-8">
-														<input id="genreAlbum" type="text" name="genreAlbum" required>
+														<input class="typeahead form-control"  id="genreAlbum" type="text" name="genreAlbum" autocomplete="off" required>
 													</div>	
 												</div>	
 											</div>
@@ -207,11 +195,23 @@
 												<div class="form-group row">
 													<label class="col-4 col-form-label" for="anneeAlbum">Année de l'album</label>
 													<div class="col-8">
-														<input id="anneeAlbum" type="number" name="anneeAlbum" required>
+														<input id="anneeAlbum" type="number" name="anneeAlbum" min="1000" max="9999" required>
 													</div>
 												</div>
 											</div>
 											<h5 id="nomCategorieAlbum"></h5><hr style="width: 100%; display:inline-block; color:black; height: 0.5px;"/>
+											<div class="itemForm item">
+												<div class="row">
+													<div class="m-auto">
+														<label class="col-form-label" for="artisteAlbum">Artiste</label>
+														<input checked id="radioAlbumArtiste" name="personneAlbum" onclick="changementEntite('Album')" type="radio" value="Artiste">
+													</div>
+													<div class="m-auto">
+														<label class="col-form-label" for="groupeAlbum">Groupe</label>
+														<input id="radioAlbumGroupe" name="personneAlbum" onclick="changementEntite('Album')" type="radio" value="Groupe">
+													</div>
+												</div>
+											</div>
 											<div id="artistesAlbum" class="itemForm item"></div>
 
 										<button type="submit"  name="ajout" value="album" class="m-auto">Ajouter un album</button>
@@ -242,6 +242,7 @@
 			input.setAttribute('id', 'nomArtiste' + i);
 			input.setAttribute('type', 'text');
 			input.setAttribute('name', 'nomArtiste' + i);
+			input.setAttribute('autocomplete', 'off');
 
 			col.appendChild(input);
 			row.appendChild(label);
@@ -268,6 +269,7 @@
 			input.setAttribute('id', 'prenomArtiste' + i);
 			input.setAttribute('type', 'text');
 			input.setAttribute('name', 'prenomArtiste' + i);
+			input.setAttribute('autocomplete', 'off');
 
 
 			col.appendChild(input);
@@ -285,19 +287,20 @@
 			div2.setAttribute("class", "form-group row");
 			let div3 = document.createElement('div');
 			div3.setAttribute("class", "col-8");
-			let label1 = document.createElement('label');
-			label1.setAttribute("class", "col-4 col-form-label");
-			label1.setAttribute('for', 'labelNomArtiste');
-			label1.appendChild(document.createTextNode('Nom du groupe'));
-			label1.required = true;
+			let label = document.createElement('label');
+			label.setAttribute("class", "col-4 col-form-label");
+			label.setAttribute('for', 'labelNomArtiste');
+			label.appendChild(document.createTextNode('Nom du groupe'));
+			label.required = true;
 
-			let input1 = document.createElement('input');
-			input1.setAttribute('id', 'nomArtiste1');
-			input1.setAttribute('type', 'text');
-			input1.setAttribute('name', 'nomArtiste1');
+			let input = document.createElement('input');
+			input.setAttribute('id', 'nomArtiste1');
+			input.setAttribute('type', 'text');
+			input.setAttribute('name', 'nomArtiste1');
+			input.setAttribute('autocomplete', 'off');
 
-			div3.appendChild(input1);
-			div2.appendChild(label1);
+			div3.appendChild(input);
+			div2.appendChild(label);
 			div2.appendChild(div3);
 			div1.appendChild(div2);
 
@@ -307,16 +310,9 @@
 		function creerCompteurArtiste(nomDeCategorie) {
 			let row = document.createElement('div');
 			row.setAttribute("class", "form-group row");
-			let input_group = document.createElement('div');
-			input_group.setAttribute("class", "col-8 input-group");
-			let input_group_append = document.createElement('div');
-			input_group_append.setAttribute('class', 'input-group-append');
-
-			let label = document.createElement('label');
-			label.setAttribute("class", "col-4 col-form-label");
-			label.appendChild(document.createTextNode('Nombre d\'artistes'));
-			label.required = true;
-
+			let btn_group = document.createElement('div');
+			btn_group.setAttribute('class', 'btn-group m-auto');
+			btn_group.setAttribute('role', 'group');
 
 			let input = document.createElement('input');
 			input.setAttribute('id', 'nbArtistes' + nomDeCategorie);
@@ -324,25 +320,25 @@
 			input.setAttribute('name', 'nbArtistes' + nomDeCategorie);
 			input.setAttribute('value', '1');
 			input.readOnly = true;
+			input.hidden = true;
 
 			let button1 = document.createElement('button');
-			button1.setAttribute('class', 'btn btn-outline-secondary');
+			button1.setAttribute('class', 'btn btn-secondary');
 			button1.setAttribute('type', 'button');
 			button1.setAttribute('onclick', 'ajouterArtiste("' + nomDeCategorie + '")');
-			button1.innerHTML = '+';
+			button1.innerHTML = '&emsp;+&emsp;';
 
 			let button2 = document.createElement('button');
-			button2.setAttribute('class', 'btn btn-outline-secondary');
+			button2.setAttribute('class', 'btn btn-secondary');
 			button2.setAttribute('type', 'button');
 			button2.setAttribute('onclick', 'supprimerArtiste("' + nomDeCategorie + '")');
-			button2.innerHTML = '-';
+			button2.innerHTML = '&emsp;-&emsp;';
 
-			input_group_append.appendChild(button1);
-			input_group_append.appendChild(button2);
-			input_group.appendChild(input);
-			input_group.appendChild(input_group_append);
-			row.appendChild(label);
-			row.appendChild(input_group);
+			btn_group.appendChild(button1);
+			btn_group.appendChild(button2);
+
+			row.appendChild(input);
+			row.appendChild(btn_group);
 
 			return row;
 		}
@@ -351,11 +347,8 @@
 			let input = document.getElementById("nbArtistes" + nomDeCategorie)
 			input.value++;
 			let artistes = document.getElementById("artistes" + nomDeCategorie);
-
-			artistes.insertBefore(creerChampNomArtiste(input.value),artistes.firstChild);
-			artistes.insertBefore(creerChampPrenomArtiste(input.value),artistes.firstChild);
-			//artistes.appendChild(creerChampNomArtiste(input.value));
-			//artistes.appendChild(creerChampPrenomArtiste(input.value));
+			artistes.insertBefore(creerChampNomArtiste(input.value), artistes.lastChild);
+			artistes.insertBefore(creerChampPrenomArtiste(input.value), artistes.lastChild);
 
 		}
 
@@ -363,8 +356,8 @@
 			if (document.getElementById("nbArtistes" + nomDeCategorie).value > 1) {
 				document.getElementById("nbArtistes" + nomDeCategorie).value--;
 				let artistes = document.getElementById("artistes" + nomDeCategorie);
-				artistes.removeChild(artistes.firstChild);
-				artistes.removeChild(artistes.firstChild);
+				artistes.removeChild(artistes.lastChild.previousSibling);
+				artistes.removeChild(artistes.lastChild.previousSibling);
 			}
 		}
 
@@ -381,7 +374,6 @@
 
 			if(radio.checked) {
 				titre.innerHTML = 'Artiste';
-				
 				artistes.appendChild(creerChampNomArtiste(1));
 				artistes.appendChild(creerChampPrenomArtiste(1));
 				artistes.appendChild(creerCompteurArtiste(nomDeCategorie));
@@ -490,29 +482,14 @@
 		}
 		
 		document.getElementById("upload_widget").addEventListener("click", function(){
-
+			let artistes = getArtistesArray();
 			var champ_obligatoire = [ 'nomPiste', 'album', 'genrePiste','anneePiste'];
-			var radio = document.getElementById('radioPisteArtiste');
-			let artistes = [];
-
-			if(radio.checked) { // Artistes
-				let value = document.getElementById("nbArtistesPiste") ? document.getElementById("nbArtistesPiste").value : 1;
-				for(let i = 1; i <= value; i++) {
-					artistes.push('nomArtiste' + i)
-				}
-			} else { // Groupe
-				artistes.push('nomArtiste1')
-			}
-
-			var champ_plein = true;
 			var tableau_valeur = [];
 			for (var cat of champ_obligatoire.concat(artistes)) {
-				valeur = removeDiacritics(document.getElementById(cat).value.trim().replace(/[&\/\\#,+()$~%.'":*?<>{}^]/g, ''));
-				champ_plein &= !((valeur.length == 0) || (valeur == "") || (valeur == "NULL"));
-				tableau_valeur[cat] = valeur;
+				tableau_valeur[cat] = removeDiacritics(document.getElementById(cat).value.trim().replace(/[&\/\\#,+()$~%.'":*?<>{}^]/g, ''));
 			}
 
-			if (champ_plein) {
+			if (isUploadAvailable()) {
 				//var public = tableau_valeur['nomArtiste'].toLowerCase().split(' ');
 				let public = '';
 				for(artiste of artistes) {
@@ -521,7 +498,7 @@
 						tableau_valeur[artiste][i] = tableau_valeur[artiste][i].charAt(0).toUpperCase() + tableau_valeur[artiste][i].slice(1);
 						
 					}
-					public += tableau_valeur[artiste].join(radio.checked ? '' : ' ');
+					public += tableau_valeur[artiste].join(document.getElementById('radioPisteArtiste').checked ? '' : ' ');
 				}
 
 
@@ -540,20 +517,122 @@
 				publicId: public,
 				clientAllowedFormats: ["mp3"]
 				}, (error, result) => {
+					console.log(result);
 					if (result && result.event === "success") {
 						console.log(result);
 						document.getElementById("ajouterMusique").disabled = false;
-
-						
-						// do something
+						document.getElementById("infoUpload").innerHTML = "Le fichier a bien été envoyé";
 					}
+					if (result && result.event === "abort") document.getElementById("infoUpload").innerHTML = "Erreur : l'envoi du fichier a échoué";
+					if(error) document.getElementById("infoUpload").innerHTML = "Erreur : l'envoi du fichier a échoué";
 				}).open();
 			}
 		}, false);
 
+		function isUploadAvailable() {
+			var champ_obligatoire = [ 'nomPiste', 'album', 'genrePiste','anneePiste'];
+			let artistes = getArtistesArray();
+
+			var champ_plein = true;
+			var tableau_valeur = [];
+			for (var cat of champ_obligatoire.concat(artistes)) {
+				valeur = removeDiacritics(document.getElementById(cat).value.trim().replace(/[&\/\\#,+()$~%.'":*?<>{}^]/g, ''));
+				champ_plein &= !((valeur.length == 0) || (valeur == "") || (valeur == "NULL"));
+			}
+			return champ_plein;
+		}
+
+		function getArtistesArray() {
+			let artistes = [];
+			if(document.getElementById('radioPisteArtiste').checked) { // Artistes
+				let value = document.getElementById("nbArtistesPiste") ? document.getElementById("nbArtistesPiste").value : 1;
+				for(let i = 1; i <= value; i++) {
+					artistes.push('nomArtiste' + i)
+				}
+			} else { // Groupe
+				artistes.push('nomArtiste1')
+			}
+			return artistes;
+		}
+
 		changementEntite('Piste');
 		changementEntite('Album');
 
+		function getInfo(url) {
+			$.ajax({url: url})
+			.done(function(data) {
+				return data;
+			})
+		}
+
+
+		//console.log(getInfo('/GetGenres?name=Bal'));
+		
+		//console.log($.ajax({async: false, url: '/GetGenres?name=' + document.getElementById('genreAlbum').value}))
+
+		$.ajax({
+			type: "GET",
+			contentType: "application/json; charset=utf-8",
+			url: '/GetGenres',
+			dataType: "json",
+			success: function (data) {
+				$("[id^='genre']").typeahead({
+					source: data,
+					menu: '<ul class="typeahead dropdown-menu" role="listbox"></ul>',
+					item: '<li><a class="dropdown-item" href="#" role="option"></a></li>',
+					headerHtml: '<li class="dropdown-header"></li>',
+					headerDivider: '<li class="divider" role="separator"></li>',
+					itemContentSelector:'a',
+					minLength: 1,
+					scrollHeight: 0,
+					autoSelect: true,
+					afterSelect: $.noop,
+					afterEmptySelect: $.noop,
+					addItem: false,
+					delay: 0
+				});
+			}
+		});
+
+		$.ajax({
+			type: "GET",
+			contentType: "application/json; charset=utf-8",
+			url: '/GetArtistes',
+			dataType: "json",
+			success: function (data) {
+				console.log(data);
+				$("[id^='nomArtiste']").typeahead({
+					source: data['nom'],
+					menu: '<ul class="typeahead dropdown-menu" role="listbox"></ul>',
+					item: '<li><a class="dropdown-item" href="#" role="option"></a></li>',
+					headerHtml: '<li class="dropdown-header"></li>',
+					headerDivider: '<li class="divider" role="separator"></li>',
+					itemContentSelector:'a',
+					minLength: 1,
+					scrollHeight: 0,
+					autoSelect: true,
+					afterSelect: $.noop,
+					afterEmptySelect: $.noop,
+					addItem: false,
+					delay: 0,
+				});
+				$("[id^='prenomArtiste']").typeahead({
+					source: data['prenom'],
+					menu: '<ul class="typeahead dropdown-menu" role="listbox"></ul>',
+					item: '<li><a class="dropdown-item" href="#" role="option"></a></li>',
+					headerHtml: '<li class="dropdown-header"></li>',
+					headerDivider: '<li class="divider" role="separator"></li>',
+					itemContentSelector:'a',
+					minLength: 1,
+					scrollHeight: 0,
+					autoSelect: true,
+					afterSelect: $.noop,
+					afterEmptySelect: $.noop,
+					addItem: false,
+					delay: 0,
+				});
+			}
+		});
 
 		</script>
 	</body>

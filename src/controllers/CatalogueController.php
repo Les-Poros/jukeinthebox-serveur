@@ -437,6 +437,7 @@ class CatalogueController {
 		$url = $request->getUri()->getBasePath();
 		return $this->view->render($response, 'AddPiste.html.twig', [
 			'url' => $url,
+
 		]);
 	}
 
@@ -495,5 +496,50 @@ class CatalogueController {
 			'url' => $url,
 			'data' => $data
 		]);
+	}
+
+	public function getArtistes($request, $response, $args) {
+		$param = $request->getParams();
+
+		$nomArtistes = [];
+		$prenomArtistes = [];
+
+		//$artistesQuerry = Artiste::where('nomArtiste','like', '%'.$param['name'].'%')->get();
+		$artistesQuerry = Artiste::all();
+		foreach ($artistesQuerry as $value) {
+			array_push($nomArtistes, $value->getOriginal()['nomArtiste']);
+			array_push($prenomArtistes, $value->getOriginal()['prénomArtiste']);
+		}
+		$response->getBody()->write(json_encode(['nom' => $nomArtistes, 'prenom' => $prenomArtistes]));
+		
+		return $response;
+	}
+
+	public function getPistes($request, $response, $args) {
+		$param = $request->getParams();
+
+		$pistes = [];
+
+		//$pistesQuerry = Piste::where('nomPiste','like', '%'.$param['name'].'%')->get();
+		$pistesQuerry = Piste::all();
+		foreach ($pistesQuerry as $value) array_push($pistes, $value->getOriginal()['nomPiste']);
+
+		$response->getBody()->write(json_encode($pistes));
+		
+		return $response;
+	}
+
+	public function getGenres($request, $response, $args) {
+		$param = $request->getParams();
+
+		$genres = [];
+
+		//$genresQuerry = Genre::where('nomGenre','like', '%'.$param['name'].'%')->get();
+		$genresQuerry = Genre::all();
+		foreach ($genresQuerry as $value) array_push($genres, $value->getOriginal()['nomGenre']);
+
+		$response->getBody()->write(json_encode($genres));
+		
+		return $response;
 	}
 }
