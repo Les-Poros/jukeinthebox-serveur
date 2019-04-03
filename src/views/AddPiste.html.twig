@@ -11,8 +11,8 @@
 		<div class="mainContainer">	
 			<h1>Ajouter une musique</h1>
 			<div class="buttons">
-					<a href="{{url}}/"><div class="button">Accueil</div></a>
-					<a href="{{url}}/ListCatalogue"><div class="button">Retour à la liste des musiques </div></a>
+					<a class="button" href="{{url}}/"><div>Accueil</div></a>
+					<a class="button" href="{{url}}/ListCatalogue"><div>Retour à la liste des musiques </div></a>
 			</div>
 			<div class="error">
 			{{error}}
@@ -342,8 +342,11 @@
 			let input = document.getElementById("nbArtistes" + nomDeCategorie)
 			input.value++;
 			let artistes = document.getElementById("artistes" + nomDeCategorie);
-			artistes.appendChild(creerChampNomArtiste(input.value));
-			artistes.appendChild(creerChampPrenomArtiste(input.value));
+
+			artistes.insertBefore(creerChampNomArtiste(input.value),artistes.firstChild);
+			artistes.insertBefore(creerChampPrenomArtiste(input.value),artistes.firstChild);
+			//artistes.appendChild(creerChampNomArtiste(input.value));
+			//artistes.appendChild(creerChampPrenomArtiste(input.value));
 
 		}
 
@@ -351,8 +354,8 @@
 			if (document.getElementById("nbArtistes" + nomDeCategorie).value > 1) {
 				document.getElementById("nbArtistes" + nomDeCategorie).value--;
 				let artistes = document.getElementById("artistes" + nomDeCategorie);
-				artistes.removeChild(artistes.lastChild);
-				artistes.removeChild(artistes.lastChild);
+				artistes.removeChild(artistes.firstChild);
+				artistes.removeChild(artistes.firstChild);
 			}
 		}
 
@@ -369,9 +372,10 @@
 
 			if(radio.checked) {
 				titre.innerHTML = 'Artiste';
-				artistes.appendChild(creerCompteurArtiste(nomDeCategorie));
+				
 				artistes.appendChild(creerChampNomArtiste(1));
 				artistes.appendChild(creerChampPrenomArtiste(1));
+				artistes.appendChild(creerCompteurArtiste(nomDeCategorie));
 			} else {
 				titre.innerHTML = 'Groupe';
 				artistes.appendChild(creerChampNomGroupe());

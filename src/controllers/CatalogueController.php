@@ -190,6 +190,7 @@ class CatalogueController {
 			foreach ($albumQuerry as $value) array_push($albums, $value->getOriginal()['nomAlbum']);
 			
 			array_push($tableauPistes, [
+				'image' => $piste->getOriginal()['imagePiste'],
 				'titre' => $piste->getOriginal()['nomPiste'],
 				'genres' => $genres,
 				'artistes' => $artistes,
