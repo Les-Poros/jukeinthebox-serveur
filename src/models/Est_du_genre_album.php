@@ -10,6 +10,7 @@ class Est_du_genre_album extends \Illuminate\Database\Eloquent\Model {
     protected $table = 'est_du_genre_album';
     protected $primaryKey = 'idEstDuGenreAlbum';
     public $timestamps = false;
+    protected $fillable = ['idAlbum', 'idGenre'];
 
     public function album() {
         return $this->belongsTo('jukeinthebox\models\Album', 'idAlbum');
