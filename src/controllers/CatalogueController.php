@@ -557,6 +557,7 @@ class CatalogueController {
 
 	public function editMusic($request, $response, $args) {
 		$param = $request->getParams();
+		$url = $request->getUri()->getBasePath();
 
 		if($request->getMethod() == "POST") {
 			// Ne fonctionne pas sur un groupe (work in progress)
@@ -599,7 +600,6 @@ class CatalogueController {
 					print($e);
 					die;
 					$error = "La piste n'a pas été modifiée, vérifiez vos informations.";
-					$url = $request->getUri()->getBasePath();
 					return $this->view->render($response, 'InfoPiste.html.twig', [
 						'url' => $url,
 						'error'=> $error
@@ -611,7 +611,6 @@ class CatalogueController {
 			'titre' => $nomPiste,
 			'image' => $imagePiste,
 			'genres' => $nomGenre,
-			'artistes' => $artistes,
 			'annee' => $anneePiste,
 			'album' => $imageAlbum,
 			'imageAlbum' => $imageAlbum,
@@ -621,7 +620,6 @@ class CatalogueController {
 		
 		return $this->view->render($response, 'InfoPiste.html.twig', [
 			'url' => $url,
-			'error'=> $error,
 			'data' => $data
 		]);
 	}
