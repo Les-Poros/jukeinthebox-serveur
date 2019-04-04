@@ -329,13 +329,13 @@ class CatalogueController {
 			}
 			//l'erreur est là, aussi
 			elseif($piste['ajout'] == 'album' && $piste['personneAlbum'] == 'Artiste') {
-				//var_dump($piste); die;
+				
 				$champsRequis = ['nomAlbum', 'anneeAlbum', 'genreAlbum'];
 				for($i = 1; $i <= $nbArtistes; $i++) array_push($champsRequis, 'nomArtiste'.$i);
 				$areAllFieldsOK = true;
 
 				foreach($champsRequis as $champs) $areAllFieldsOK &= isset($piste[$champs]);
-				//var_dump($nomAlbum); die;
+			
 
 				if($areAllFieldsOK){
 	
@@ -502,7 +502,7 @@ class CatalogueController {
 			'anneeAlbum' => $albumQuerry->first() ? $albumQuerry->first()->getAttributes()['annéeAlbum'] : null
 		];
 
-		var_dump($data);
+		
 
 		return $this->view->render($response, 'InfoPiste.html.twig', [
 			'url' => $url,
@@ -591,7 +591,6 @@ class CatalogueController {
 						
 						Est_du_genre_piste::where('idPiste', '=', $piste->idPiste)->delete();
 						$genre = Genre::where('nomGenre', 'like', $nom)->first();
-						var_dump($genre);
 						if($genre) Est_du_genre_piste::create(['idPiste' => $piste->idPiste, 'idGenre' => $genre->getOriginal()['idGenre']]);
 					}
 					
