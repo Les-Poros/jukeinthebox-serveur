@@ -10,6 +10,11 @@
 
 		  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
 		<script src="bootstrap3-typeahead.min.js"></script>
+
+		<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+		<link href="web/css/select2-bootstrap4.min.css" rel="stylesheet">
+
 	</head>
 
 	<body>
@@ -51,9 +56,9 @@
 
 											<div class="itemForm item" >
 												<div class="form-group row">
-													<label class="col-4 col-form-label" for="genrePiste">Genre de la piste</label>
+													<label class="col-4 col-form-label" for="idsGenrePiste">Genres de la piste</label>
 													<div class="col-8">
-														<input id="genrePiste" type="text" placeholder="Genre1, Genre2" name="genrePiste" autocomplete="off" required>
+														<select class="form-control" style="width:80%" id="idsGenrePiste" name="idsGenrePiste[]" multiple="multiple" required></select>	
 													</div>	
 												</div>	
 											</div>
@@ -163,9 +168,9 @@
 
 											<div class="itemForm item" >
 												<div class="form-group row">
-													<label class="col-4 col-form-label" for="nomAlbum">Piste</label>
+													<label class="col-4 col-form-label" for="idsPistesAlbum">Pistes</label>
 													<div class="col-8">
-														<input id="nomPisteAlbum" class="form-control" type="text" name="nomPisteAlbum" autocomplete="off" required>
+														<select class="form-control" style="width:80%" id="idsPistesAlbum" name="idsPistesAlbum[]" multiple="multiple" required></select>
 													</div>
 												</div>
 											</div>
@@ -193,9 +198,9 @@
 
 											<div class="itemForm item" >
 												<div class="form-group row" >
-													<label class="col-4 col-form-label" for="genreAlbum">Genre de l'album</label>
+													<label class="col-4 col-form-label" for="genreAlbum">Genres de l'album</label>
 													<div class="col-8">
-														<input class="typeahead form-control"  id="genreAlbum" placeholder="Genre1, Genre2" type="text" name="genreAlbum" autocomplete="off" required>
+														<select class="form-control" style="width:80%" id="idsGenreAlbum" name="idsGenreAlbum[]" multiple="multiple" required></select>
 													</div>	
 												</div>	
 											</div>
@@ -358,6 +363,28 @@
 			let artistes = document.getElementById("artistes" + nomDeCategorie);
 			artistes.insertBefore(creerChampNomArtiste(input.value), artistes.lastChild);
 			artistes.insertBefore(creerChampPrenomArtiste(input.value), artistes.lastChild);
+						$.ajax({
+			type: "GET",
+			contentType: "application/json; charset=utf-8",
+			url: url + '/GetArtistes',
+			dataType: "json",
+			success: function (data) {
+				$('#nomArtiste' + input.value).typeahead({
+					source: data['nom'],
+					menu: '<ul class="typeahead dropdown-menu" role="listbox"></ul>',
+					item: '<li><a class="dropdown-item" href="#" role="option"></a></li>',
+					headerHtml: '<li class="dropdown-header"></li>',
+					headerDivider: '<li class="divider" role="separator"></li>',
+					itemContentSelector:'a',
+					minLength: 1,
+					scrollHeight: 0,
+					autoSelect: true,
+					afterSelect: $.noop,
+					afterEmptySelect: $.noop,
+					addItem: false,
+					delay: 0,
+				});
+			}});
 
 		}
 
@@ -492,7 +519,7 @@
 		
 		document.getElementById("upload_widget").addEventListener("click", function(){
 			let artistes = getArtistesArray();
-			var champ_obligatoire = [ 'nomPiste', 'album', 'genrePiste','anneePiste'];
+			var champ_obligatoire = ['nomPiste', 'album', 'idsGenrePiste','anneePiste'];
 			var tableau_valeur = [];
 			for (var cat of champ_obligatoire.concat(artistes)) {
 				tableau_valeur[cat] = removeDiacritics(document.getElementById(cat).value.trim().replace(/[&\/\\#,+()$~%.'":*?<>{}^]/g, ''));
@@ -509,13 +536,7 @@
 					}
 					public += tableau_valeur[artiste].join(document.getElementById('radioPisteArtiste').checked ? '' : ' ');
 				}
-
-
-
-				public +=  '-';
-				public += tableau_valeur['nomPiste'].replace(/ /g,"_");
-
-				console.log(public);
+				public += '-' + tableau_valeur['nomPiste'].replace(/ /g,"_");
 
 				cloudinary.createUploadWidget({
 				cloudName: 'lesporos',
@@ -537,7 +558,7 @@
 		}, false);
 
 		function isUploadAvailable() {
-			var champ_obligatoire = [ 'nomPiste', 'album', 'genrePiste','anneePiste'];
+			var champ_obligatoire = ['nomPiste', 'album','anneePiste'];
 			let artistes = getArtistesArray();
 
 			var champ_plein = true;
@@ -546,7 +567,7 @@
 				valeur = removeDiacritics(document.getElementById(cat).value.trim().replace(/[&\/\\#,+()$~%.'":*?<>{}^]/g, ''));
 				champ_plein &= !((valeur.length == 0) || (valeur == "") || (valeur == "NULL"));
 			}
-			return champ_plein;
+			return champ_plein && document.getElementById('idsGenrePiste').children.length != 0;
 		}
 
 		function getArtistesArray() {
@@ -580,6 +601,29 @@
 			dataType: "json",
 			success: function (data) {
 				$("[id^='genre']").typeahead({
+					source: data,
+					menu: '<ul class="typeahead dropdown-menu" role="listbox"></ul>',
+					item: '<li><a class="dropdown-item" href="#" role="option"></a></li>',
+					headerHtml: '<li class="dropdown-header"></li>',
+					headerDivider: '<li class="divider" role="separator"></li>',
+					itemContentSelector:'a',
+					minLength: 1,
+					scrollHeight: 0,
+					autoSelect: true,
+					afterSelect: $.noop,
+					afterEmptySelect: $.noop,
+					addItem: false,
+					delay: 0
+				});
+			}
+		});
+		$.ajax({
+			type: "GET",
+			contentType: "application/json; charset=utf-8",
+			url: url + '/GetAlbums',
+			dataType: "json",
+			success: function (data) {
+				$('input[name="nomAlbum"]').typeahead({
 					source: data,
 					menu: '<ul class="typeahead dropdown-menu" role="listbox"></ul>',
 					item: '<li><a class="dropdown-item" href="#" role="option"></a></li>',
@@ -640,8 +684,7 @@
 			url: url + '/GetPistes',
 			dataType: "json",
 			success: function (data) {
-				console.log(data);
-				$("#nomPisteAlbum").typeahead({
+				$("#idsPistesAlbum").typeahead({
 					source: data,
 					menu: '<ul class="typeahead dropdown-menu" role="listbox"></ul>',
 					item: '<li><a class="dropdown-item" href="#" role="option"></a></li>',
@@ -656,12 +699,28 @@
 					addItem: false,
 					delay: 0
 				});
-			},
-
+			}
 		}).fail(function(error) {
     		console.log(error);
 		});
 
+		$('#idsPistesAlbum').select2({
+			ajax: {
+				type: "GET",
+				contentType: "application/json; charset=utf-8",
+				url: url + '/GetPistes',
+				dataType: "json",
+			}
+		});
+
+		$("[id^='idsGenre']").select2({
+			ajax: {
+				type: "GET",
+				contentType: "application/json; charset=utf-8",
+				url: url + '/GetGenres',
+				dataType: "json",
+			}
+		});
 		</script>
 	</body>
 

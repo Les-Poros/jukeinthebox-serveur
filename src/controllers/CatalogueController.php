@@ -164,6 +164,7 @@ class CatalogueController {
 		$url = $request->getUri()->getBasePath();
 
 		$tableauPistes = [];
+
 		foreach (Piste::all() as $piste) {
 			// Gestion des genres
 			$genres = [];
@@ -199,26 +200,27 @@ class CatalogueController {
 			]);
 		}
 		
+		
 		if($request->getMethod() == "POST") {
 			
 			$piste = $request->getParams();
+			
 
 			$nomPiste = filter_input(INPUT_POST, 'nomPiste', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-			$nomPisteAlbum = filter_input(INPUT_POST, 'nomPisteAlbum', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-			$imagePiste = filter_input(INPUT_POST, 'imagePiste', FILTER_SANITIZE_URL);
+			$idsPistesAlbum = filter_input(INPUT_POST, 'idsPistesAlbum', FILTER_SANITIZE_NUMBER_INT, FILTER_REQUIRE_ARRAY) ?: [];
+			$imagePiste = filter_input(INPUT_POST, 'imagePiste', FILTER_SANITIZE_URL) ?: "https://www.gap-tallard-durance.fr/fileadmin/_processed_/5/a/csm_AdobeStock_cle_sol_03179e2243.jpg";
 			$anneePiste = filter_input(INPUT_POST, 'anneePiste', FILTER_SANITIZE_NUMBER_INT);
-			$anneeAlbum = filter_input(INPUT_POST, 'anneeAlbum', FILTER_SANITIZE_NUMBER_INT);
+			$anneeAlbum = filter_input(INPUT_POST, 'anneeAlbum', FILTER_SANITIZE_NUMBER_INT) ?: $anneePiste;
 			
 			$nomAlbum = filter_input(INPUT_POST, 'nomAlbum',FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-			$imageAlbum = filter_input(INPUT_POST, 'imageAlbum', FILTER_SANITIZE_URL);
+			$imageAlbum = filter_input(INPUT_POST, 'imageAlbum', FILTER_SANITIZE_URL) ?: "https://www.gap-tallard-durance.fr/fileadmin/_processed_/5/a/csm_AdobeStock_cle_sol_03179e2243.jpg";
 
-
-			if(isset( $piste['personne'])) {
-				$nbArtistes = filter_input(INPUT_POST,'nbArtistesPiste', FILTER_SANITIZE_NUMBER_INT) ?? 1;
-				$nomGenre = filter_input(INPUT_POST, 'genrePiste', FILTER_SANITIZE_STRING);
+			if(isset($piste['personne'])) {
+				$nbArtistes = filter_input(INPUT_POST,'nbArtistesPiste', FILTER_SANITIZE_NUMBER_INT) ?: 1;
+				$idsGenres = filter_input(INPUT_POST, 'idsGenrePiste', FILTER_SANITIZE_NUMBER_INT, FILTER_REQUIRE_ARRAY) ?: [];
 			} else {
-				$nbArtistes = filter_input(INPUT_POST,'nbArtistesAlbum', FILTER_SANITIZE_NUMBER_INT) ?? 1;
-				$nomGenre = filter_input(INPUT_POST, 'genreAlbum', FILTER_SANITIZE_STRING);
+				$nbArtistes = filter_input(INPUT_POST,'nbArtistesAlbum', FILTER_SANITIZE_NUMBER_INT) ?: 1;
+				$idsGenres = filter_input(INPUT_POST, 'idsGenreAlbum', FILTER_SANITIZE_NUMBER_INT, FILTER_REQUIRE_ARRAY) ?: [];
 			}
 
 			for($i = 1 ; $i <= $nbArtistes; $i++) {
@@ -229,45 +231,26 @@ class CatalogueController {
 
 			if($piste['ajout'] == 'musique' && $piste['personne'] == 'Artiste') {
 				// Ajout d'un musique avec un ou plusieurs artistes
-				$champsRequis = ['nomPiste', 'anneePiste', 'genrePiste', 'nomAlbum'];
-				for($i = 1; $i <= $nbArtistes; $i++) array_push($champsRequis, 'nomArtiste'.$i);
-				$areAllFieldsOK = true;
-	
-	
-				foreach($champsRequis as $champs) $areAllFieldsOK &= isset($piste[$champs]);
-				if($areAllFieldsOK){
-					try{	
-						if($imagePiste == "")
-						{
-							$imagePiste = "https://www.gap-tallard-durance.fr/fileadmin/_processed_/5/a/csm_AdobeStock_cle_sol_03179e2243.jpg";
-						}
-						Piste::query()->firstOrCreate(['nomPiste' => $nomPiste,'imagePiste' => $imagePiste,'annéePiste' => $anneePiste])->save();
-	
-						$piste = Piste::select('idPiste')->where('nomPiste','like',  $nomPiste)->first();
-						if($imageAlbum == "")
-						{
-							$imageAlbum = "https://www.gap-tallard-durance.fr/fileadmin/_processed_/5/a/csm_AdobeStock_cle_sol_03179e2243.jpg";
-						}
-						Album::query()->firstOrCreate(['nomAlbum' => $nomAlbum, 'imageAlbum' => $imageAlbum, 'annéeAlbum' => $anneeAlbum])->save();
-						$album = Album::select('idAlbum')->where('nomAlbum','like',$nomAlbum)->first();
-						Fait_partie::query()->firstOrCreate(['idPiste'=> $piste->idPiste,'idAlbum'=>$album->idAlbum])->save();
+				if($nomPiste && $anneePiste && $nomAlbum && $nbArtistes >= 1){
+					try{
 						
+						$piste =Piste::firstOrCreate(['nomPiste' => $nomPiste,'imagePiste' => $imagePiste,'annéePiste' => $anneePiste]);
+						$album = Album::firstOrCreate(['nomAlbum' => $nomAlbum, 'imageAlbum' => $imageAlbum, 'annéeAlbum' => $anneeAlbum]);
+						Fait_partie::firstOrCreate(['idPiste'=> $piste->idPiste,'idAlbum'=>$album->idAlbum]);
 						
 						for($i = 0 ; $i < $nbArtistes; $i++) {
-							Artiste::query()->firstOrCreate(['nomArtiste' => $nomArtistes[$i], 'prénomArtiste' => $prenomArtistes[$i]])->save();
+							Artiste::firstOrCreate(['nomArtiste' => $nomArtistes[$i], 'prénomArtiste' => $prenomArtistes[$i]]);
 							$artiste = Artiste::select('idArtiste')->where('nomArtiste','like',  $nomArtistes[$i])->first();
-							A_joue_piste::query()->firstOrCreate(['idPiste'=>$piste->idPiste,'idArtiste'=> $artiste->idArtiste])->save();
-							A_joue_album::query()->firstOrCreate(['idAlbum' => $album->idAlbum, 'idArtiste'=>$artiste->idArtiste])->save();
+							A_joue_piste::firstOrCreate(['idPiste'=>$piste->idPiste,'idArtiste'=> $artiste->idArtiste]);
+							A_joue_album::firstOrCreate(['idAlbum' => $album->idAlbum, 'idArtiste'=>$artiste->idArtiste]);
 						}
-
-						$nomGenre = explode(",", $nomGenre);
 						
-						foreach ($nomGenre as $nom) {
-							$nom = trim($nom);
-							Genre::query()->firstOrCreate(['nomGenre' => $nom])->save();
+						foreach (Genre::whereIn('idGenre', $idsGenres)->get()->toArray() as $nom) {
+							$nom = trim($nom['nomGenre']);
+							Genre::firstOrCreate(['nomGenre' => $nom]);
 							$genre = Genre::select('idGenre')->where('nomGenre','like', $nom)->first();
-							Est_du_genre_piste::query()->firstOrCreate(['idPiste'=> $piste->idPiste, 'idGenre'=> $genre->idGenre])->save();
-							Est_du_genre_album::query()->firstOrCreate(['idAlbum'=> $album->idAlbum, 'idGenre'=> $genre->idGenre])->save();
+							Est_du_genre_piste::firstOrCreate(['idPiste'=> $piste->idPiste, 'idGenre'=> $genre->idGenre]);
+							Est_du_genre_album::firstOrCreate(['idAlbum'=> $album->idAlbum, 'idGenre'=> $genre->idGenre]);
 						}
 						
 					}
@@ -286,48 +269,23 @@ class CatalogueController {
 			}
 			elseif($piste['ajout'] == 'musique' && $piste['personne'] == 'Groupe') {
 				// Ajout d'un musique avec un groupe
-				$champsRequis = ['nomPiste', 'anneePiste', 'genrePiste', 'nomAlbum'];
-				for($i = 1; $i <= $nbArtistes; $i++) array_push($champsRequis, 'nomArtiste'.$i);
-				$areAllFieldsOK = true;
-
-				foreach($champsRequis as $champs) $areAllFieldsOK &= isset($piste[$champs]);
-
-				if($areAllFieldsOK){
-	
+				if($nomPiste && $anneePiste && $nomAlbum && $nbArtistes >= 1){
 					try{
-	
-						if($imagePiste == "")
-						{
-							$imagePiste = "https://www.gap-tallard-durance.fr/fileadmin/_processed_/5/a/csm_AdobeStock_cle_sol_03179e2243.jpg";
-						}
-						Piste::query()->firstOrCreate(['nomPiste' => $nomPiste,'imagePiste' => $imagePiste,'annéePiste' => $anneePiste])->save();
-						$piste = Piste::select('idPiste')->where('nomPiste','like',  $nomPiste)->first();
-
-						if($imageAlbum == "")
-						{
-							$imageAlbum = "https://www.gap-tallard-durance.fr/fileadmin/_processed_/5/a/csm_AdobeStock_cle_sol_03179e2243.jpg";
-						}
-						Album::query()->firstOrCreate(['nomAlbum' => $nomAlbum, 'imageAlbum' => $imageAlbum, 'annéeAlbum' => $anneeAlbum])->save();
-						$album = Album::select('idAlbum')->where('nomAlbum','like', $nomAlbum)->first();
+						$piste = Piste::firstOrCreate(['nomPiste' => $nomPiste,'imagePiste' => $imagePiste,'annéePiste' => $anneePiste]);
+						$album = Album::firstOrCreate(['nomAlbum' => $nomAlbum, 'imageAlbum' => $imageAlbum, 'annéeAlbum' => $anneeAlbum]);
 						
-						
-
-						$nomGenre = explode(",", $nomGenre);
-						foreach ($nomGenre as $nom) {
-							Genre::query()->firstOrCreate(['nomGenre' => $nom])->save();
+						foreach (Genre::whereIn('idGenre', $idsGenres)->get()->toArray() as $nom) {
+							$nom = trim($nom['nomGenre']);
+							Genre::firstOrCreate(['nomGenre' => $nom]);
 							$genre = Genre::select('idGenre')->where('nomGenre','like', $nom)->first();
-							Est_du_genre_album::query()->firstOrCreate(['idAlbum'=> $album->idAlbum, 'idGenre'=> $genre->idGenre])->save();
-							Est_du_genre_piste::query()->firstOrCreate(['idPiste'=> $piste->idPiste, 'idGenre'=> $genre->idGenre])->save();
+							Est_du_genre_piste::firstOrCreate(['idPiste'=> $piste->idPiste, 'idGenre'=> $genre->idGenre]);
+							Est_du_genre_album::firstOrCreate(['idAlbum'=> $album->idAlbum, 'idGenre'=> $genre->idGenre]);
 						}
 
-						Artiste::query()->firstOrCreate(['nomArtiste' => $nomArtistes[0], 'prénomArtiste' => ""])->save();
-						$artiste = Artiste::select('idArtiste')->where('nomArtiste','like',  $nomArtistes[0])->first();
-
-						A_joue_piste::query()->firstOrCreate(['idPiste'=>$piste->idPiste,'idArtiste'=> $artiste->idArtiste])->save();
-						Fait_partie::query()->firstOrCreate(['idPiste'=> $piste->idPiste,'idAlbum'=> $album->getOriginal()['idAlbum']])->save();
-						A_joue_album::query()->firstOrCreate(['idAlbum' => $album->getOriginal()['idAlbum'], 'idArtiste'=>$artiste->idArtiste])->save();
-
-	
+						$artiste = Artiste::firstOrCreate(['nomArtiste' => $nomArtistes[0], 'prénomArtiste' => ""]);
+						A_joue_piste::firstOrCreate(['idPiste'=>$piste->idPiste,'idArtiste'=> $artiste->idArtiste]);
+						Fait_partie::firstOrCreate(['idPiste'=> $piste->idPiste,'idAlbum'=> $album->getOriginal()['idAlbum']]);
+						A_joue_album::firstOrCreate(['idAlbum' => $album->getOriginal()['idAlbum'], 'idArtiste'=>$artiste->idArtiste]);
 					}
 					catch(\Exception $e){
 						print($e);
@@ -342,41 +300,56 @@ class CatalogueController {
 					
 				}
 			}
-			//l'erreur est là, aussi
-			elseif($piste['ajout'] == 'album' && $piste['personneAlbum'] == 'Artiste') {
-				
-				$champsRequis = ['nomAlbum', 'anneeAlbum', 'genreAlbum'];
-				for($i = 1; $i <= $nbArtistes; $i++) array_push($champsRequis, 'nomArtiste'.$i);
-				$areAllFieldsOK = true;
-
-				foreach($champsRequis as $champs) $areAllFieldsOK &= isset($piste[$champs]);
-			
-
-				if($areAllFieldsOK){
-	
+			else { // $piste['ajout'] == 'album'
+				if(count($idsPistesAlbum) >= 1 && $nomAlbum && $nbArtistes >= 1 && count($idsGenres))  {
 					try{
-						$pisteAlbum = Piste::where('nomPiste', 'like', $nomPisteAlbum)->first();
-						if($pisteAlbum) {
-
-							//Insertion de l'album
-							if($imageAlbum == "")
-							{
-								$imageAlbum = "https://www.gap-tallard-durance.fr/fileadmin/_processed_/5/a/csm_AdobeStock_cle_sol_03179e2243.jpg";
-							}
-							Album::query()->firstOrCreate(['nomAlbum' => $nomAlbum,'imageAlbum' => $imageAlbum,'annéeAlbum' => $anneeAlbum])->save();
-							$album = Album::select('idAlbum')->where('nomAlbum','like',  $nomAlbum)->first();
-		
-							for($i = 0 ; $i < $nbArtistes; $i++) {
-								Artiste::query()->firstOrCreate(['nomArtiste' => $nomArtistes[$i], 'prénomArtiste' => $prenomArtistes[$i]])->save();
-								$artiste = Artiste::select('idArtiste')->where('nomArtiste','like',  $nomArtistes[$i])->first();
-								A_joue_album::query()->firstOrCreate(['idAlbum'=> $album->idAlbum,'idArtiste'=> $artiste->idArtiste])->save();
-							}
-							
-							$nomGenre = explode(",", $nomGenre);
-							foreach ($nomGenre as $nom) {
-								Genre::query()->firstOrCreate(['nomGenre' => $nom])->save();
-								$genre = Genre::select('idGenre')->where('nomGenre','like', $nom)->first();
-								Est_du_genre_album::query()->firstOrCreate(['idAlbum'=> $album->idAlbum, 'idGenre'=> $genre->idGenre])->save();
+						if(Piste::whereIn('idPiste', $idsPistesAlbum)->get()) {
+							$albums = Album::where('nomAlbum', 'like', $nomAlbum)
+								->join('a_joué_album', 'album.idAlbum', '=', 'a_joué_album.idAlbum')
+								->join('artiste', 'artiste.idArtiste','=','a_joué_album.idArtiste')
+								->get()
+								->groupBy(function ($item, $key) {return $item->getOriginal()['idAlbum'];})
+								->toArray();
+							if(empty($albums)) {
+								$albumComplet = true;
+								$idAlbumComplet = 0;
+								foreach ($albums as $key => $album) {
+									$nomArtistesTemp = $nomArtistes;
+									foreach ($album as $artiste) {
+										$artistePresent = false;
+										if(in_array($artiste['nomArtiste'], $nomArtistesTemp)) {
+											$artistePresent = true;
+											$nomArtistesTemp = array_diff($nomArtistesTemp, array($artiste['nomArtiste']));
+										}
+										$albumComplet &= $artistePresent;
+									}
+									$albumComplet &= (count($album) == count($nomArtistes));
+									if($albumComplet) $idAlbumComplet = $key;
+								}
+								if($idAlbumComplet !=0) {
+									// Cas l'album existe déjà
+									foreach(Piste::whereIn('idPiste', $idsPistesAlbum)->get()->toArray() as $piste) {
+										Fait_partie::firstOrCreate(['idPiste' => $piste['idPiste'], 'idAlbum' => $idAlbumComplet]);
+									}
+								} else {
+									// Cas un album de ce nom là existe, mais pas avec les mêmes artistes
+									$album = Album::firstOrCreate(['nomAlbum' => $nomAlbum,'imageAlbum' => $imageAlbum, 'annéeAlbum' => $anneeAlbum]);
+									foreach(Piste::whereIn('idPiste', $idsPistesAlbum)->get()->toArray() as $piste) {
+										Fait_partie::firstOrCreate(['idPiste' => $piste['idPiste'], 'idAlbum' => $album->idAlbum]);
+									}
+									foreach(Artiste::whereIn('nomArtiste', $nomArtistes)->get()->toArray() as $artiste) {
+										A_joue_album::firstOrCreate(['idAlbum' => $album->idAlbum, 'idArtiste' => $artiste['idArtiste']]);
+									}
+								}
+							} else {
+								// Cas Aucun album ne porte ce nom là
+								$album = Album::firstOrCreate(['nomAlbum' => $nomAlbum,'imageAlbum' => $imageAlbum, 'annéeAlbum' => $anneeAlbum]);
+								foreach(Piste::whereIn('idPiste', $idsPistesAlbum)->get()->toArray() as $piste) {
+									Fait_partie::firstOrCreate(['idPiste' => $piste['idPiste'], 'idAlbum' => $album->idAlbum]);
+								}
+								foreach(Artiste::whereIn('nomArtiste', $nomArtistes)->get()->toArray() as $artiste) {
+										A_joue_album::firstOrCreate(['idAlbum' => $album->idAlbum, 'idArtiste' => $artiste['idArtiste']]);
+								}
 							}
 						} else $error = "L'album n'a pas été ajouté, vérifiez vos informations.";
 					}
@@ -392,64 +365,9 @@ class CatalogueController {
 					}
 					$url = $request->getUri()->getBasePath();
 					return $this->view->render($response, 'AddPiste.html.twig', [
-						'url' => $url,
-						'error' => $error
+						'url' => $url
 					]);
 				}
-			}
-			//$piste['ajout'] == 'album' && $piste['entite'] == 'groupe'
-			else {
-				$champsRequis = ['nomAlbum', 'anneeAlbum', 'genreAlbum'];
-				for($i = 1; $i <= $nbArtistes; $i++) array_push($champsRequis, 'nomArtiste'.$i);
-				$areAllFieldsOK = true;
-
-				foreach($champsRequis as $champs) $areAllFieldsOK &= isset($piste[$champs]);
-
-				if($areAllFieldsOK){
-	
-					try{
-						$pisteAlbum = Piste::where('nomPiste', 'like', $nomPisteAlbum)->first();
-						if($pisteAlbum) {
-
-							//Insertion de l'album
-							if($imageAlbum == "")
-							{
-								$imageAlbum = "https://www.gap-tallard-durance.fr/fileadmin/_processed_/5/a/csm_AdobeStock_cle_sol_03179e2243.jpg";
-							}
-							Album::query()->firstOrCreate(['nomAlbum' => $nomAlbum,'imageAlbum' => $imageAlbum,'annéeAlbum' => $anneeAlbum])->save();
-							$album = Album::select('idAlbum')->where('nomAlbum','like',  $nomAlbum)->first();
-		
-							//Insertion du groupe
-							Artiste::query()->firstOrCreate(['nomArtiste' => $nomArtistes[0], 'prénomArtiste' =>''])->save();
-							$artiste = Artiste::select('idArtiste')->where('nomArtiste','like',  $nomArtistes[0])->first();
-							//Lié un album à des artistes 
-							A_joue_album::query()->firstOrCreate(['idAlbum'=>$album->idAlbum,'idArtiste'=> $artiste->idArtiste])->save();
-
-							$nomGenre = explode(",", $nomGenre);
-							foreach ($nomGenre as $nom) { //Insertion des genres
-								Genre::query()->firstOrCreate(['nomGenre' => $nom])->save();
-								$genre = Genre::select('idGenre')->where('nomGenre','like', $nom)->first();
-								//Lié un genre à un album
-								Est_du_genre_album::query()->firstOrCreate(['idAlbum'=> $album->idAlbum, 'idGenre'=> $genre->idGenre])->save();
-							}
-						} else $error = "L'album n'a pas été ajouté, vérifiez vos informations.";
-					}
-					catch(\Exception $e){
-						print($e);
-						$error = "L'album n'a pas été ajoutée, vérifiez vos informations.";
-						$url = $request->getUri()->getBasePath();
-						return $this->view->render($response, 'AddPiste.html.twig', [
-							'url' => $url,
-							'error'=> $error
-						]);
-					}
-						
-					$url = $request->getUri()->getBasePath();
-					return $this->view->render($response, 'AddPiste.html.twig', [
-						'url' => $url,
-						'error' => $error
-					]);
-				}		
 			}
 		}
 		
@@ -555,11 +473,11 @@ class CatalogueController {
 
 		$pistes = [];
 
-		//$pistesQuerry = Piste::where('nomPiste','like', '%'.$param['name'].'%')->get();
-		$pistesQuerry = Piste::all();
-		foreach ($pistesQuerry as $value) array_push($pistes, $value->getOriginal()['nomPiste']);
+		$pistesQuerry = empty($param['term']) ? Piste::all() : Piste::where('nomPiste','like', '%'.$param['term'].'%')->get();
+		//$pistesQuerry = Piste::all();
+		foreach ($pistesQuerry as $value) array_push($pistes, ['id' => $value->getOriginal()['idPiste'], 'text' => $value->getOriginal()['nomPiste']]);
 
-		$response->getBody()->write(json_encode($pistes));
+		$response->getBody()->write(json_encode(['results' => $pistes]));
 		
 		return $response;
 	}
@@ -570,10 +488,18 @@ class CatalogueController {
 		$genres = [];
 
 		//$genresQuerry = Genre::where('nomGenre','like', '%'.$param['name'].'%')->get();
-		$genresQuerry = Genre::all();
-		foreach ($genresQuerry as $value) array_push($genres, $value->getOriginal()['nomGenre']);
+		$genresQuerry = empty($param['term']) ? Genre::all() : Genre::where('nomGenre','like', '%'.$param['term'].'%')->get();
+		foreach ($genresQuerry as $value) array_push($genres, ['id' => $value->getOriginal()['idGenre'], 'text' => $value->getOriginal()['nomGenre']]);
 
-		$response->getBody()->write(json_encode($genres));
+		$response->getBody()->write(json_encode(['results' => $genres]));
+		
+		return $response;
+	}
+
+	public function getAlbums($request, $response, $args) {
+		$albums = [];
+		foreach (Album::all() as $value) array_push($albums, $value->getOriginal()['nomAlbum']);
+		$response->getBody()->write(json_encode($albums));
 		
 		return $response;
 	}
@@ -587,12 +513,12 @@ class CatalogueController {
 			$piste = $request->getParams();
 
 			// Required
-			$nomPiste = filter_input(INPUT_POST, 'nomPiste', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-			$nomPisteOriginal = filter_input(INPUT_POST, 'nomPisteOriginal', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+			$nomPiste = filter_input(INPUT_POST, 'nomPiste', FILTER_SANITIZE_STRING,  FILTER_FLAG_NO_ENCODE_QUOTES);
+			$nomPisteOriginal = filter_input(INPUT_POST, 'nomPisteOriginal', FILTER_SANITIZE_STRING,  FILTER_FLAG_NO_ENCODE_QUOTES);
 			$nomGenre = filter_input(INPUT_POST, 'genrePiste', FILTER_SANITIZE_STRING);
 			$anneePiste = filter_input(INPUT_POST, 'anneePiste', FILTER_SANITIZE_NUMBER_INT);
-			$nomAlbum = filter_input(INPUT_POST, 'nomAlbum',FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-			$nomAlbumOriginal = filter_input(INPUT_POST, 'nomAlbumOriginal',FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+			$nomAlbum = filter_input(INPUT_POST, 'nomAlbum',FILTER_SANITIZE_STRING,  FILTER_FLAG_NO_ENCODE_QUOTES);
+			$nomAlbumOriginal = filter_input(INPUT_POST, 'nomAlbumOriginal',FILTER_SANITIZE_STRING,  FILTER_FLAG_NO_ENCODE_QUOTES);
 
 			// Optional
 			$imagePiste = filter_input(INPUT_POST, 'imagePiste', FILTER_SANITIZE_URL);

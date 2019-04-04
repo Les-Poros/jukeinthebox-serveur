@@ -135,6 +135,11 @@ $app->post('/EditMusic', function($request, $response, $args){
 	$EditMusic = $controller->editMusic($request, $response, $args);
 })->setName('EditMusic');
 
+$app->get('/GetAlbums', function($request, $response, $args){
+	$controller = $this['CatalogueController'];
+	$controller->getAlbums($request, $response, $args);
+})->setName('GetAlbums');
+
 $app->map(['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], '/{routes:.+}', function($req, $res) {
     $handler = $this->notFoundHandler; // handle using the default Slim page not found handler
     return $handler($req, $res);
