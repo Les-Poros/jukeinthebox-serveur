@@ -293,6 +293,7 @@ class CatalogueController {
 
 						Album::query()->firstOrCreate(['nomAlbum' => $nomAlbum, 'imageAlbum' => $imageAlbum, 'annéeAlbum' => $anneeAlbum])->save();
 						$album = Album::select('idAlbum')->where('nomAlbum','like', $nomAlbum)->first();
+						Fait_partie::query()->firstOrCreate(['idPiste'=> $piste->idPiste,'idAlbum'=>$album->idAlbum])->save();
 
 						$nomGenre = explode(",", $nomGenre);
 						foreach ($nomGenre as $nom) {
@@ -309,7 +310,7 @@ class CatalogueController {
 						
 
 						
-						Fait_partie::query()->firstOrCreate(['idPiste'=> $piste->idPiste,'idAlbum'=> $album->getOriginal()['idAlbum']])->save();
+						//Fait_partie::query()->firstOrCreate(['idPiste'=> $piste->idPiste,'idAlbum'=> $album->getOriginal()['idAlbum']])->save();
 						A_joue_album::query()->firstOrCreate(['idAlbum' => $album->getOriginal()['idAlbum'], 'idArtiste'=>$artiste->idArtiste])->save();
 
 	
