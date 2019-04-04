@@ -237,11 +237,17 @@ class CatalogueController {
 				foreach($champsRequis as $champs) $areAllFieldsOK &= isset($piste[$champs]);
 				if($areAllFieldsOK){
 					try{	
-
+						if($imagePiste == "")
+						{
+							$imagePiste = "https://www.gap-tallard-durance.fr/fileadmin/_processed_/5/a/csm_AdobeStock_cle_sol_03179e2243.jpg";
+						}
 						Piste::query()->firstOrCreate(['nomPiste' => $nomPiste,'imagePiste' => $imagePiste,'annéePiste' => $anneePiste])->save();
 	
 						$piste = Piste::select('idPiste')->where('nomPiste','like',  $nomPiste)->first();
-
+						if($imageAlbum == "")
+						{
+							$imageAlbum = "https://www.gap-tallard-durance.fr/fileadmin/_processed_/5/a/csm_AdobeStock_cle_sol_03179e2243.jpg";
+						}
 						Album::query()->firstOrCreate(['nomAlbum' => $nomAlbum, 'imageAlbum' => $imageAlbum, 'annéeAlbum' => $anneeAlbum])->save();
 						$album = Album::select('idAlbum')->where('nomAlbum','like',$nomAlbum)->first();
 						Fait_partie::query()->firstOrCreate(['idPiste'=> $piste->idPiste,'idAlbum'=>$album->idAlbum])->save();
@@ -290,10 +296,17 @@ class CatalogueController {
 	
 					try{
 	
+						if($imagePiste == "")
+						{
+							$imagePiste = "https://www.gap-tallard-durance.fr/fileadmin/_processed_/5/a/csm_AdobeStock_cle_sol_03179e2243.jpg";
+						}
 						Piste::query()->firstOrCreate(['nomPiste' => $nomPiste,'imagePiste' => $imagePiste,'annéePiste' => $anneePiste])->save();
-	
 						$piste = Piste::select('idPiste')->where('nomPiste','like',  $nomPiste)->first();
 
+						if($imageAlbum == "")
+						{
+							$imageAlbum = "https://www.gap-tallard-durance.fr/fileadmin/_processed_/5/a/csm_AdobeStock_cle_sol_03179e2243.jpg";
+						}
 						Album::query()->firstOrCreate(['nomAlbum' => $nomAlbum, 'imageAlbum' => $imageAlbum, 'annéeAlbum' => $anneeAlbum])->save();
 						$album = Album::select('idAlbum')->where('nomAlbum','like', $nomAlbum)->first();
 						
@@ -346,6 +359,10 @@ class CatalogueController {
 						if($pisteAlbum) {
 
 							//Insertion de l'album
+							if($imageAlbum == "")
+							{
+								$imageAlbum = "https://www.gap-tallard-durance.fr/fileadmin/_processed_/5/a/csm_AdobeStock_cle_sol_03179e2243.jpg";
+							}
 							Album::query()->firstOrCreate(['nomAlbum' => $nomAlbum,'imageAlbum' => $imageAlbum,'annéeAlbum' => $anneeAlbum])->save();
 							$album = Album::select('idAlbum')->where('nomAlbum','like',  $nomAlbum)->first();
 		
@@ -395,6 +412,10 @@ class CatalogueController {
 						if($pisteAlbum) {
 
 							//Insertion de l'album
+							if($imageAlbum == "")
+							{
+								$imageAlbum = "https://www.gap-tallard-durance.fr/fileadmin/_processed_/5/a/csm_AdobeStock_cle_sol_03179e2243.jpg";
+							}
 							Album::query()->firstOrCreate(['nomAlbum' => $nomAlbum,'imageAlbum' => $imageAlbum,'annéeAlbum' => $anneeAlbum])->save();
 							$album = Album::select('idAlbum')->where('nomAlbum','like',  $nomAlbum)->first();
 		
