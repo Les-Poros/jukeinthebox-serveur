@@ -196,7 +196,7 @@ class CatalogueController {
 				'genres' => $genres,
 				'artistes' => $artistes,
 				'annee' => $piste->getOriginal()['annéePiste'],
-				'album' => $albumQuerry->first() ? $albumQuerry->first()->getAttributes()['nomAlbum'] : null
+				'album' => $albums
 			]);
 		}
 		
