@@ -317,7 +317,7 @@ class CatalogueController {
 							Genre::query()->firstOrCreate(['nomGenre' => $nom])->save();
 							$genre = Genre::select('idGenre')->where('nomGenre','like', $nom)->first();
 							Est_du_genre_album::query()->firstOrCreate(['idAlbum'=> $album->idAlbum, 'idGenre'=> $genre->idGenre])->save();
-							Est_du_genre_piste::query()->firstOrCreate(['idPiste'=> $piste>getOriginal()['idPiste'], 'idGenre'=> $genre->idGenre])->save();
+							Est_du_genre_piste::query()->firstOrCreate(['idPiste'=> $piste->idPiste, 'idGenre'=> $genre->idGenre])->save();
 						}
 
 						Artiste::query()->firstOrCreate(['nomArtiste' => $nomArtistes[0], 'prénomArtiste' => ""])->save();
