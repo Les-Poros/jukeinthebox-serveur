@@ -142,7 +142,7 @@
 													
 												</div>
 											</div>
-											<button type="submit" class="m-auto btn-success" id="ajouterMusique" name="ajout" value="musique" disabled >Ajouter une musique</button>
+											<button type="submit" class="m-auto" id="ajouterMusique" name="ajout" value="musique" disabled >Ajouter une musique</button>
 										</div>
 									</div>
 								</div>
@@ -526,9 +526,9 @@
 				publicId: public,
 				clientAllowedFormats: ["mp3"]
 				}, (error, result) => {
-					console.log(result);
+					
 					if (result && result.event === "success") {
-						console.log(result);
+					
 						document.getElementById("ajouterMusique").disabled = false;
 						document.getElementById("infoUpload").innerHTML = "Le fichier a bien été envoyé";
 					}
