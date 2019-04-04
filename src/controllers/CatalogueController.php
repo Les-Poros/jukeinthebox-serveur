@@ -433,7 +433,7 @@ class CatalogueController {
 		$url = $request->getUri()->getBasePath();
 		return $this->view->render($response, 'ListMusic.html.twig', [
 			'url' => $url,
-			'error' => $error,
+			//'error' => $error,
 			'tableauPistes' => $tableauPistes
 		]);
 	}

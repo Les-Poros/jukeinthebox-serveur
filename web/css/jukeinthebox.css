@@ -149,6 +149,23 @@ input[type=number]::-webkit-outer-spin-button {
 .info{
   padding-top: 5%;
 }
+
+/*#upload_widget{
+  width: 50%;
+  background-color: #c2c2c2;
+  color: #3c3c3c;
+  border: 1px solid #b3b3b3;
+  box-shadow: 1px 1px 3px gray;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border-radius: 4px;
+  cursor: pointer;
+}*/
+
+.pointer {cursor: pointer;}
+
+
+
 /*
 fieldset
 {

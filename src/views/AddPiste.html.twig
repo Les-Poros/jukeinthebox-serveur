@@ -20,7 +20,7 @@
 					<a class="button  btn-secondary" href="{{url}}/ListCatalogue"><div>Retour à la liste des musiques </div></a>
 			</div>
 			<div class="row">
-				<div class="col-8 offset-md-2">
+				<div class="info col-8 offset-md-2">
 					<div class="alert alert-info" role="alert">
 						Cette page est composé de deux formulaire, l'un pour ajouter une piste, l'autre pour ajouter un album et peuvent être remplis indépendament l'un de l'autre.
 					</div>
@@ -127,15 +127,15 @@
 
 											
 											
-											<!--<input id="monBtn" type="image" class="btn" src="assets/icons8-plus-math-24.png" alt="icone" style="position:relative; z-index:20; margin:0px;" onclick="AjouterArtistes()">-->
+											
 											<h5>Fichier</h5> <hr style="width: 100%; display:inline-block; color:black; height: 0.5px;"/>
 
 											<div class="itemForm item" >
 												<div class="form-group row">
 													<label class="col-4 col-form-label" for="upload_widget">Fichier mp3</label>
 													<div class="col-8">
-														<input id="upload_widget" type="button" class="cloudinary-button" value="Envoie du fichier*"/>
-														<label class="">*Seuls les fichiers mp3 sont acceptés</label>
+														<input id="upload_widget" name="upload_widget" type="button" class="cloudinary-button" value="Envoi du fichier* " />//disabled
+														<label class="">* Seuls les fichiers mp3 sont acceptés</label>
 														<p id="infoUpload"></p>
 													</div>
 													
@@ -499,7 +499,7 @@
 			}
 
 			if (isUploadAvailable()) {
-				//var public = tableau_valeur['nomArtiste'].toLowerCase().split(' ');
+				
 				let public = '';
 				for(artiste of artistes) {
 					tableau_valeur[artiste] = tableau_valeur[artiste].toLowerCase().split(' ');
@@ -515,7 +515,7 @@
 				public +=  '-';
 				public += tableau_valeur['nomPiste'].replace(/ /g,"_");
 
-				console.log(public);
+				
 
 				cloudinary.createUploadWidget({
 				cloudName: 'lesporos',
@@ -526,9 +526,9 @@
 				publicId: public,
 				clientAllowedFormats: ["mp3"]
 				}, (error, result) => {
-					console.log(result);
+					
 					if (result && result.event === "success") {
-						console.log(result);
+						
 						document.getElementById("ajouterMusique").disabled = false;
 						document.getElementById("infoUpload").innerHTML = "Le fichier a bien été envoyé";
 					}
@@ -574,10 +574,6 @@
 			})
 		}
 
-
-		//console.log(getInfo('/GetGenres?name=Bal'));
-		
-		//console.log($.ajax({async: false, url: '/GetGenres?name=' + document.getElementById('genreAlbum').value}))
 
 		$.ajax({
 			type: "GET",

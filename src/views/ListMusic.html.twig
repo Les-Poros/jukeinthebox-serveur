@@ -41,7 +41,7 @@
 						</thead>
 						<tbody>
 						{% for j in tableauPistes %}
-							<tr id="row">
+							<tr id="row" class="pointer">
 								<td><img id ="vignette" src="{{j['image']}}"></img></td>
 								<td>{{j['titre']}}</td>
 								<td>{{j['artistes']|join(', ')}}</td>
@@ -85,7 +85,7 @@
 					});
 					
 					$("#row").click(function(item){
-						console.log(item.target.parentNode.cells[0].innerText);
+						
 						window.location = "{{ path_for('InfoMusic') }}" + encodeURI("?title=" + item.target.parentNode.cells[1].innerText.replace(/\s/g, "+"));
 					});
 				</script>
