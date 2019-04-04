@@ -117,21 +117,23 @@ $app->get('/InfoMusic', function($request, $response, $args){
 
 $app->get('/GetArtistes', function($request, $response, $args){
 	$controller = $this['CatalogueController'];
-	$param = $request->getParams();
 	$GetArtistes = $controller->getArtistes($request, $response, $args);
 })->setName('GetArtistes');
 
 $app->get('/GetPistes', function($request, $response, $args){
 	$controller = $this['CatalogueController'];
-	$param = $request->getParams();
 	$GetPistes = $controller->getPistes($request, $response, $args);
 })->setName('GetPistes');
 
 $app->get('/GetGenres', function($request, $response, $args){
 	$controller = $this['CatalogueController'];
-	$param = $request->getParams();
 	$GetGenres = $controller->getGenres($request, $response, $args);
 })->setName('GetGenres');
+
+$app->post('/EditMusic', function($request, $response, $args){
+	$controller = $this['CatalogueController'];
+	$EditMusic = $controller->editMusic($request, $response, $args);
+})->setName('EditMusic');
 
 $app->map(['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], '/{routes:.+}', function($req, $res) {
     $handler = $this->notFoundHandler; // handle using the default Slim page not found handler

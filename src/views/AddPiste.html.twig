@@ -153,19 +153,28 @@
 					<div class="col-6">
 					<form action='{{url}}/ListCatalogue' method='post' enctype='multipart/form-data'>
 						<fieldset class="col-12">
-							<legend>Album :</legend>
+							<legend>Ajouter un Album :</legend>
 								<div class="card">
 									<div class="card-body">
 										<div class="form-group row">
 
 											
+											<h5>Piste</h5> <hr style="width: 100%; display:inline-block; color:black; height: 0.5px;"/>
+
+											<div class="itemForm item" >
+												<div class="form-group row">
+													<label class="col-4 col-form-label" for="nomAlbum">Piste</label>
+													<div class="col-8">
+														<input id="nomPisteAlbum" class="form-control" type="text" name="nomPisteAlbum" autocomplete="off" required>
+													</div>
+												</div>
+											</div>
+
 											<h5>Album</h5> <hr style="width: 100%; display:inline-block; color:black; height: 0.5px;"/>
 
 											<div class="itemForm item" >
 												<div class="form-group row">
-
-														<label class="col-4 col-form-label" for="nomAlbum">Album</label>
-
+													<label class="col-4 col-form-label" for="nomAlbum">Album</label>
 													<div class="col-8">
 														<input id="nomAlbum" class="form-control" type="text" name="nomAlbum" autocomplete="off" required>
 													</div>
@@ -600,7 +609,6 @@
 			url: '/GetArtistes',
 			dataType: "json",
 			success: function (data) {
-				console.log(data);
 				$("[id^='nomArtiste']").typeahead({
 					source: data['nom'],
 					menu: '<ul class="typeahead dropdown-menu" role="listbox"></ul>',
@@ -630,6 +638,29 @@
 					afterEmptySelect: $.noop,
 					addItem: false,
 					delay: 0,
+				});
+			}
+		});
+		$.ajax({
+			type: "GET",
+			contentType: "application/json; charset=utf-8",
+			url: '/GetPistes',
+			dataType: "json",
+			success: function (data) {
+				$("#nomPisteAlbum").typeahead({
+					source: data,
+					menu: '<ul class="typeahead dropdown-menu" role="listbox"></ul>',
+					item: '<li><a class="dropdown-item" href="#" role="option"></a></li>',
+					headerHtml: '<li class="dropdown-header"></li>',
+					headerDivider: '<li class="divider" role="separator"></li>',
+					itemContentSelector:'a',
+					minLength: 1,
+					scrollHeight: 0,
+					autoSelect: true,
+					afterSelect: $.noop,
+					afterEmptySelect: $.noop,
+					addItem: false,
+					delay: 0
 				});
 			}
 		});
