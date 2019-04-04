@@ -83,9 +83,7 @@
 						});
 						
 					});
-					
-					$("#row").click(function(item){
-						
+					$(".pointer").click(function(item){
 						window.location = "{{ path_for('InfoMusic') }}" + encodeURI("?title=" + item.target.parentNode.cells[1].innerText.replace(/\s/g, "+"));
 					});
 				</script>
