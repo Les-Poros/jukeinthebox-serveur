@@ -200,7 +200,7 @@ class CatalogueController {
 		}
 		
 		if($request->getMethod() == "POST") {
-			// Ne fonctionne pas sur un groupe (work in progress)
+			
 			$piste = $request->getParams();
 
 			$nomPiste = filter_input(INPUT_POST, 'nomPiste', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
@@ -297,13 +297,13 @@ class CatalogueController {
 						Album::query()->firstOrCreate(['nomAlbum' => $nomAlbum, 'imageAlbum' => $imageAlbum, 'annéeAlbum' => $anneeAlbum])->save();
 						$album = Album::select('idAlbum')->where('nomAlbum','like', $nomAlbum)->first();
 						
-						//Fait_partie::query()->firstOrCreate(['idPiste'=> $piste->idPiste,'idAlbum'=>$album->idAlbum])->save();
+						
 
 						$nomGenre = explode(",", $nomGenre);
 						foreach ($nomGenre as $nom) {
 							Genre::query()->firstOrCreate(['nomGenre' => $nom])->save();
 							$genre = Genre::select('idGenre')->where('nomGenre','like', $nom)->first();
-							Est_du_genre_album::query()->firstOrCreate(['idAlbum'=> $album->getOriginal()['idAlbum'], 'idGenre'=> $genre->idGenre])->save();
+							Est_du_genre_album::query()->firstOrCreate(['idAlbum'=> $album->idAlbum, 'idGenre'=> $genre->idGenre])->save();
 							Est_du_genre_piste::query()->firstOrCreate(['idPiste'=> $piste>getOriginal()['idPiste'], 'idGenre'=> $genre->idGenre])->save();
 						}
 
@@ -311,11 +311,6 @@ class CatalogueController {
 						$artiste = Artiste::select('idArtiste')->where('nomArtiste','like',  $nomArtistes[0])->first();
 
 						A_joue_piste::query()->firstOrCreate(['idPiste'=>$piste->idPiste,'idArtiste'=> $artiste->idArtiste])->save();
-						
-						
-						
-
-						
 						Fait_partie::query()->firstOrCreate(['idPiste'=> $piste->idPiste,'idAlbum'=> $album->getOriginal()['idAlbum']])->save();
 						A_joue_album::query()->firstOrCreate(['idAlbum' => $album->getOriginal()['idAlbum'], 'idArtiste'=>$artiste->idArtiste])->save();
 
