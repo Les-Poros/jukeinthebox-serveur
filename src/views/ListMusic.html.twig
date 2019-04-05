@@ -42,7 +42,7 @@
 						<tbody>
 						{% for j in tableauPistes %}
 							<tr id="row" class="pointer">
-								<td><img id ="vignette" src="{{j['image']}}"></img></td>
+								<td style="width: 15%;"><img id ="vignette" src="{{j['image']}}"></img></td>
 								<td>{{j['titre']}}</td>
 								<td>{{j['artistes']|join(', ')}}</td>
 								<td>{{j['album']|join(', ')}}</td>

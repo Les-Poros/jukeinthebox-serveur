@@ -263,6 +263,8 @@
 			row.appendChild(label);
 			row.appendChild(col);
 
+			//
+
 			return row;
 		}
 
@@ -395,6 +397,29 @@
 					});
 				}
 			});
+			$.ajax({
+				type: "GET",
+				contentType: "application/json; charset=utf-8",
+				url: url + '/GetArtistes',
+				dataType: "json",
+				success: function (data) {
+					$('#prenomArtiste' + input.value).typeahead({
+						source: [...new Set(data['prenom'])], // Retire les duplicatas du tableau
+						menu: '<ul class="typeahead dropdown-menu" role="listbox"></ul>',
+						item: '<li><a class="dropdown-item" href="#" role="option"></a></li>',
+						headerHtml: '<li class="dropdown-header"></li>',
+						headerDivider: '<li class="divider" role="separator"></li>',
+						itemContentSelector:'a',
+						minLength: 1,
+						scrollHeight: 0,
+						autoSelect: true,
+						afterSelect: $.noop,
+						afterEmptySelect: $.noop,
+						addItem: false,
+						delay: 0,
+					});
+				}
+			});
 		}
 
 		function supprimerArtiste(nomDeCategorie) {
@@ -425,10 +450,58 @@
 				artistes.appendChild(creerChampNomArtiste(1));
 				artistes.appendChild(creerChampPrenomArtiste(1));
 				artistes.appendChild(creerCompteurArtiste(nomDeCategorie));
+				$.ajax({
+			type: "GET",
+			contentType: "application/json; charset=utf-8",
+			url: url + '/GetArtistes',
+			dataType: "json",
+			success: function (data) {
+					$('input[name="prenomArtiste1"]').typeahead({
+						source: [...new Set(data['prenom'])], // Retire les duplicatas du tableau
+						menu: '<ul class="typeahead dropdown-menu" role="listbox"></ul>',
+						item: '<li><a class="dropdown-item" href="#" role="option"></a></li>',
+						headerHtml: '<li class="dropdown-header"></li>',
+						headerDivider: '<li class="divider" role="separator"></li>',
+						itemContentSelector:'a',
+						minLength: 1,
+						scrollHeight: 0,
+						autoSelect: true,
+						afterSelect: $.noop,
+						afterEmptySelect: $.noop,
+						addItem: false,
+						delay: 0,
+					});
+				}
+			});
 			} else {
 				titre.innerHTML = 'Groupe';
 				artistes.appendChild(creerChampNomGroupe());
 			}
+
+			// Requête pour ajouter l'autocomplétion au champ ajouté
+			$.ajax({
+			type: "GET",
+			contentType: "application/json; charset=utf-8",
+			url: url + '/GetArtistes',
+			dataType: "json",
+			success: function (data) {
+					$('input[name="nomArtiste1"]').typeahead({
+						source: data['nom'],
+						menu: '<ul class="typeahead dropdown-menu" role="listbox"></ul>',
+						item: '<li><a class="dropdown-item" href="#" role="option"></a></li>',
+						headerHtml: '<li class="dropdown-header"></li>',
+						headerDivider: '<li class="divider" role="separator"></li>',
+						itemContentSelector:'a',
+						minLength: 1,
+						scrollHeight: 0,
+						autoSelect: true,
+						afterSelect: $.noop,
+						afterEmptySelect: $.noop,
+						addItem: false,
+						delay: 0,
+					});
+				}
+			});
 		}
 
 		// Gestion des accents
@@ -679,7 +752,7 @@
 					delay: 0,
 				});
 				$("[id^='prenomArtiste']").typeahead({
-					source: data['prenom'],
+					source: [...new Set(data['prenom'])], // Retire les duplicatas du tableau
 					menu: '<ul class="typeahead dropdown-menu" role="listbox"></ul>',
 					item: '<li><a class="dropdown-item" href="#" role="option"></a></li>',
 					headerHtml: '<li class="dropdown-header"></li>',

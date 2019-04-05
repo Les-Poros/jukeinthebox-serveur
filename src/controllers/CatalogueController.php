@@ -337,12 +337,20 @@ class CatalogueController {
 									// Nous ajoutons juste les pistes
 									foreach(Piste::whereIn('idPiste', $idsPistesAlbum)->get()->toArray() as $piste) {
 										Fait_partie::firstOrCreate(['idPiste' => $piste['idPiste'], 'idAlbum' => $idAlbumComplet]);
+
 									}
 								} else {
 									// Cas : un album de ce nom là existe, mais pas avec les mêmes artistes
 									// Nous crééons un nouvel album avec ces artistes
 									// puis nous ajoutons les pistes et les relations album <-> artiste 
 									$album = Album::firstOrCreate(['nomAlbum' => $nomAlbum,'imageAlbum' => $imageAlbum, 'annéeAlbum' => $anneeAlbum]);
+
+									foreach (Genre::whereIn('idGenre', $idsGenres)->get()->toArray() as $nom) {
+										$nom = trim($nom['nomGenre']);
+										Genre::firstOrCreate(['nomGenre' => $nom]);
+										$genre = Genre::select('idGenre')->where('nomGenre','like', $nom)->first();
+										Est_du_genre_album::firstOrCreate(['idAlbum'=> $album->idAlbum, 'idGenre'=> $genre->idGenre]);
+									}
 									foreach(Piste::whereIn('idPiste', $idsPistesAlbum)->get()->toArray() as $piste) {
 										Fait_partie::firstOrCreate(['idPiste' => $piste['idPiste'], 'idAlbum' => $album->idAlbum]);
 									}
@@ -355,6 +363,12 @@ class CatalogueController {
 								// Nous crééons un nouvel album avec ces artistes
 								// puis nous ajoutons les pistes et les relations album <-> artiste 
 								$album = Album::firstOrCreate(['nomAlbum' => $nomAlbum,'imageAlbum' => $imageAlbum, 'annéeAlbum' => $anneeAlbum]);
+								foreach (Genre::whereIn('idGenre', $idsGenres)->get()->toArray() as $nom) {
+									$nom = trim($nom['nomGenre']);
+									Genre::firstOrCreate(['nomGenre' => $nom]);
+									$genre = Genre::select('idGenre')->where('nomGenre','like', $nom)->first();
+									Est_du_genre_album::firstOrCreate(['idAlbum'=> $album->idAlbum, 'idGenre'=> $genre->idGenre]);
+								}
 								foreach(Piste::whereIn('idPiste', $idsPistesAlbum)->get()->toArray() as $piste) {
 									Fait_partie::firstOrCreate(['idPiste' => $piste['idPiste'], 'idAlbum' => $album->idAlbum]);
 								}
