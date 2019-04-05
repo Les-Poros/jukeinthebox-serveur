@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="{{url}}/web/css/jukeinthebox.css">
+        <link crossorigin="anonymous" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" rel="stylesheet">
+    </head>
+
+    <body>
+        <div class="mainContainer">
+            <h1>Modifier une musique</h1>
+            <div class="buttons">
+                <a class="button" href="{{url}}/">
+                    <div >Accueil</div>
+                </a>
+                <a class="button" href="{{url}}/ListCatalogue">
+                    <div >Retour à la liste des musiques
+                    </div>
+                </a>
+            </div>
+            <div class="error">
+                {{error}}
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <form action='{{url}}/EditMusic' method='post'>
+                   
+                        <fieldset class="col-12">
+                            <legend>Piste associée à un album :</legend>
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="form-group row" id="formArtiste">
+                                        <div class="itemForm" id="item">
+                                       
+											<img class="col-4 offset-4" alt={{data.titre}} src="{{data.image}}"></img>
+                                        </div>
+                                        <h5>Musique</h5>
+                                        <hr style="width: 100%; display:inline-block; color:black; height: 0.5px;" />
+
+
+                                        <div class="itemForm item">
+                                            <div class="form-group row">
+                                                <label class="col-4 col-form-label" for="nomPiste">Titre</label>
+                                                <div class="col-8">
+                                                    <input class="form-control" id="nomPiste" name="nomPiste" value="{{data.titre}}" required type="text">
+                                                    <input id="nomPisteOriginal" name="nomPisteOriginal" value="{{data.titre}}" required type="text" hidden>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="itemForm item">
+                                            <div class="form-group row">
+                                                <label class="col-4 col-form-label" for="genrePiste">Genre de la piste</label>
+                                                <div class="col-8">
+                                                    <input class="form-control" id="genrePiste" name="genrePiste" value="{{data.genres|join(', ')}}" required type="text">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="itemForm item">
+                                            <div class="form-group row">
+                                                <label class="col-4 col-form-label" for="imagePiste">Image associée à la piste</label>
+                                                <div class="col-8">
+                                                    <input class="form-control" id="imagePiste" name="imagePiste" value="{{data.image}}" type="text">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="itemForm item">
+                                            <div class="form-group row">
+                                                <label class="col-4 col-form-label" for="anneePiste">Année de la piste</label>
+                                                <div class="col-8">
+                                                    <input class="form-control" id="anneePiste" name="anneePiste" value="{{data.annee}}" required type="number">
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <h5>Album</h5>
+                                        <hr style="width: 100%; display:inline-block; color:black; height: 0.5px;" />
+                                        <div class="itemForm item">
+                                            <div class="form-group row">
+
+                                                <label class="col-4 col-form-label" for="nomAlbum">Album</label>
+
+                                                <div class="col-8">
+                                                    <input class="form-control" id="album" name="nomAlbum" value="{{data.album}}" required type="text">
+                                                    <input id="nomAlbumOriginal" name="nomAlbumOriginal" value="{{data.album}}" required type="text" hidden>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="itemForm item">
+                                            <div class="form-group row">
+                                                <label class="col-4 col-form-label" for="imageAlbum">Image associée à l'album</label>
+                                                <div class="col-8">
+                                                    <input class="form-control" id="imageAlbum" name="imageAlbum" value="{{data.imageAlbum}}" type="text">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="itemForm item">
+                                            <div class="form-group row">
+                                                <label class="col-4 col-form-label" for="anneeAlbum">Année de l'album</label>
+                                                <div class="col-8">
+                                                    <input class="form-control" id="anneeAlbum" name="anneeAlbum" value="{{data.anneeAlbum}}" type="number">
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <h5 id="nomCategoriePiste"></h5><hr style="width: 100%; display:inline-block; color:black; height: 0.5px;" />
+        
+                                        <div class="itemForm item" id="artistesPiste"></div>
+
+                                        <button class="m-auto" id="ajouterMusique" name="ajout" type="submit" value="musique">Enregistrer les modifications</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </body>
+    <script>
+
+
+
+</script>

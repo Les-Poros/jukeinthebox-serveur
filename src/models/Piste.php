@@ -11,6 +11,7 @@ class Piste extends \Illuminate\Database\Eloquent\Model {
     protected $table = 'piste';
     protected $primaryKey = 'idPiste';
     public $timestamps = false;
+    protected $fillable = ['nomPiste', 'imagePiste', 'annéePiste'];
 
     public function a_joue_piste() {
         return $this->hasMany('jukeinthebox\models\A_joue_piste', 'idPiste');

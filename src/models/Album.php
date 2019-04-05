@@ -10,6 +10,8 @@ class Album extends \Illuminate\Database\Eloquent\Model {
     protected $table = 'album';
     protected $primaryKey = 'idAlbum';
     public $timestamps = false;
+    protected $fillable = ['nomAlbum', 'imageAlbum', 'annéeAlbum'];
+
 
     public function a_joue_album() {
         return $this->hasMany('jukeinthebox\models\A_joué_album', 'idAJoueAlbum');

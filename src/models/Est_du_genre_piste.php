@@ -10,6 +10,7 @@ class Est_du_genre_piste extends \Illuminate\Database\Eloquent\Model {
     protected $table = 'est_du_genre_piste';
     protected $primaryKey = 'idEstDuGenrePiste';
     public $timestamps = false;
+    protected $fillable = ['idPiste', 'idGenre'];
 
     public function piste() {
         return $this->belongsTo('jukeinthebox\models\Piste', 'idPiste');

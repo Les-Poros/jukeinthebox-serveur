@@ -25,10 +25,11 @@ h1 {
   text-align: center;
 }
 
-a {
+.button {
   width: 30%;
   text-decoration: none;
 }
+
 a:hover {
   text-decoration: none;
 }
@@ -65,7 +66,7 @@ table {
   height: 10vh;
 }
 
-input[type=text], input[type=email] {
+input[type=text], input[type=email], input[type="number"] {
   width: 80%;
   padding: 12px 20px;
   margin: 8px 0;
@@ -86,6 +87,11 @@ input[type=text], input[type=email] {
   border-radius: 4px;
   cursor: pointer;
 }
+
+button[type=submit]:hover {
+  background-color: darkgray;
+}
+
 .createJukeboxButton:hover {
   background-color: darkgray;
 }
@@ -105,5 +111,92 @@ input[type=text], input[type=email] {
 .itemForm {
   width: 100%;
 }
+
+.item {
+  padding-left: 5%;
+}
+
+.error {
+  color: red;
+  margin-top: 2%;
+  margin-left: 5%;
+}
+
+.separateur {
+  overflow: hidden;
+  text-align: center;
+}
+
+.separateur:before, .separateur:after {
+  background-color: #333;
+  content: "";
+  display: inline-block;
+  height: 1px;
+  position: relative;
+  vertical-align: middle;
+  width: 50%;
+}
+
+.separateur:before {
+  right: 0.5em;
+  margin-left: -50%;
+}
+
+.separateur:after {
+  left: 0.5em;
+  margin-right: -50%;
+}
+
+/* Suppression des flèches dans les Input number pour firefox */ 
+input[type='number'] {
+    -moz-appearance:textfield;
+}
+
+/* Suppression des flèches dans les Input number pour les navigateurs webkit */ 
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+#vignette{
+  width:10%;
+}
+
+#pagination.a {
+    width: 100%;
+}
+
+#table_id_wrapper {
+  padding-top: 5%;
+}
+.info{
+  padding-top: 5%;
+}
+
+/*#upload_widget{
+  width: 50%;
+  background-color: #c2c2c2;
+  color: #3c3c3c;
+  border: 1px solid #b3b3b3;
+  box-shadow: 1px 1px 3px gray;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border-radius: 4px;
+  cursor: pointer;
+}*/
+
+.pointer {cursor: pointer;}
+
+
+
+/*
+fieldset
+{
+  background-color:#CCC;
+  max-width:700px;
+  padding:16px;
+  margin-right:50%;
+}
+*/
 
 /*# sourceMappingURL=jukeinthebox.css.map */

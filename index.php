@@ -101,6 +101,26 @@ $app->get('/getJukeboxAction', function($request, $response, $args){
 
 $app->delete('/next', 'FileController:nextFile')->setName('next');
 
+$app->get('/ListCatalogue', function($request, $response, $args){
+	$controller = $this['CatalogueController'];
+	$listCatalogue = $controller->listCatalogue($request, $response, $args);
+})->setName('ListCatalogue');
+
+$app->post('/ListCatalogue', function($request, $response, $args){
+	$controller = $this['CatalogueController'];
+	$ListCatalogue = $controller->listCatalogue($request, $response, $args);
+})->setName('ListCatalogue');
+
+$app->get('/CreateMusic', function($request, $response, $args){
+	$controller = $this['CatalogueController'];
+	$CreateMusic = $controller->createMusic($request, $response, $args);
+})->setName('CreateMusic');
+
+$app->post('/CreateAlbum', function($request, $response, $args){
+	$controller = $this['CatalogueController'];
+	$CreateAlbum = $controller->createAlbum($request, $response, $args);
+})->setName('CreateAlbum');
+
 $app->post('/next', 'JukeboxController:nextJuke')->setName('next');
 
 $app->post('/play', 'JukeboxController:play')->setName('play');
@@ -124,6 +144,40 @@ $app->get('/catalogue', function($request, $response, $args){
 		'application/json'
 	);
 })->setName('Catalogue');
+
+$app->get('/InfoMusic', function($request, $response, $args){
+	$controller = $this['CatalogueController'];
+	$param = $request->getParams();
+	if(!isset($param['title']) || empty($param['title']))
+		return $controller->listCatalogue($request, $response, $args);
+
+	$InfoMusic = $controller->infoMusic($request, $response, $args);
+})->setName('InfoMusic');
+
+$app->get('/GetArtistes', function($request, $response, $args){
+	$controller = $this['CatalogueController'];
+	$GetArtistes = $controller->getArtistes($request, $response, $args);
+})->setName('GetArtistes');
+
+$app->get('/GetPistes', function($request, $response, $args){
+	$controller = $this['CatalogueController'];
+	$GetPistes = $controller->getPistes($request, $response, $args);
+})->setName('GetPistes');
+
+$app->get('/GetGenres', function($request, $response, $args){
+	$controller = $this['CatalogueController'];
+	$GetGenres = $controller->getGenres($request, $response, $args);
+})->setName('GetGenres');
+
+$app->post('/EditMusic', function($request, $response, $args){
+	$controller = $this['CatalogueController'];
+	$EditMusic = $controller->editMusic($request, $response, $args);
+})->setName('EditMusic');
+
+$app->get('/GetAlbums', function($request, $response, $args){
+	$controller = $this['CatalogueController'];
+	$controller->getAlbums($request, $response, $args);
+})->setName('GetAlbums');
 
 $app->get('/catalogueChoice', function($request, $response, $args){
 	$controller = $this['CatalogueController'];

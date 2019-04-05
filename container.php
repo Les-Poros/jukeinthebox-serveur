@@ -24,7 +24,8 @@ $container['view'] = function ($container) {
 };
 
 $container['CatalogueController'] = function ($c){
-    return new CatalogueController();
+    $view = $c->get('view');
+    return new CatalogueController($view);
 };
 
 $container['JukeboxController'] = function ($c){
