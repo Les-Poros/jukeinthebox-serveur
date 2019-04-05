@@ -241,6 +241,7 @@
 	<script src="https://widget.cloudinary.com/v2.0/global/all.js" type="text/javascript"></script>  
 	<script>
 		function creerChampNomArtiste(i) {		
+			// Retourne un element de form nomArtiste en tant qu'element DOM
 			let row = document.createElement('div');
 			row.setAttribute("class", "form-group row");
 			let col = document.createElement('div');
@@ -266,6 +267,7 @@
 		}
 
 		function creerChampPrenomArtiste(i) {
+			// Retourne un element de form prenomArtiste en tant qu'element DOM
 			let row = document.createElement('div');
 			row.setAttribute("class", "form-group row");
 			let col = document.createElement('div');
@@ -294,6 +296,7 @@
 		}
 
 		function creerChampNomGroupe() {
+			// Retourne un element de form nomGroupe en tant qu'element DOM
 			let div1 = document.createElement('div');
 			div1.setAttribute("class", "itemForm item");
 			div1.setAttribute('name', 'artistesField');
@@ -322,6 +325,9 @@
 		}
 		
 		function creerCompteurArtiste(nomDeCategorie) {
+			// Retourne un element de form en tant qu'element DOM
+			// Deux boutons qui permettent d'ajouter ou de supprimer 
+			// les champs auxquels ils sont liés
 			let row = document.createElement('div');
 			row.setAttribute("class", "form-group row");
 			let btn_group = document.createElement('div');
@@ -358,37 +364,41 @@
 		}
 
 		function ajouterArtiste(nomDeCategorie) {
+			// Ajoute les champs de noms et prenoms d'artistes
 			let input = document.getElementById("nbArtistes" + nomDeCategorie)
-			input.value++;
+			input.value++; // Augmente le compteur du nombre d'artistes
 			let artistes = document.getElementById("artistes" + nomDeCategorie);
 			artistes.insertBefore(creerChampNomArtiste(input.value), artistes.lastChild);
 			artistes.insertBefore(creerChampPrenomArtiste(input.value), artistes.lastChild);
-						$.ajax({
-			type: "GET",
-			contentType: "application/json; charset=utf-8",
-			url: url + '/GetArtistes',
-			dataType: "json",
-			success: function (data) {
-				$('#nomArtiste' + input.value).typeahead({
-					source: data['nom'],
-					menu: '<ul class="typeahead dropdown-menu" role="listbox"></ul>',
-					item: '<li><a class="dropdown-item" href="#" role="option"></a></li>',
-					headerHtml: '<li class="dropdown-header"></li>',
-					headerDivider: '<li class="divider" role="separator"></li>',
-					itemContentSelector:'a',
-					minLength: 1,
-					scrollHeight: 0,
-					autoSelect: true,
-					afterSelect: $.noop,
-					afterEmptySelect: $.noop,
-					addItem: false,
-					delay: 0,
-				});
-			}});
 
+			// Requête pour ajouter l'autocomplétion au champ ajouté
+			$.ajax({
+				type: "GET",
+				contentType: "application/json; charset=utf-8",
+				url: url + '/GetArtistes',
+				dataType: "json",
+				success: function (data) {
+					$('#nomArtiste' + input.value).typeahead({
+						source: data['nom'],
+						menu: '<ul class="typeahead dropdown-menu" role="listbox"></ul>',
+						item: '<li><a class="dropdown-item" href="#" role="option"></a></li>',
+						headerHtml: '<li class="dropdown-header"></li>',
+						headerDivider: '<li class="divider" role="separator"></li>',
+						itemContentSelector:'a',
+						minLength: 1,
+						scrollHeight: 0,
+						autoSelect: true,
+						afterSelect: $.noop,
+						afterEmptySelect: $.noop,
+						addItem: false,
+						delay: 0,
+					});
+				}
+			});
 		}
 
 		function supprimerArtiste(nomDeCategorie) {
+			// Supprime les champs nomArtistes et prenomAtristes
 			if (document.getElementById("nbArtistes" + nomDeCategorie).value > 1) {
 				document.getElementById("nbArtistes" + nomDeCategorie).value--;
 				let artistes = document.getElementById("artistes" + nomDeCategorie);
@@ -402,10 +412,12 @@
 
 
 		function changementEntite(nomDeCategorie) {
+			// Gère les forms en fonction  de si l'on ajoute des artistes ou un groupe
 			var radio = document.getElementById('radio' + nomDeCategorie + 'Artiste');
 			var titre = document.getElementById('nomCategorie' + nomDeCategorie);
 			let artistes = document.getElementById("artistes" + nomDeCategorie)
-			// Supprime le contenu de la div
+
+			// Vide le contenu de la div avant de la remplir avec les bons champs
 			while (artistes.hasChildNodes()) {artistes.removeChild(artistes.lastChild);}
 
 			if(radio.checked) {
@@ -419,9 +431,8 @@
 			}
 		}
 
-		//GESTION DES ACCENTS
+		// Gestion des accents
 		function removeDiacritics (str) {
-			
 			var defaultDiacriticsRemovalMap = [
 				{'base':'A', 'letters':/[\u0041\u24B6\uFF21\u00C0\u00C1\u00C2\u1EA6\u1EA4\u1EAA\u1EA8\u00C3\u0100\u0102\u1EB0\u1EAE\u1EB4\u1EB2\u0226\u01E0\u00C4\u01DE\u1EA2\u00C5\u01FA\u01CD\u0200\u0202\u1EA0\u1EAC\u1EB6\u1E00\u0104\u023A\u2C6F]/g},
 				{'base':'AA','letters':/[\uA732]/g},
@@ -514,9 +525,9 @@
 			}
 
 			return str;
-
 		}
 		
+		// Création du widget d'upload de musique + gestion de l'upload
 		document.getElementById("upload_widget").addEventListener("click", function(){
 			let artistes = getArtistesArray();
 			var champ_obligatoire = ['nomPiste', 'album', 'idsGenrePiste','anneePiste'];
@@ -557,6 +568,7 @@
 			}
 		}, false);
 
+		// Return true si les champs nécessaires à l'upload on bien étés remplis
 		function isUploadAvailable() {
 			var champ_obligatoire = ['nomPiste', 'album','anneePiste'];
 			let artistes = getArtistesArray();
@@ -571,6 +583,7 @@
 		}
 
 		function getArtistesArray() {
+			// Récupère la liste des artistes dans les champs du formulaire
 			let artistes = [];
 			if(document.getElementById('radioPisteArtiste').checked) { // Artistes
 				let value = document.getElementById("nbArtistesPiste") ? document.getElementById("nbArtistesPiste").value : 1;
@@ -583,6 +596,7 @@
 			return artistes;
 		}
 
+		// Initialise les formulaires
 		changementEntite('Piste');
 		changementEntite('Album');
 
@@ -593,7 +607,10 @@
 			})
 		}
 
+		// Récupère l'url depuis TWIG
 		var url = '{{url}}';
+
+		// Ajout des select et de l'autocompletion sur les champs
 		$.ajax({
 			type: "GET",
 			contentType: "application/json; charset=utf-8",

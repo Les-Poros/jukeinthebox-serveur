@@ -160,49 +160,51 @@ class CatalogueController {
 	 * @param args
 	 */
 	public function listCatalogue($request, $response, $args) {
-
 		$url = $request->getUri()->getBasePath();
 
-		$tableauPistes = [];
+		// Récupère l'ensemble des pistes avec leurs genres, artistes et albums, et la convertie en tableau indéxé par l'id de piste
+		$querry = Piste::join('est_du_genre_piste','piste.idPiste','est_du_genre_piste.idPiste')
+			->join('genre', 'est_du_genre_piste.idGenre','genre.idGenre' )
+			->join('a_joué_piste','piste.idPiste','a_joué_piste.idPiste')
+			->join('artiste', 'a_joué_piste.idArtiste','artiste.idArtiste' )
+			->join('fait_partie','piste.idPiste','fait_partie.idPiste')
+			->join('album', 'fait_partie.idAlbum','album.idAlbum' )
+			->get()
+			->groupBy('idPiste')
+			->toArray();
 
-		foreach (Piste::all() as $piste) {
-			// Gestion des genres
-			$genres = [];
-			$genresQuerry = Piste::join('est_du_genre_piste','piste.idPiste','est_du_genre_piste.idPiste')
-				->join('genre', 'est_du_genre_piste.idGenre','genre.idGenre' )
-				->where('piste.idPiste','=', $piste->getOriginal()['idPiste'])
-				->get();
-			foreach ($genresQuerry as $value) array_push($genres, $value->getOriginal()['nomGenre']);
 
-			// Gestion des artistes
-			$artistes = [];
-			$artistesQuerry = Piste::join('a_joué_piste','piste.idPiste','a_joué_piste.idPiste')
-				->join('artiste', 'a_joué_piste.idArtiste','artiste.idArtiste' )
-				->where('piste.idPiste','=', $piste->getOriginal()['idPiste'])
-				->get();
-			foreach ($artistesQuerry as $value) array_push($artistes, $value->getOriginal()['nomArtiste']);
-
-			// Gestion de l'album
-			$albums = [];
-			$albumQuerry = Piste::join('fait_partie','piste.idPiste','fait_partie.idPiste')
-				->join('album', 'fait_partie.idAlbum','album.idAlbum' )
-				->where('piste.idPiste','=', $piste->getOriginal()['idPiste'])
-				->get();
-			foreach ($albumQuerry as $value) array_push($albums, $value->getOriginal()['nomAlbum']);
-			
-			array_push($tableauPistes, [
-				'image' => $piste->getOriginal()['imagePiste'],
-				'titre' => $piste->getOriginal()['nomPiste'],
-				'genres' => $genres,
-				'artistes' => $artistes,
-				'annee' => $piste->getOriginal()['annéePiste'],
-				'album' => $albums
-			]);
+		$array = array();
+		foreach($querry as $piste) { // Itération sur chaque piste
+			foreach ($piste as $val) { // itération sur chaque exemplaire de la piste
+				if (!array_key_exists($val['idPiste'], $array)) {
+					// Si la piste n'est pas encore dans le tableau, 
+					// Créer les entrées necessaires
+					$array[$val['idPiste']] = $val;
+					$array[$val['idPiste']]['nomGenre'] = [$array[$val['idPiste']]['nomGenre']];
+					$array[$val['idPiste']]['nomArtiste'] = [$array[$val['idPiste']]['nomArtiste']];
+					$array[$val['idPiste']]['nomAlbum'] = [$array[$val['idPiste']]['nomAlbum']];
+				} else {
+					// Sinon compléter les champs
+					$array[$val['idPiste']]['nomGenre'][] = $val['nomGenre'];
+					$array[$val['idPiste']]['nomArtiste'][] = $val['nomArtiste'];
+					$array[$val['idPiste']]['nomAlbum'][] = $val['nomAlbum'];
+				}
+			}
+			// $array[$val['idPiste']]['nomGenre'] = ['Rock', 'Rock', 'Funk', 'Rock'], d'où le array_unique()
+			// pour revenir sur un exemplaire de chaque. Idem pour les nomArtiste et nomAlbum
+			$tableauPistes[] = [
+				'image' => $val['imagePiste'],
+				'titre' => $val['nomPiste'],
+				'genres' => array_unique($array[$val['idPiste']]['nomGenre']),
+				'artistes' => array_unique($array[$val['idPiste']]['nomArtiste']),
+				'annee' => $val['annéePiste'],
+				'album' => array_unique($array[$val['idPiste']]['nomAlbum'])
+			];
 		}
 		
-		
+		// Gestion des requêtes depuis AddPiste.html.twig
 		if($request->getMethod() == "POST") {
-			
 			$piste = $request->getParams();
 			
 
@@ -228,16 +230,17 @@ class CatalogueController {
 				$prenomArtistes[] = filter_input(INPUT_POST, 'prenomArtiste'.$i, FILTER_SANITIZE_STRING);
 			}
 
-
+			// $piste['ajout'] et $piste['personne'] sont initialisées dans le formulaire et nous permettent
+			// de savoir dans quel cas nous nous trouvons
 			if($piste['ajout'] == 'musique' && $piste['personne'] == 'Artiste') {
 				// Ajout d'un musique avec un ou plusieurs artistes
 				if($nomPiste && $anneePiste && $nomAlbum && $nbArtistes >= 1){
 					try{
-						
 						$piste =Piste::firstOrCreate(['nomPiste' => $nomPiste,'imagePiste' => $imagePiste,'annéePiste' => $anneePiste]);
 						$album = Album::firstOrCreate(['nomAlbum' => $nomAlbum, 'imageAlbum' => $imageAlbum, 'annéeAlbum' => $anneeAlbum]);
 						Fait_partie::firstOrCreate(['idPiste'=> $piste->idPiste,'idAlbum'=>$album->idAlbum]);
 						
+						// Ajout des relations sur les artistes
 						for($i = 0 ; $i < $nbArtistes; $i++) {
 							Artiste::firstOrCreate(['nomArtiste' => $nomArtistes[$i], 'prénomArtiste' => $prenomArtistes[$i]]);
 							$artiste = Artiste::select('idArtiste')->where('nomArtiste','like',  $nomArtistes[$i])->first();
@@ -245,6 +248,7 @@ class CatalogueController {
 							A_joue_album::firstOrCreate(['idAlbum' => $album->idAlbum, 'idArtiste'=>$artiste->idArtiste]);
 						}
 						
+						// Ajout des relations sur les genres
 						foreach (Genre::whereIn('idGenre', $idsGenres)->get()->toArray() as $nom) {
 							$nom = trim($nom['nomGenre']);
 							Genre::firstOrCreate(['nomGenre' => $nom]);
@@ -252,7 +256,6 @@ class CatalogueController {
 							Est_du_genre_piste::firstOrCreate(['idPiste'=> $piste->idPiste, 'idGenre'=> $genre->idGenre]);
 							Est_du_genre_album::firstOrCreate(['idAlbum'=> $album->idAlbum, 'idGenre'=> $genre->idGenre]);
 						}
-						
 					}
 					catch(\Exception $e){
 						print($e);
@@ -274,6 +277,7 @@ class CatalogueController {
 						$piste = Piste::firstOrCreate(['nomPiste' => $nomPiste,'imagePiste' => $imagePiste,'annéePiste' => $anneePiste]);
 						$album = Album::firstOrCreate(['nomAlbum' => $nomAlbum, 'imageAlbum' => $imageAlbum, 'annéeAlbum' => $anneeAlbum]);
 						
+						// Ajout des relations sur les artistes
 						foreach (Genre::whereIn('idGenre', $idsGenres)->get()->toArray() as $nom) {
 							$nom = trim($nom['nomGenre']);
 							Genre::firstOrCreate(['nomGenre' => $nom]);
@@ -282,6 +286,7 @@ class CatalogueController {
 							Est_du_genre_album::firstOrCreate(['idAlbum'=> $album->idAlbum, 'idGenre'=> $genre->idGenre]);
 						}
 
+						// Ajout des relations sur le groupe
 						$artiste = Artiste::firstOrCreate(['nomArtiste' => $nomArtistes[0], 'prénomArtiste' => ""]);
 						A_joue_piste::firstOrCreate(['idPiste'=>$piste->idPiste,'idArtiste'=> $artiste->idArtiste]);
 						Fait_partie::firstOrCreate(['idPiste'=> $piste->idPiste,'idAlbum'=> $album->getOriginal()['idAlbum']]);
@@ -301,6 +306,7 @@ class CatalogueController {
 				}
 			}
 			else { // $piste['ajout'] == 'album'
+			// Vérification des champs
 				if(count($idsPistesAlbum) >= 1 && $nomAlbum && $nbArtistes >= 1 && count($idsGenres))  {
 					try{
 						if(Piste::whereIn('idPiste', $idsPistesAlbum)->get()) {
@@ -327,12 +333,15 @@ class CatalogueController {
 									if($albumComplet) $idAlbumComplet = $key;
 								}
 								if($idAlbumComplet !=0) {
-									// Cas l'album existe déjà
+									// Cas : l'album existe déjà
+									// Nous ajoutons juste les pistes
 									foreach(Piste::whereIn('idPiste', $idsPistesAlbum)->get()->toArray() as $piste) {
 										Fait_partie::firstOrCreate(['idPiste' => $piste['idPiste'], 'idAlbum' => $idAlbumComplet]);
 									}
 								} else {
-									// Cas un album de ce nom là existe, mais pas avec les mêmes artistes
+									// Cas : un album de ce nom là existe, mais pas avec les mêmes artistes
+									// Nous crééons un nouvel album avec ces artistes
+									// puis nous ajoutons les pistes et les relations album <-> artiste 
 									$album = Album::firstOrCreate(['nomAlbum' => $nomAlbum,'imageAlbum' => $imageAlbum, 'annéeAlbum' => $anneeAlbum]);
 									foreach(Piste::whereIn('idPiste', $idsPistesAlbum)->get()->toArray() as $piste) {
 										Fait_partie::firstOrCreate(['idPiste' => $piste['idPiste'], 'idAlbum' => $album->idAlbum]);
@@ -343,6 +352,8 @@ class CatalogueController {
 								}
 							} else {
 								// Cas Aucun album ne porte ce nom là
+								// Nous crééons un nouvel album avec ces artistes
+								// puis nous ajoutons les pistes et les relations album <-> artiste 
 								$album = Album::firstOrCreate(['nomAlbum' => $nomAlbum,'imageAlbum' => $imageAlbum, 'annéeAlbum' => $anneeAlbum]);
 								foreach(Piste::whereIn('idPiste', $idsPistesAlbum)->get()->toArray() as $piste) {
 									Fait_partie::firstOrCreate(['idPiste' => $piste['idPiste'], 'idAlbum' => $album->idAlbum]);
@@ -451,13 +462,18 @@ class CatalogueController {
 		]);
 	}
 
+	/**
+	 * Methode pour récupérer un tableau des noms et prenoms d'artistes
+	 * @param request
+	 * @param response
+	 * @param args
+	 */
 	public function getArtistes($request, $response, $args) {
 		$param = $request->getParams();
 
 		$nomArtistes = [];
 		$prenomArtistes = [];
 
-		//$artistesQuerry = Artiste::where('nomArtiste','like', '%'.$param['name'].'%')->get();
 		$artistesQuerry = Artiste::all();
 		foreach ($artistesQuerry as $value) {
 			array_push($nomArtistes, $value->getOriginal()['nomArtiste']);
@@ -468,6 +484,12 @@ class CatalogueController {
 		return $response;
 	}
 
+	/**
+	 * Methode pour récupérer la liste des pistes en couple (id, titre)
+	 * @param request
+	 * @param response
+	 * @param args
+	 */
 	public function getPistes($request, $response, $args) {
 		$param = $request->getParams();
 
@@ -482,6 +504,12 @@ class CatalogueController {
 		return $response;
 	}
 
+	/**
+	 * Methode pour récupérer la liste des Genres
+	 * @param request
+	 * @param response
+	 * @param args
+	 */
 	public function getGenres($request, $response, $args) {
 		$param = $request->getParams();
 
@@ -496,6 +524,12 @@ class CatalogueController {
 		return $response;
 	}
 
+	/**
+	 * Methode pour récupérer la liste des titres d'albums
+	 * @param request
+	 * @param response
+	 * @param args
+	 */
 	public function getAlbums($request, $response, $args) {
 		$albums = [];
 		foreach (Album::all() as $value) array_push($albums, $value->getOriginal()['nomAlbum']);
@@ -504,12 +538,17 @@ class CatalogueController {
 		return $response;
 	}
 
+	/**
+	 * Methode pour modifier une musique
+	 * @param request
+	 * @param response
+	 * @param args
+	 */
 	public function editMusic($request, $response, $args) {
 		$param = $request->getParams();
 		$url = $request->getUri()->getBasePath();
 
 		if($request->getMethod() == "POST") {
-			// Ne fonctionne pas sur un groupe (work in progress)
 			$piste = $request->getParams();
 
 			// Required
@@ -535,13 +574,12 @@ class CatalogueController {
 					Album::where('nomAlbum', 'like',  $nomAlbumOriginal)
 						->update(['nomAlbum' => $nomAlbum, 'imageAlbum' => $imageAlbum, 'annéeAlbum' => $anneeAlbum]);
 
-
-					$nomGenre = explode(", ", $nomGenre);
-					foreach ($nomGenre as $nom) {
-						
-						Est_du_genre_piste::where('idPiste', '=', $piste->idPiste)->delete();
-						$genre = Genre::where('nomGenre', 'like', $nom)->first();
-						if($genre) Est_du_genre_piste::create(['idPiste' => $piste->idPiste, 'idGenre' => $genre->getOriginal()['idGenre']]);
+					// Ajout des relations sur les genres
+					foreach (Genre::whereIn('idGenre', $idsGenres)->get()->toArray() as $nom) {
+						$nom = trim($nom['nomGenre']);
+						Genre::firstOrCreate(['nomGenre' => $nom]);
+						$genre = Genre::select('idGenre')->where('nomGenre','like', $nom)->first();
+						Est_du_genre_piste::firstOrCreate(['idPiste'=> $piste->idPiste, 'idGenre'=> $genre->idGenre]);
 					}
 					
 				}
