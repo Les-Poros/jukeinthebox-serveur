@@ -31,17 +31,39 @@
 						<th scope="col">Client</th>
 						<th scope="col">Mail</th>
 						<th scope="col">Adresse</th>
+						<th scope="col"></th>
 					</tr>
 
                     {% for j in listJukebox %}
                         <tr>
-					        <td>Jukebox n°{{j['idJukebox']}}</td> <td>{{j['tokenActivation']}}</td>
+					        <td>Jukebox n°{{j['idJukebox']}}</td>
+							<td>{{j['tokenActivation']}}</td>
                             <td>{{j['qr_code']}}</td>
                             <td>{{j['nomClient']}}</td>
                             <td>{{j['mailClient']}}</td>
                             <td>{{j['adresseClient']}}</td>
+							<td>
+								<form class="deleteForm" action='{{url}}/DeleteJukebox/{{j['idJukebox']}}' method='post'>
+									<button class="deleteButton" type="submit"><img src="{{url}}/web/images/delete.png"></button>
+								</form>
+							</td>
 				        </tr>	
-                    {% endfor %} 
+                    {% endfor %}
+						{% if idJukebox != '' %}
+							<tr>
+								<td>Jukebox n°{{idJukebox}}</td>
+								<td>{{token}}</td>
+								<td></td>
+								<td>{{nomClient}}</td>
+								<td>{{mailClient}}</td>
+								<td>{{adresseClient}}</td>
+								<td>
+									<a href="{{url}}/DeleteJukebox/{{idJukebox}}">
+										<img src="{{url}}/web/images/delete.png">
+									</a>
+								</td>
+							</tr>	
+						{% endif %} 
                 </table>
         </div>
 	</body>

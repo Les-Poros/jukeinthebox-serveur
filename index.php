@@ -7,6 +7,8 @@ use jukeinthebox\bd\Connection;
 use jukeinthebox\controllers\FileController;
 use jukeinthebox\controllers\CatalogueController;
 use jukeinthebox\controllers\ServeurController;
+use jukeinthebox\controllers\JukeboxController;
+use jukeinthebox\controllers\StatistiquesController;
 
 $ini = parse_ini_file('src/conf/conf.ini');
 
@@ -59,6 +61,11 @@ $app->get('/CreateJukebox', function($request, $response, $args){
 	$CreateJukebox = $controller->createJukebox($request, $response, $args);
 })->setName('CreateJukebox');
 
+$app->post('/DeleteJukebox/{id}', function($request, $response, $args){
+	$controller = $this['ServeurController'];
+	$DeleteJukebox = $controller->deleteJukebox($request, $response, $args);
+})->setName('DeleteJukebox');
+
 $app->get('/File', function($request, $response, $args){
 	$controller = $this['FileController'];
 	$displayFile = $controller->displayFile($request, $response, $args);
@@ -72,7 +79,25 @@ $app->post('/addfile', 'FileController:addFile')->setName('addFile');
 //Route permettant l'ajout d'une musique dans la bibliothèque
 $app->post('/addMusicBiblio', 'CatalogueController:addMusicBiblio')->setName('addMusicBiblio');
 $app->post('/deleteMusicBiblio', 'CatalogueController:deleteMusicBiblio')->setName('deleteMusicBiblio');
+$app->post('/qrcode', 'JukeboxController:setQrcode')->setName('setQrcode');
 
+$app->get('/validateJukebox', function($request, $response, $args){
+	$controller = $this['JukeboxController'];
+	$controller->validateToken($request, $response, $args);
+	return $response->withHeader(
+		'Content-Type',
+		'application/json'
+	);
+})->setName('validateJukebox');
+
+$app->get('/getJukeboxAction', function($request, $response, $args){
+	$controller = $this['JukeboxController'];
+	$controller->getJukeboxAction($request, $response, $args);
+	return $response->withHeader(
+		'Content-Type',
+		'application/json'
+	);
+})->setName('getJukebox');
 
 $app->delete('/next', 'FileController:nextFile')->setName('next');
 
@@ -91,11 +116,25 @@ $app->get('/CreateMusic', function($request, $response, $args){
 	$CreateMusic = $controller->createMusic($request, $response, $args);
 })->setName('CreateMusic');
 
-
 $app->post('/CreateAlbum', function($request, $response, $args){
 	$controller = $this['CatalogueController'];
 	$CreateAlbum = $controller->createAlbum($request, $response, $args);
 })->setName('CreateAlbum');
+
+$app->post('/next', 'JukeboxController:nextJuke')->setName('next');
+
+$app->post('/play', 'JukeboxController:play')->setName('play');
+
+$app->post('/pause', 'JukeboxController:pause')->setName('pause');
+
+$app->post('/modeBlindtest', 'JukeboxController:modeBlindtest')->setName('modeBlindtest');
+
+$app->post('/modeNormal', 'JukeboxController:modeNormal')->setName('modeNormal');
+
+$app->post('/repeat', 'JukeboxController:repeat')->setName('repeat');
+
+$app->post('/selectCatag', 'JukeboxController:selectCatag')->setName('selectCatag');
+$app->post('/integrerCatag', 'CatalogueController:integrerCatag')->setName('integrerCatag');
 
 $app->get('/catalogue', function($request, $response, $args){
 	$controller = $this['CatalogueController'];
@@ -139,6 +178,26 @@ $app->get('/GetAlbums', function($request, $response, $args){
 	$controller = $this['CatalogueController'];
 	$controller->getAlbums($request, $response, $args);
 })->setName('GetAlbums');
+
+$app->get('/catalogueChoice', function($request, $response, $args){
+	$controller = $this['CatalogueController'];
+	$displayCatalogue = $controller->displayCatalogueChoice($request, $response, $args);
+	return $response->withHeader(
+		'Content-Type',
+		'application/json'
+	);
+})->setName('CatalogueChoice');
+
+$app->post('/pushStatsMusic', 'StatistiquesController:pushStatsMusic')->setName('pushStatsMusic');
+
+$app->get('/getStats', function($request, $response, $args){
+	$controller = $this['StatistiquesController'];
+	$controller->getStats($request, $response, $args);
+	return $response->withHeader(
+		'Content-Type',
+		'application/json'
+	);
+})->setName('getStats');
 
 $app->map(['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], '/{routes:.+}', function($req, $res) {
     $handler = $this->notFoundHandler; // handle using the default Slim page not found handler

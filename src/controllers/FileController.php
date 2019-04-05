@@ -123,10 +123,20 @@ class FileController {
 	 * @param args
 	 */
 	public function nextFile($request, $response, $args) {
-			if(isset($_POST["token"]))
+		if(isset($_POST["token"])){
 			File::where('idJukebox', '=', Jukebox::getIdByQrcode($_GET["token"]))->first()->delete();
-			else
+			$jukebox = Jukebox::where('idJukebox', '=', Jukebox::getIdByQrcode($_GET["token"]))->first();
+			$jukebox->action = "play";
+			$jukebox->save();
+		}
+		else{
 			File::where('idJukebox', '=', Jukebox::getIdByBartender($_GET["bartender"]))->first()->delete();
+			$jukebox = Jukebox::where('idJukebox', '=', Jukebox::getIdByBartender($_GET["bartender"]))->first();
+			$jukebox->action = "play";
+			$jukebox->save();
+		}
 	}
+
+
 
 }

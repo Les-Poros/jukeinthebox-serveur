@@ -47,6 +47,25 @@ table {
   margin-left: 10%;
 }
 
+.deleteButton {
+  background-color: #c2c2c2;
+  color: #3c3c3c;
+  border: 1px solid #b3b3b3;
+  box-shadow: 1px 1px 3px gray;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.deleteButton:hover {
+  background-color: darkgray;
+}
+
+.deleteForm {
+  width: 10vh;
+  height: 10vh;
+}
+
 input[type=text], input[type=email], input[type="number"] {
   width: 80%;
   padding: 12px 20px;
@@ -57,7 +76,7 @@ input[type=text], input[type=email], input[type="number"] {
   box-sizing: border-box;
 }
 
-button[type=submit] {
+.createJukeboxButton {
   width: 50%;
   background-color: #c2c2c2;
   color: #3c3c3c;
@@ -73,7 +92,11 @@ button[type=submit]:hover {
   background-color: darkgray;
 }
 
-form {
+.createJukeboxButton:hover {
+  background-color: darkgray;
+}
+
+.createJuke {
   display: flex;
   flex-direction: column;
   align-items: center;

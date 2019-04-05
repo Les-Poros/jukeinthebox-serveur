@@ -54,8 +54,11 @@ class ServeurController {
 			$adresseClient=$_POST['adresseClient'];
 			$jukebox = new Jukebox();
 			$bibliothque = new Bibliotheque();
+			$bibliothque->titre="Catalogue perso";
+			$bibliothque->predef=0;
 			$bibliothque->save();
 			$jukebox->idBibliotheque = $bibliothque->idBibliotheque;
+			$jukebox->bibliAct = $bibliothque->idBibliotheque;
 			$token = md5(time() . mt_rand());
 			$jukebox->qr_code='';
 			$jukebox->tokenActivation = $token;
@@ -84,6 +87,16 @@ class ServeurController {
 		]);
 	}
 
-	
+	public function deleteJukebox($request, $response, $args){
+		$url = $request->getUri()->getBasePath();
+		$jukebox = Jukebox::where('idJukebox', '=', $args["id"])->first();
+		Bibliotheque::where('idBibliotheque','=', $jukebox['idBibliotheque'])->first()->delete();
+		$jukebox->delete();
+		$listJukebox = Jukebox::get();
+		return $this->view->render($response, 'ListJukebox.html.twig', [
+			'url' => $url,
+			'listJukebox' => $listJukebox
+		]);
+	}
 
 }

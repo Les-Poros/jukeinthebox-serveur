@@ -1,8 +1,3 @@
-DROP DATABASE IF EXISTS `jukeinthebox`;
-CREATE DATABASE jukeinthebox CHARACTER SET utf8;
-
-USE jukeinthebox;
-
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
@@ -11,6 +6,58 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8 */;
+
+--
+-- Base de données :  `rimet2u`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `album`
+--
+
+CREATE TABLE IF NOT EXISTS `album` (
+  `idAlbum` int(10) NOT NULL AUTO_INCREMENT,
+  `nomAlbum` varchar(255) CHARACTER SET latin1 NOT NULL,
+  `imageAlbum` varchar(255) CHARACTER SET latin1 NOT NULL,
+  `annéeAlbum` int(10) NOT NULL,
+  PRIMARY KEY (`idAlbum`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=6 ;
+
+--
+-- Contenu de la table `album`
+--
+
+INSERT INTO `album` (`idAlbum`, `nomAlbum`, `imageAlbum`, `annéeAlbum`) VALUES
+(1, 'Let there be fire', 'https://f4.bcbits.com/img/a3614231628_10.jpg', 2018),
+(2, 'Godhunter', 'http://www.gap-tallard-durance.fr/fileadmin/_processed_/5/a/csm_AdobeStock_cle_sol_03179e2243.jpg', 2019),
+(3, 'Balavoine sur scène', 'https://img.cdandlp.com/2016/11/imgL/3058765433.jpg', 1981),
+(4, 'Daniel Balavoine: Les 50 Plus Belles Chansons', 'https://static.fnac-static.com/multimedia/images_produits/ZoomPE/0/7/7/0600753074770/tsp20130831051645/Les-50-plus-belles-chansons.jpg', 2008),
+(5, 'D''eux', 'https://is1-ssl.mzstatic.com/image/thumb/Music/3a/4e/ff/mzi.eciahqkd.jpg/268x0w.jpg', 1995);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `artiste`
+--
+
+CREATE TABLE IF NOT EXISTS `artiste` (
+  `idArtiste` int(10) NOT NULL AUTO_INCREMENT,
+  `nomArtiste` varchar(255) NOT NULL,
+  `prénomArtiste` varchar(255) NOT NULL,
+  PRIMARY KEY (`idArtiste`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
+
+--
+-- Contenu de la table `artiste`
+--
+
+INSERT INTO `artiste` (`idArtiste`, `nomArtiste`, `prénomArtiste`) VALUES
+(1, 'Aviators', ''),
+(2, 'Balavoine', 'Daniel'),
+(3, 'Workman', 'Nanette'),
+(4, 'Dion', 'Céline');
 
 -- --------------------------------------------------------
 
@@ -67,54 +114,6 @@ INSERT INTO `a_joué_piste` (`idAJouePiste`, `idPiste`, `idArtiste`) VALUES
 -- --------------------------------------------------------
 
 --
--- Structure de la table `album`
---
-
-CREATE TABLE IF NOT EXISTS `album` (
-  `idAlbum` int(10) NOT NULL AUTO_INCREMENT,
-  `nomAlbum` varchar(255) CHARACTER SET latin1 NOT NULL,
-  `imageAlbum` varchar(255) CHARACTER SET latin1 NOT NULL,
-  `annéeAlbum` int(10) NOT NULL,
-  PRIMARY KEY (`idAlbum`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=6 ;
-
---
--- Contenu de la table `album`
---
-
-INSERT INTO `album` (`idAlbum`, `nomAlbum`, `imageAlbum`, `annéeAlbum`) VALUES
-(1, 'Let there be fire', 'https://f4.bcbits.com/img/a3614231628_10.jpg', 2018),
-(2, 'Godhunter', 'http://www.gap-tallard-durance.fr/fileadmin/_processed_/5/a/csm_AdobeStock_cle_sol_03179e2243.jpg', 2019),
-(3, 'Balavoine sur scène', 'https://img.cdandlp.com/2016/11/imgL/3058765433.jpg', 1981),
-(4, 'Daniel Balavoine: Les 50 Plus Belles Chansons', 'https://static.fnac-static.com/multimedia/images_produits/ZoomPE/0/7/7/0600753074770/tsp20130831051645/Les-50-plus-belles-chansons.jpg', 2008),
-(5, 'D''eux', 'https://is1-ssl.mzstatic.com/image/thumb/Music/3a/4e/ff/mzi.eciahqkd.jpg/268x0w.jpg', 1995);
-
--- --------------------------------------------------------
-
---
--- Structure de la table `artiste`
---
-
-CREATE TABLE IF NOT EXISTS `artiste` (
-  `idArtiste` int(10) NOT NULL AUTO_INCREMENT,
-  `nomArtiste` varchar(255) NOT NULL,
-  `prénomArtiste` varchar(255) NOT NULL,
-  PRIMARY KEY (`idArtiste`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
-
---
--- Contenu de la table `artiste`
---
-
-INSERT INTO `artiste` (`idArtiste`, `nomArtiste`, `prénomArtiste`) VALUES
-(1, 'Aviators', ''),
-(2, 'Balavoine', 'Daniel'),
-(3, 'Workman', 'Nanette'),
-(4, 'Dion', 'Céline');
-
--- --------------------------------------------------------
-
---
 -- Structure de la table `bibliotheque`
 --
 
@@ -145,7 +144,7 @@ CREATE TABLE IF NOT EXISTS `contenu_bibliotheque` (
   PRIMARY KEY (`idContenu_bibliotheque`),
   KEY `idBibliotheque` (`idBibliotheque`),
   KEY `idPiste` (`idPiste`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=19 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
 
 --
 -- Contenu de la table `contenu_bibliotheque`
@@ -248,17 +247,17 @@ CREATE TABLE IF NOT EXISTS `file` (
   `idJukebox` int(10) NOT NULL,
   PRIMARY KEY (`idFile`),
   KEY `file_ibfk_1` (`idJukebox`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=58 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
 
 --
 -- Contenu de la table `file`
 --
 
 INSERT INTO `file` (`idFile`, `idPiste`, `idJukebox`) VALUES
-(54, 1, 1),
-(55, 2, 1),
-(56, 1, 1),
-(57, 3, 1);
+(1, 1, 1),
+(2, 2, 1),
+(3, 1, 1),
+(4, 3, 1);
 
 -- --------------------------------------------------------
 
@@ -285,7 +284,7 @@ INSERT INTO `genre` (`idGenre`, `nomGenre`) VALUES
 (6, 'Synth'),
 (7, 'Pop'),
 (8, 'Rap'),
-(9, 'Chanson française');
+(9, 'Variété Française');
 
 -- --------------------------------------------------------
 
@@ -298,6 +297,7 @@ CREATE TABLE IF NOT EXISTS `jukebox` (
   `idBibliotheque` int(10) NOT NULL,
   `tokenActivation` varchar(100) NOT NULL,
   `qr_code` varchar(100) NOT NULL,
+  `qr_code2` varchar(255) NOT NULL,
   `nomClient` varchar(255) NOT NULL,
   `mailClient` varchar(255) NOT NULL,
   `adresseClient` varchar(255) NOT NULL,
@@ -308,9 +308,9 @@ CREATE TABLE IF NOT EXISTS `jukebox` (
 -- Contenu de la table `jukebox`
 --
 
-INSERT INTO `jukebox` (`idJukebox`, `idBibliotheque`, `tokenActivation`, `qr_code`, `nomClient`, `mailClient`, `adresseClient`) VALUES
-(1, 1, 'token', 'qrcode', '', '', ''),
-(2, 2, 'a24702a8ab41a2e18c21f346594eff2a', '', 'rimet', 'rimet@hotmail.fr', '1 rue bidou');
+INSERT INTO `jukebox` (`idJukebox`, `idBibliotheque`, `tokenActivation`, `qr_code`, `qr_code2`, `nomClient`, `mailClient`, `adresseClient`) VALUES
+(1, 1, 'token', '4k0kths6x3p5wgv7b42655', 'qrcode', '', '', ''),
+(2, 2, 'a24702a8ab41a2e18c21f346594eff2a', '', '', 'rimet', 'rimet@hotmail.fr', '1 rue bidou');
 
 -- --------------------------------------------------------
 
