@@ -159,49 +159,16 @@ class CatalogueController {
 	 * @param response
 	 * @param args
 	 */
+
+	public function listPiste($request, $response, $args)
+	{
+		
+	} 
 	public function listCatalogue($request, $response, $args) {
 		$url = $request->getUri()->getBasePath();
 
-		// Récupère l'ensemble des pistes avec leurs genres, artistes et albums, et la convertie en tableau indéxé par l'id de piste
-		$querry = Piste::join('est_du_genre_piste','piste.idPiste','est_du_genre_piste.idPiste')
-			->join('genre', 'est_du_genre_piste.idGenre','genre.idGenre' )
-			->join('a_joué_piste','piste.idPiste','a_joué_piste.idPiste')
-			->join('artiste', 'a_joué_piste.idArtiste','artiste.idArtiste' )
-			->join('fait_partie','piste.idPiste','fait_partie.idPiste')
-			->join('album', 'fait_partie.idAlbum','album.idAlbum' )
-			->get()
-			->groupBy('idPiste')
-			->toArray();
-
-
-		$array = array();
-		foreach($querry as $piste) { // Itération sur chaque piste
-			foreach ($piste as $val) { // itération sur chaque exemplaire de la piste
-				if (!array_key_exists($val['idPiste'], $array)) {
-					// Si la piste n'est pas encore dans le tableau, 
-					// Créer les entrées necessaires
-					$array[$val['idPiste']] = $val;
-					$array[$val['idPiste']]['nomGenre'] = [$array[$val['idPiste']]['nomGenre']];
-					$array[$val['idPiste']]['nomArtiste'] = [$array[$val['idPiste']]['nomArtiste']];
-					$array[$val['idPiste']]['nomAlbum'] = [$array[$val['idPiste']]['nomAlbum']];
-				} else {
-					// Sinon compléter les champs
-					$array[$val['idPiste']]['nomGenre'][] = $val['nomGenre'];
-					$array[$val['idPiste']]['nomArtiste'][] = $val['nomArtiste'];
-					$array[$val['idPiste']]['nomAlbum'][] = $val['nomAlbum'];
-				}
-			}
-			// $array[$val['idPiste']]['nomGenre'] = ['Rock', 'Rock', 'Funk', 'Rock'], d'où le array_unique()
-			// pour revenir sur un exemplaire de chaque. Idem pour les nomArtiste et nomAlbum
-			$tableauPistes[] = [
-				'image' => $val['imagePiste'],
-				'titre' => $val['nomPiste'],
-				'genres' => array_unique($array[$val['idPiste']]['nomGenre']),
-				'artistes' => array_unique($array[$val['idPiste']]['nomArtiste']),
-				'annee' => $val['annéePiste'],
-				'album' => array_unique($array[$val['idPiste']]['nomAlbum'])
-			];
-		}
+		
+		
 		
 		// Gestion des requêtes depuis AddPiste.html.twig
 		if($request->getMethod() == "POST") {
@@ -394,6 +361,46 @@ class CatalogueController {
 					]);
 				}
 			}
+		}
+		// Récupère l'ensemble des pistes avec leurs genres, artistes et albums, et la convertie en tableau indéxé par l'id de piste
+		$querry = Piste::join('est_du_genre_piste','piste.idPiste','est_du_genre_piste.idPiste')
+			->join('genre', 'est_du_genre_piste.idGenre','genre.idGenre' )
+			->join('a_joué_piste','piste.idPiste','a_joué_piste.idPiste')
+			->join('artiste', 'a_joué_piste.idArtiste','artiste.idArtiste' )
+			->join('fait_partie','piste.idPiste','fait_partie.idPiste')
+			->join('album', 'fait_partie.idAlbum','album.idAlbum' )
+			->get()
+			->groupBy('idPiste')
+			->toArray();
+
+
+		$array = array();
+		foreach($querry as $piste) { // Itération sur chaque piste
+			foreach ($piste as $val) { // itération sur chaque exemplaire de la piste
+				if (!array_key_exists($val['idPiste'], $array)) {
+					// Si la piste n'est pas encore dans le tableau, 
+					// Créer les entrées necessaires
+					$array[$val['idPiste']] = $val;
+					$array[$val['idPiste']]['nomGenre'] = [$array[$val['idPiste']]['nomGenre']];
+					$array[$val['idPiste']]['nomArtiste'] = [$array[$val['idPiste']]['nomArtiste']];
+					$array[$val['idPiste']]['nomAlbum'] = [$array[$val['idPiste']]['nomAlbum']];
+				} else {
+					// Sinon compléter les champs
+					$array[$val['idPiste']]['nomGenre'][] = $val['nomGenre'];
+					$array[$val['idPiste']]['nomArtiste'][] = $val['nomArtiste'];
+					$array[$val['idPiste']]['nomAlbum'][] = $val['nomAlbum'];
+				}
+			}
+			// $array[$val['idPiste']]['nomGenre'] = ['Rock', 'Rock', 'Funk', 'Rock'], d'où le array_unique()
+			// pour revenir sur un exemplaire de chaque. Idem pour les nomArtiste et nomAlbum
+			$tableauPistes[] = [
+				'image' => $val['imagePiste'],
+				'titre' => $val['nomPiste'],
+				'genres' => array_unique($array[$val['idPiste']]['nomGenre']),
+				'artistes' => array_unique($array[$val['idPiste']]['nomArtiste']),
+				'annee' => $val['annéePiste'],
+				'album' => array_unique($array[$val['idPiste']]['nomAlbum'])
+			];
 		}
 		
 		$url = $request->getUri()->getBasePath();
