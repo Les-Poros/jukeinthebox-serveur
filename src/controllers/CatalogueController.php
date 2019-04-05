@@ -11,15 +11,13 @@ use jukeinthebox\models\A_joue_piste;
 use jukeinthebox\models\Contenu_bibliotheque;
 use jukeinthebox\models\Fait_partie;
 use jukeinthebox\models\Bibliotheque;
+use jukeinthebox\models\Est_du_genre_piste;
+use jukeinthebox\models\Jukebox;
+use jukeinthebox\models\Piste;
 use \Slim\Views\Twig as twig;
 use jukeinthebox\views\Home;
 use \jukeinthebox\views\ListMusic;
 use \jukeinthebox\views\AddPiste;
-use jukeinthebox\models\Est_du_genre_album;
-use jukeinthebox\models\Est_du_genre_piste;
-use jukeinthebox\models\Jukebox;
-use jukeinthebox\models\Bibliotheque;
-use jukeinthebox\models\Piste;
 
 /**
  * Class CatalogueController
@@ -729,26 +727,8 @@ class CatalogueController {
         $json = ['catalogue' => $array];
 
         echo json_encode($json);
-    }
-    /**
-     * Method that displays that add a music to the bibliotheque
-     * @param request
-     * @param response
-     * @param args
-     */
-    public function addMusicBiblio($request, $response, $args)
-    {
-        $addContenu = new Contenu_bibliotheque();
-
-        //On récupère la bibliothèque du JukeBox
-        $getBibliotheque = Jukebox::join('bibliotheque', 'jukebox.idBibliotheque', '=', 'bibliotheque.idBibliotheque')->where("idJukebox", "=", Jukebox::getIdByBartender($_POST["bartender"]))->first()->idBibliotheque;
-
-        $addContenu->idPiste = $_POST['id'];
-
-        $addContenu->idBibliotheque = $getBibliotheque;
-
-        $addContenu->save();
-    }
+	}
+	
 
     public function integrerCatag($request, $response, $args)
     {
@@ -763,16 +743,6 @@ class CatalogueController {
         $addContenu->idBibliotheque = $getBibliothequeBarman;
         $addContenu->save();
         }
-    }
-    /**
-     * Method that displays that delete a music from the bibliotheque
-     * @param request
-     * @param response
-     * @param args
-     */
-    public function deleteMusicBiblio($request, $response, $args)
-    {
-        Contenu_bibliotheque::where('idPiste', '=', $_POST['id'])->where('idBibliotheque', '=', Jukebox::getBibliByBartender($_POST["bartender"]))->first()->delete();
     }
   
 }
