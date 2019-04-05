@@ -159,17 +159,10 @@ class CatalogueController {
 	 * @param response
 	 * @param args
 	 */
-
-	public function listPiste($request, $response, $args)
-	{
-		
-	} 
+	
 	public function listCatalogue($request, $response, $args) {
 		$url = $request->getUri()->getBasePath();
 
-		
-		
-		
 		// Gestion des requêtes depuis AddPiste.html.twig
 		if($request->getMethod() == "POST") {
 			$piste = $request->getParams();
@@ -197,8 +190,7 @@ class CatalogueController {
 				$prenomArtistes[] = filter_input(INPUT_POST, 'prenomArtiste'.$i, FILTER_SANITIZE_STRING);
 			}
 
-			// $piste['ajout'] et $piste['personne'] sont initialisées dans le formulaire et nous permettent
-			// de savoir dans quel cas nous nous trouvons
+			// Enregistre la musique des artistes
 			if($piste['ajout'] == 'musique' && $piste['personne'] == 'Artiste') {
 				// Ajout d'un musique avec un ou plusieurs artistes
 				if($nomPiste && $anneePiste && $nomAlbum && $nbArtistes >= 1){
@@ -237,6 +229,7 @@ class CatalogueController {
 					
 				}
 			}
+			// Enregiste la musique d'un groupe
 			elseif($piste['ajout'] == 'musique' && $piste['personne'] == 'Groupe') {
 				// Ajout d'un musique avec un groupe
 				if($nomPiste && $anneePiste && $nomAlbum && $nbArtistes >= 1){
@@ -272,8 +265,9 @@ class CatalogueController {
 					
 				}
 			}
-			else { // $piste['ajout'] == 'album'
-			// Vérification des champs
+			// Enregistre un ablum
+			else {
+				// Vérification des champs
 				if(count($idsPistesAlbum) >= 1 && $nomAlbum && $nbArtistes >= 1 && count($idsGenres))  {
 					try{
 						if(Piste::whereIn('idPiste', $idsPistesAlbum)->get()) {
@@ -355,10 +349,6 @@ class CatalogueController {
 							'error'=> $error
 						]);
 					}
-					$url = $request->getUri()->getBasePath();
-					return $this->view->render($response, 'AddPiste.html.twig', [
-						'url' => $url
-					]);
 				}
 			}
 		}
